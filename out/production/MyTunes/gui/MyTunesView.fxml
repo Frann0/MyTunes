@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXSlider?>
+<?import com.jfoenix.controls.JFXTextField?>
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<?import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ButtonBar?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" styleClass="background" stylesheets="@css/Styles.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="bll.MyTunesController">
+   <children>
+      <BorderPane fx:id="root" onDragDropped="#handleDragDropped" onDragOver="#handleDragOver" prefHeight="720.0" prefWidth="1280.0">
+         <bottom>
+            <HBox prefHeight="75.0" styleClass="bottombar" BorderPane.alignment="CENTER">
+               <children>
+                  <Pane prefHeight="75.0" prefWidth="255.0">
+                     <children>
+                        <ImageView fx:id="imgAlbumArt" fitHeight="50.0" fitWidth="50.0" layoutX="18.0" layoutY="13.0" pickOnBounds="true" preserveRatio="true" />
+                        <Label fx:id="lblArtist" layoutX="84.0" layoutY="9.0" text="Artist" textFill="WHITE">
+                           <font>
+                              <Font name="System Bold" size="16.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="lblAlbumTitle" layoutX="84.0" layoutY="32.0" text="Album Title" textFill="#b9b9b9" />
+                        <Label fx:id="lblSongTitle" layoutX="84.0" layoutY="50.0" text="Song Title" textFill="WHITE" />
+                     </children>
+                  </Pane>
+                  <Pane prefHeight="75.0" prefWidth="764.0">
+                     <children>
+                        <ToggleButton fx:id="tglPlay" layoutX="364.0" layoutY="6.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleToggleAction" prefHeight="35.0" prefWidth="35.0" text="&gt;" textAlignment="CENTER">
+                           <graphic>
+                              
+                           </graphic>
+                           <font>
+                              <Font name="System Bold" size="15.0" />
+                           </font></ToggleButton>
+                        <JFXSlider fx:id="sldTime" layoutX="91.0" layoutY="44.0" prefHeight="14.0" prefWidth="581.0" />
+                        <Label fx:id="lblTimeMin" layoutX="50.0" layoutY="42.0" textAlignment="RIGHT" textFill="WHITE" />
+                        <Label fx:id="lblTimeMax" layoutX="672.0" layoutY="42.0" textFill="WHITE" />
+                     </children>
+                  </Pane>
+                  <Pane prefHeight="75.0" prefWidth="255.0">
+                     <children>
+                        <FontAwesomeIconView fx:id="icnMute" fill="WHITE" glyphName="VOLUME_UP" layoutX="71.0" layoutY="55.0" onMouseClicked="#handleMute" size="20" styleClass="mute" />
+                        <JFXSlider fx:id="sldVolume" layoutX="103.0" layoutY="40.0" onMouseReleased="#handleManuelMute" prefHeight="14.0" prefWidth="114.0" />
+                     </children>
+                  </Pane>
+               </children>
+            </HBox>
+         </bottom>
+         <left>
+            <VBox prefHeight="617.0" prefWidth="237.0" styleClass="playlist-bar" stylesheets="@css/Styles.css" BorderPane.alignment="CENTER">
+               <children>
+                  <Pane prefHeight="40.0" prefWidth="200.0" styleClass="bottombar" stylesheets="@css/Styles.css">
+                     <children>
+                        <Label layoutX="84.0" layoutY="7.0" text="Playlists" textAlignment="CENTER" textFill="WHITE">
+                           <font>
+                              <Font name="MS Outlook" size="20.0" />
+                           </font>
+                        </Label>
+                        <MaterialDesignIconView fill="WHITE" glyphName="PLAYLIST_PLAY" layoutX="55.0" layoutY="27.0" size="20" />
+                     </children>
+                  </Pane>
+                  <Pane prefHeight="519.0" prefWidth="237.0">
+                     <children>
+                        <ListView fx:id="lstPlaylist" layoutX="-7.0" onMouseClicked="#handlePlaylistSelect" prefHeight="517.0" prefWidth="247.0" />
+                     </children>
+                  </Pane>
+                  <Pane prefHeight="51.0" prefWidth="231.0" styleClass="bottombar">
+                     <children>
+                        <Button fx:id="btnAddPlaylist" layoutX="36.0" layoutY="12.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleAddPlaylist" prefHeight="35.0" prefWidth="35.0" styleClass="addPlaylist" text="+" />
+                        <Button fx:id="btnRemovePlaylist" layoutX="98.0" layoutY="12.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleRemovePlaylist" prefHeight="35.0" prefWidth="35.0" styleClass="addPlaylist" text="-" />
+                        <Button fx:id="btnEditPlaylist" layoutX="160.0" layoutY="12.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleEditPlaylist" prefHeight="35.0" prefWidth="35.0" styleClass="addPlaylist" text=". . ." />
+                     </children>
+                  </Pane>
+               </children>
+            </VBox>
+         </left>
+         <center>
+            <BorderPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+               <top>
+                  <Pane maxHeight="-Infinity" prefHeight="43.0" prefWidth="1043.0" styleClass="playlistTitleBar" BorderPane.alignment="CENTER">
+                     <children>
+                        <Label fx:id="lblCurrentPlaylist" layoutX="14.0" layoutY="4.0" text="Playlist Title" textFill="WHITE">
+                           <font>
+                              <Font size="24.0" />
+                           </font>
+                        </Label>
+                        <ButtonBar buttonMinWidth="35.0" layoutX="829.0" prefHeight="35.0" prefWidth="200.0">
+                          <buttons>
+                              <Button fx:id="btnAddSong" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="0.0" mnemonicParsing="false" onAction="#handleAddSong" prefHeight="35.0" prefWidth="35.0" styleClass="addPlaylist" text="+" />
+                              <Button fx:id="btnRemoveSong" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="0.0" mnemonicParsing="false" onAction="#handleRemoveSong" prefHeight="35.0" prefWidth="35.0" styleClass="addPlaylist" text="-" />
+                          </buttons>
+                           <padding>
+                              <Insets top="2.5" />
+                           </padding>
+                        </ButtonBar>
+                        <Button fx:id="btnAddSong1" layoutX="194.0" layoutY="4.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="0.0" mnemonicParsing="false" onAction="#handleShufflePlay" prefHeight="35.0" prefWidth="113.0" styleClass="shuffle-button" text="&gt; Shuffle play" textAlignment="CENTER">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font>
+                        </Button>
+                        <JFXTextField focusColor="#71ba51" layoutX="791.0" layoutY="9.0" onKeyTyped="#handleSearch" promptText="Search" unFocusColor="#4f4f4f" />
+                        <FontAwesomeIconView fx:id="icnSearch" fill="WHITE" glyphName="SEARCH" layoutX="774.0" layoutY="28.0" styleClass="search" />
+                     </children>
+                  </Pane>
+               </top>
+               <center>
+                  <ListView fx:id="lstCurrentPlayList" onMouseClicked="#handleSongSelect" prefHeight="200.0" prefWidth="200.0" styleClass="currentPlaylistList" BorderPane.alignment="CENTER_LEFT" />
+               </center>
+            </BorderPane>
+         </center>
+         <top>
+            <HBox prefHeight="25.0" prefWidth="1280.0" styleClass="menu-bar" BorderPane.alignment="CENTER">
+               <children>
+                  <Pane prefHeight="23.0" prefWidth="227.0">
+                     <children>
+                        <MaterialDesignIconView fill="WHITE" glyphName="FISH" layoutX="-4.0" layoutY="20.0" size="20" wrappingWidth="15.0" />
+                        <Label alignment="CENTER" contentDisplay="CENTER" layoutX="24.0" layoutY="3.0" text="- Something's fishy" textAlignment="CENTER" textFill="WHITE" />
+                     </children>
+                  </Pane>
+                  <Pane prefHeight="23.0" prefWidth="892.0">
+                     <children>
+                        <Label fx:id="lblTitlebar" alignment="CENTER" contentDisplay="CENTER" layoutX="414.0" layoutY="3.0" text="Title bar" textAlignment="CENTER" textFill="WHITE" />
+                     </children>
+                  </Pane>
+                  <Pane prefHeight="200.0" prefWidth="200.0">
+                     <children>
+                        <FontAwesomeIconView fx:id="icnEXIT" fill="WHITE" glyphName="TIMES" layoutX="165.0" layoutY="16.0" onMouseClicked="#handleExit" size="15" styleClass="exit" />
+                        <FontAwesomeIconView fx:id="icnMINIMIZE" fill="WHITE" glyphName="MINUS" layoutX="134.0" layoutY="17.0" onMouseClicked="#handleMinimize" size="15" styleClass="minimize" />
+                     </children>
+                  </Pane>
+               </children>
+            </HBox>
+         </top>
+      </BorderPane>
+   </children>
+</AnchorPane>

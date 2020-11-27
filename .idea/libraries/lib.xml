@@ -1,0 +1,27 @@
+<component name="libraryTable">
+  <library name="lib">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/jfoenix-9.0.10.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/javafx-base-11.0.1-win.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/javafx-controls-11.0.1-mac.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/fontawesomefx-controls-11.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/fontawesomefx-fontawesome-4.7.0-9.1.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/fontawesomefx-materialdesignfont-2.0.26-9.1.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/javafx-graphics-11.0.1-win.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/javafx-fxml-11.0.1-mac.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/fontawesomefx-fontawesome-4.7.0-11.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/javafx-base-11.0.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/javafx-controls-11.0.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/fontawesomefx-commons-9.1.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/javafx-base-11.0.1-mac.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/fontawesomefx-commons-11.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/javafx-graphics-11.0.1-mac.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/javafx-graphics-11.0.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/javafx-fxml-11.0.1-win.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/javafx-controls-11.0.1-win.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/fontawesomefx-controls-9.1.2.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
