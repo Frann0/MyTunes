@@ -1,9 +1,11 @@
-package bll;
+package gui;
 
+import bll.*;
 import com.jfoenix.controls.JFXSlider;
 import dal.MyTunesDAO;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
+import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -14,9 +16,11 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.BorderPane;
 
+import javafx.scene.layout.HBox;
 import javafx.scene.media.Media;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -28,6 +32,12 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class MyTunesController implements Initializable {
+    @FXML
+    private FontAwesomeIconView icnShuffle;
+    @FXML
+    private MaterialDesignIconView icnRepeat;
+    @FXML
+    private HBox titlebar;
     @FXML
     private Label lblTimeMin;
     @FXML
@@ -67,6 +77,8 @@ public class MyTunesController implements Initializable {
     private boolean isPlaying;
     private double prevVolume;
     private Playlist currentPlaylist;
+    private boolean shuffleActive;
+    private boolean repeatActive;
 
     /**
      * Initialize bruger vi til at sætte mange af vores FXML værdier efter de er blevet
@@ -79,6 +91,11 @@ public class MyTunesController implements Initializable {
         lblTitlebar.setText("Codify - No song playing");
         isMuted = false;
         isPlaying = false;
+        shuffleActive = false;
+        repeatActive = false;
+
+        handleShufflePlay();
+        handleRepeat();
         handleMute();
 
         playlistHandler.addPlaylist("test1");
@@ -105,7 +122,6 @@ public class MyTunesController implements Initializable {
 
         prevVolume = sldVolume.getValue();
 
-        myTunesDAO.setPl(playlistHandler);
     }
 
     /**
@@ -114,10 +130,12 @@ public class MyTunesController implements Initializable {
      */
     public void handleDragDropped(DragEvent dragEvent) {
         List<File> selectedFiles = dragEvent.getDragboard().getFiles();
+
         currentPlaylist = playlistHandler.getPlaylists().get(lstPlaylist.getSelectionModel().getSelectedIndex());
 
         dragAndDropHandler.handleDragDropped(selectedFiles, currentPlaylist);
         checkEmptySongList();
+        updateMediaList();
     }
 
     /**
@@ -229,6 +247,7 @@ public class MyTunesController implements Initializable {
 
         currentPlaylist.addSong(new Song(selectedFile));
         checkEmptySongList();
+        updateMediaList();
     }
 
     /**
@@ -249,9 +268,8 @@ public class MyTunesController implements Initializable {
 
             mediaManager.setMedia(cSong.getMedia());
             //Test for null metadata problem.
-            for (Song song : currentPlaylist.getSongs()){
-                song.updateMedia();
-            }
+            updateMediaList();
+
             lstCurrentPlayList.refresh();
 
             lblTimeMin.setText(cSong.getCurrentTime());
@@ -302,6 +320,34 @@ public class MyTunesController implements Initializable {
      * den første sang i den liste.
      */
     public void handleShufflePlay() {
+        icnShuffle.setOnMouseEntered(mouseEvent -> icnShuffle.setStyle("-fx-font-family: FontAwesome; -fx-fill: white; -fx-font-size: 15"));
+
+        if (shuffleActive){
+            icnShuffle.setStyle("-fx-font-family: FontAwesome; -fx-fill: #71BA51; -fx-font-size: 15");
+            icnShuffle.setOnMouseExited(mouseEvent -> icnShuffle.setStyle("-fx-font-family: FontAwesome; -fx-fill: #71BA51; -fx-font-size: 15"));
+            shuffleActive = false;
+        }else{
+            icnShuffle.setStyle("-fx-font-family: FontAwesome; -fx-fill: #4f4f4f; -fx-font-size: 15");
+            icnShuffle.setOnMouseExited(mouseEvent -> icnShuffle.setStyle("-fx-font-family: FontAwesome; -fx-fill: #4f4f4f; -fx-font-size: 15"));
+            shuffleActive = true;
+        }
+    }
+
+    /**
+     * Håndter om den nuværende sang skal køre på repeat.
+     */
+    public void handleRepeat() {
+        icnRepeat.setOnMouseEntered(mouseEvent -> icnRepeat.setStyle("-fx-font-family: 'Material Design Icons'; -fx-fill: white; -fx-font-size: 20"));
+
+        if (repeatActive){
+            icnRepeat.setStyle("-fx-font-family: 'Material Design Icons'; -fx-fill: #71BA51; -fx-font-size: 20");
+            icnRepeat.setOnMouseExited(mouseEvent -> icnRepeat.setStyle("-fx-font-family: 'Material Design Icons'; -fx-fill: #71BA51; -fx-font-size: 20"));
+            repeatActive = false;
+        }else{
+            icnRepeat.setStyle("-fx-font-family: 'Material Design Icons'; -fx-fill: #4f4f4f; -fx-font-size: 20");
+            icnRepeat.setOnMouseExited(mouseEvent -> icnRepeat.setStyle("-fx-font-family: 'Material Design Icons'; -fx-fill: #4f4f4f; -fx-font-size: 20"));
+            repeatActive = true;
+        }
     }
 
     /**
@@ -348,4 +394,11 @@ public class MyTunesController implements Initializable {
     public void handleSearch(KeyEvent event) {
 
     }
+
+    private void updateMediaList(){
+        for(Song s : currentPlaylist.getSongs()){
+            s.updateMedia();
+        }
+    }
+
 }

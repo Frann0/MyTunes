@@ -10,27 +10,7 @@
     -fx-border-color: #1b1b1b;;
 }
 
-.shuffle-button{
-    -fx-shape: "M 400 300 A 50 50 0 1 1 400 200 L 700 200 A 50 50 0 1 1 700 300 L 400 300 ";
-    -fx-background-color: #1b1b1b;
-    -fx-border-color: #4f4f4f;
-    -fx-border-width: 1;
-    -fx-text-fill: #4f4f4f;
-}
-
-.shuffle-button:hover{
-    -fx-border-color: #71BA51;
-    -fx-text-fill: #71BA51;
-}
-
-.shuffle-button:pressed{
-    -fx-background-color: #111111;
-    -fx-text-fill: #457a2d;
-    -fx-border-color: #457a2d;
-
-}
-
-.toggle-button{
+.playbutton{
     -fx-shape: "M 400 300 A 150 150 0 1 1 700 300 A 150 150 0 1 1 400 300 ";
     -fx-background-color: #1b1b1b;
     -fx-border-color: #4f4f4f;
@@ -38,9 +18,22 @@
     -fx-text-fill: #4f4f4f;
 }
 
-.toggle-button:hover{
+.playbutton:hover{
     -fx-border-color: white;
     -fx-text-fill: white;
+}
+
+.shufflebutton{
+    -fx-background-color: #1b1b1b;
+    -fx-fill: #4f4f4f;
+}
+
+.shufflebutton:hover{
+    -fx-fill: white;
+}
+
+.shufflebutton:selected{
+    -fx-fill: #71BA51;
 }
 
 .list-view{
@@ -109,7 +102,7 @@
     -fx-pref-height: 3px;
 }
 
-.jfx-slider .thumb,
+.jfx-slider:hover .thumb,
 -jfx-slider:focused .thumb{
     -fx-background-color: -jfx-default-thumb;
     -fx-background-radius: 20;
@@ -155,11 +148,11 @@
     -fx-fill: #562700;
 }
 
-.mute{
+.UIButtons{
     -fx-fill: #4f4f4f;
 }
 
-.mute:hover{
+.UIButtons:hover{
     -fx-fill: white;
 }
 

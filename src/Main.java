@@ -13,7 +13,6 @@ public class Main extends Application {
     private final int HEIGHT = 720;
     private final String TITLE = "Codify - Something's fishy";
 
-    public static Stage STAGE = null;
     private double xOffset = 0;
     private double yOffset = 0;
 
@@ -50,6 +49,7 @@ public class Main extends Application {
         root.setOnMouseReleased((event) -> {
             primaryStage.setOpacity(1.0f);
         });
+
         primaryStage.show();
     }
 

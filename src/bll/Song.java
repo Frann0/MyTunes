@@ -20,9 +20,10 @@ public class Song implements Initializable {
 
     /**
      * Constructor for song klassen.
+     *
      * @param f filen der skal laves til en sang.
      */
-    public Song(File f){
+    public Song(File f) {
         this.m = new Media(f.toURI().toString());
         this.path = f.toURI().toString();
     }
@@ -35,6 +36,7 @@ public class Song implements Initializable {
     /**
      * getter for artisten der har lavet sangen.
      * Fundet gennem mediaets metadata.
+     *
      * @return artisten der har lavet sangen.
      */
     public String getArtist() {
@@ -43,6 +45,7 @@ public class Song implements Initializable {
 
     /**
      * getter for album title, sangen er fra.
+     *
      * @return album titlen
      */
     public String getAlbumTitle() {
@@ -51,6 +54,7 @@ public class Song implements Initializable {
 
     /**
      * getter for sang navnet.
+     *
      * @return sang navnet
      */
     public String getSongName() {
@@ -59,6 +63,7 @@ public class Song implements Initializable {
 
     /**
      * Getter for den lokale fil's sti.
+     *
      * @return stien til den lokale fil.
      */
     public String getPath() {
@@ -67,6 +72,7 @@ public class Song implements Initializable {
 
     /**
      * getter for mediaet forbundet med denne sang.
+     *
      * @return mediaet for denne sang.
      */
     public Media getMedia() {
@@ -75,6 +81,7 @@ public class Song implements Initializable {
 
     /**
      * getter for album covered.
+     *
      * @return hvis metadataen er der, altså ikke er null, returnere den det billede
      * ellers returnere den vores defualtalbumart.png
      */
@@ -88,25 +95,33 @@ public class Song implements Initializable {
      * kan ikke bare hente det med det samme sangen er oprettet. derfor
      * null metadata problem. FIND FIKS
      */
-    public void updateMedia(){
-        songName.setValue(m.getMetadata().get("title").toString());
-        artist.setValue(m.getMetadata().get("artist").toString());
-        albumTitle.setValue(m.getMetadata().get("album").toString());
+    public void updateMedia() {
+        if (!m.getMetadata().isEmpty()) {
+            songName.setValue(m.getMetadata().get("title").toString());
+            artist.setValue(m.getMetadata().get("artist").toString());
+            albumTitle.setValue(m.getMetadata().get("album").toString());
+        } else {
+            songName.setValue("Missing Title");
+            artist.setValue("Missing Artist");
+            albumTitle.setValue("Missing Album title");
+        }
     }
 
     /**
      * overrider toString metoden, for at vise de ting vi vil vise i listviewet.
      * TODO skal laves om. der skal mere info på, så som duration.
+     *
      * @return
      */
     @Override
     public String toString() {
-        return String.format("%-50s%-45s%-50s",artist.getValue(),albumTitle.getValue(),songName.getValue());
+        return String.format("%-50s%-45s%-50s", artist.getValue(), albumTitle.getValue(), songName.getValue());
     }
 
     /**
      * getter for hvor vi er i sangen p.t
      * TODO undersøg om det er i media man finder det, eller om det er i mediaPlayeren.
+     *
      * @return hvor langt vi er i sangen.
      */
     public String getCurrentTime() {
@@ -116,9 +131,10 @@ public class Song implements Initializable {
 
     /**
      * getter for hvor lang sangen er i helhed.
+     *
      * @return
      */
-    public String getDuration(){
+    public String getDuration() {
         return String.valueOf(m.getDuration().toSeconds());
     }
 }
