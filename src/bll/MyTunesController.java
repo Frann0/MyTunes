@@ -68,6 +68,12 @@ public class MyTunesController implements Initializable {
     private double prevVolume;
     private Playlist currentPlaylist;
 
+    /**
+     * Initialize bruger vi til at sætte mange af vores FXML værdier efter de er blevet
+     * initialiseret.
+     * @param url
+     * @param rb
+     */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         lblTitlebar.setText("Codify - No song playing");
@@ -102,22 +108,32 @@ public class MyTunesController implements Initializable {
         myTunesDAO.setPl(playlistHandler);
     }
 
+    /**
+     * Håndtere når vi slipper en fil / filer på vores program.
+     * @param dragEvent
+     */
     public void handleDragDropped(DragEvent dragEvent) {
         List<File> selectedFiles = dragEvent.getDragboard().getFiles();
         currentPlaylist = playlistHandler.getPlaylists().get(lstPlaylist.getSelectionModel().getSelectedIndex());
 
         dragAndDropHandler.handleDragDropped(selectedFiles, currentPlaylist);
-
-
         checkEmptySongList();
     }
 
+    /**
+     * Håndtere hvad der skal ske når vi trækker en fil henover vores program.
+     * @param dragEvent
+     */
     public void handleDragOver(DragEvent dragEvent) {
         if (dragEvent.getDragboard().hasFiles()) {
             dragEvent.acceptTransferModes(TransferMode.ANY);
         }
     }
 
+    /**
+     * Håndtere vores pause/unpause knap.
+     * TODO Skal opdateres.
+     */
     public void handleToggleAction() {
         //TODO Lav getState i mediaManager, og opdater ikon derefter
         if (lstCurrentPlayList.getSelectionModel().getSelectedItem() != null) {
@@ -134,8 +150,11 @@ public class MyTunesController implements Initializable {
         }
     }
 
+    /**
+     * Håndtere hvad der skal ske når vi vælger en af vores playlister.
+     */
     public void handlePlaylistSelect() {
-        myTunesDAO.saveFile();
+
         if (lstPlaylist.getSelectionModel().getSelectedItem() != null) {
             currentPlaylist = lstPlaylist.getSelectionModel().getSelectedItem();
             lblCurrentPlaylist.setText(currentPlaylist.getName());
@@ -144,6 +163,9 @@ public class MyTunesController implements Initializable {
         }
     }
 
+    /**
+     * Håndtere hvad der skal ske når vi vil tilføje en ny playliste.
+     */
     public void handleAddPlaylist() {
         TextInputDialog dialog = new TextInputDialog("Playlist");
         dialog.setTitle("Add playlist");
@@ -154,6 +176,9 @@ public class MyTunesController implements Initializable {
         result.ifPresent(playlistHandler::addPlaylist);
     }
 
+    /**
+     * Håndtere vores slet playliste funktion.
+     */
     public void handleRemovePlaylist() {
         if (lstPlaylist.getSelectionModel().getSelectedItem() != null) {
             Alert alert = new Alert(AlertType.CONFIRMATION);
@@ -172,6 +197,10 @@ public class MyTunesController implements Initializable {
         }
     }
 
+    /**
+     * Håndtere hvad der skal ske når vi ville ændre i vores playliste.
+     * Det vil sige, opdatere dens navn.
+     */
     public void handleEditPlaylist() {
         if (lstPlaylist.getSelectionModel().getSelectedItem() != null) {
             TextInputDialog dialog = new TextInputDialog("New Playlist Name");
@@ -186,6 +215,9 @@ public class MyTunesController implements Initializable {
         }
     }
 
+    /**
+     * Håndtere vores manuelle tilføj sang funktion.
+     */
     public void handleAddSong() {
         currentPlaylist = playlistHandler.getPlaylists().get(lstPlaylist.getSelectionModel().getSelectedIndex());
 
@@ -199,18 +231,24 @@ public class MyTunesController implements Initializable {
         checkEmptySongList();
     }
 
+    /**
+     * Håndtere hvad der skal ske når vi vil slette en sang fra vores playliste
+     */
     public void handleRemoveSong() {
         Playlist currentPlayList = lstPlaylist.getSelectionModel().getSelectedItem();
         currentPlayList.removeSong(lstCurrentPlayList.getSelectionModel().getSelectedItem());
         checkEmptySongList();
     }
 
+    /**
+     * Håndtere hvad der skal ske når vi vælger en sang fra listen.
+     */
     public void handleSongSelect() {
         if (lstCurrentPlayList.getSelectionModel().getSelectedItem() != null) {
             Song cSong = lstCurrentPlayList.getSelectionModel().getSelectedItem();
 
             mediaManager.setMedia(cSong.getMedia());
-
+            //Test for null metadata problem.
             for (Song song : currentPlaylist.getSongs()){
                 song.updateMedia();
             }
@@ -228,7 +266,12 @@ public class MyTunesController implements Initializable {
         }
     }
 
-    public void checkEmptySongList() {
+    /**
+     * Checker hvorvidt vores nuværende playliste indeholder sang elementer.
+     * Hvis ikke, så skal baggrunden være vores "Tutorial" altså vores
+     * "Oh no!" billede, ellers skal den være blank.
+     */
+    private void checkEmptySongList() {
         if (lstCurrentPlayList.getItems().size() <= 0) {
             lstCurrentPlayList.styleProperty().set("-fx-background-image: url(\"/Resources/emptyList.png\")");
         } else {
@@ -237,19 +280,34 @@ public class MyTunesController implements Initializable {
         lstCurrentPlayList.refresh();
     }
 
+    /**
+     * Håndtere vores luk knap.
+     */
     public void handleExit() {
         System.exit(0);
     }
 
+    /**
+     * Håndtere vores minimer knap i vores custom title bar.
+     */
     public void handleMinimize() {
         Stage stage = (Stage) root.getScene().getWindow();
         stage.setIconified(true);
     }
 
+    /**
+     * Kommer til at håndtere shuffle play.
+     * Ved at tage alle sangene i nuværende playlist.
+     * Sætte dem ind i tilfældig rækkefølge i en ArrayList, og derefter afspille
+     * den første sang i den liste.
+     */
     public void handleShufflePlay() {
     }
 
-
+    /**
+     * Håndtere vores mute funktion. Man muter ved at trykke på ikonet.
+     * Så ikonet, skal opdateres efter det
+     */
     public void handleMute() {
         if (isMuted) {
             prevVolume = sldVolume.getValue();
@@ -265,6 +323,11 @@ public class MyTunesController implements Initializable {
         }
     }
 
+    /**
+     * Håndtere vores manuelle mute funktion. Manuelt i det at man kan "Mute" ved
+     * at slide slideren i bund. Så der skal den også håndtere hvilket ikon der skal
+     * vises. TODO Sikkert en bedre måde at gøre de to funktioner på.
+     */
     public void handleManuelMute() {
         if (sldVolume.getValue() <= 0) {
             icnMute.setIcon(FontAwesomeIcon.VOLUME_OFF);
@@ -278,6 +341,10 @@ public class MyTunesController implements Initializable {
         }
     }
 
+    /**
+     * Håndtere vores søge funktion. Og opdatere vores listview efter det.
+     *
+     */
     public void handleSearch(KeyEvent event) {
 
     }

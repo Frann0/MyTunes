@@ -17,9 +17,10 @@ public class MediaManager {
     private StringProperty durationProperty = new SimpleStringProperty("");
     private StringProperty currentTimeProperty = new SimpleStringProperty("");
 
-
-
-
+    /**
+     * håndtere at pause sangen.
+     * @param paused hvor vidt den er pauset eller ej.
+     */
     public void play(boolean paused){
         if (paused) {
             mediaPlayer.play();
@@ -28,6 +29,10 @@ public class MediaManager {
         }
     }
 
+    /**
+     * Sætter sætter det medie der skal afspilles på, og laver en ny mediaPlayer ud fra det.
+     * @param me mediet der skal afspilles.
+     */
     public void setMedia(Media me) {
         mediaPlayer = new MediaPlayer(me);
         mediaPlayer.setOnReady(() -> {
@@ -38,6 +43,11 @@ public class MediaManager {
         });
     }
 
+    /**
+     * TODO VIRKER IKKE PT.
+     * håndtere når vi muter sangen.
+     * @param mute hvorvidt den er mutet eller ej.
+     */
     public void setMute(boolean mute){
         if (mediaPlayer != null) {
             if (mute) {
@@ -48,6 +58,10 @@ public class MediaManager {
         }
     }
 
+    /**
+     * Sætter volumen af sangen når vi bruger slideren.
+     * @param volume Værdien fra slideren.
+     */
     public void setVolume(double volume) {
         if (mediaPlayer != null) {
             if (volume <= 0) {
@@ -59,6 +73,10 @@ public class MediaManager {
         }
     }
 
+    /**
+     * getter for duration af sangen.
+     * @return længden af sangen.
+     */
     public StringProperty getDuration(){
         return durationProperty;
     }
