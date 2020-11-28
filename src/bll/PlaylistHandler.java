@@ -35,6 +35,7 @@ public class PlaylistHandler {
      * Opdatere vores playliste, ved at sætte en ny title på den.
      * @param index indexed på den valgte playliste.
      * @param name det nye navn på playlisten.
+     * @param name det nye navn på playlisten.
      */
     public void updatePlaylist(int index, String name){
         playlists.get(index).setName(name);

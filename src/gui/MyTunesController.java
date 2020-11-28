@@ -89,14 +89,11 @@ public class MyTunesController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         lblTitlebar.setText("Codify - No song playing");
+
         isMuted = false;
         isPlaying = false;
         shuffleActive = false;
         repeatActive = false;
-
-        handleShufflePlay();
-        handleRepeat();
-        handleMute();
 
         playlistHandler.addPlaylist("test1");
         playlistHandler.addPlaylist("test2");
@@ -322,15 +319,16 @@ public class MyTunesController implements Initializable {
     public void handleShufflePlay() {
         icnShuffle.setOnMouseEntered(mouseEvent -> icnShuffle.setStyle("-fx-font-family: FontAwesome; -fx-fill: white; -fx-font-size: 15"));
 
-        if (shuffleActive){
+        if (!shuffleActive){
             icnShuffle.setStyle("-fx-font-family: FontAwesome; -fx-fill: #71BA51; -fx-font-size: 15");
             icnShuffle.setOnMouseExited(mouseEvent -> icnShuffle.setStyle("-fx-font-family: FontAwesome; -fx-fill: #71BA51; -fx-font-size: 15"));
-            shuffleActive = false;
+            shuffleActive = true;
         }else{
             icnShuffle.setStyle("-fx-font-family: FontAwesome; -fx-fill: #4f4f4f; -fx-font-size: 15");
             icnShuffle.setOnMouseExited(mouseEvent -> icnShuffle.setStyle("-fx-font-family: FontAwesome; -fx-fill: #4f4f4f; -fx-font-size: 15"));
-            shuffleActive = true;
+            shuffleActive = false;
         }
+        currentPlaylist.shuffle(shuffleActive);
     }
 
     /**
@@ -339,14 +337,14 @@ public class MyTunesController implements Initializable {
     public void handleRepeat() {
         icnRepeat.setOnMouseEntered(mouseEvent -> icnRepeat.setStyle("-fx-font-family: 'Material Design Icons'; -fx-fill: white; -fx-font-size: 20"));
 
-        if (repeatActive){
+        if (!repeatActive){
             icnRepeat.setStyle("-fx-font-family: 'Material Design Icons'; -fx-fill: #71BA51; -fx-font-size: 20");
             icnRepeat.setOnMouseExited(mouseEvent -> icnRepeat.setStyle("-fx-font-family: 'Material Design Icons'; -fx-fill: #71BA51; -fx-font-size: 20"));
-            repeatActive = false;
+            repeatActive = true;
         }else{
             icnRepeat.setStyle("-fx-font-family: 'Material Design Icons'; -fx-fill: #4f4f4f; -fx-font-size: 20");
             icnRepeat.setOnMouseExited(mouseEvent -> icnRepeat.setStyle("-fx-font-family: 'Material Design Icons'; -fx-fill: #4f4f4f; -fx-font-size: 20"));
-            repeatActive = true;
+            repeatActive = false;
         }
     }
 
@@ -355,17 +353,17 @@ public class MyTunesController implements Initializable {
      * Så ikonet, skal opdateres efter det
      */
     public void handleMute() {
-        if (isMuted) {
+        if (!isMuted) {
             prevVolume = sldVolume.getValue();
             sldVolume.setValue(0);
             icnMute.setIcon(FontAwesomeIcon.VOLUME_OFF);
             mediaManager.setMute(true);
-            isMuted = false;
+            isMuted = true;
         } else {
             icnMute.setIcon(FontAwesomeIcon.VOLUME_UP);
             sldVolume.setValue(prevVolume);
             mediaManager.setMute(false);
-            isMuted = true;
+            isMuted = false;
         }
     }
 
