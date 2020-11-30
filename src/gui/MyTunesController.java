@@ -2,26 +2,21 @@ package gui;
 
 import bll.*;
 import com.jfoenix.controls.JFXSlider;
-import dal.MyTunesDAO;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
+import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon;
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.BorderPane;
 
-import javafx.scene.layout.HBox;
-import javafx.scene.media.Media;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -33,11 +28,11 @@ import java.util.ResourceBundle;
 
 public class MyTunesController implements Initializable {
     @FXML
+    private TextField txtSearchField;
+    @FXML
     private FontAwesomeIconView icnShuffle;
     @FXML
     private MaterialDesignIconView icnRepeat;
-    @FXML
-    private HBox titlebar;
     @FXML
     private Label lblTimeMin;
     @FXML
@@ -51,7 +46,7 @@ public class MyTunesController implements Initializable {
     @FXML
     private JFXSlider sldVolume;
     @FXML
-    private ToggleButton tglPlay;
+    private MaterialDesignIconView tglPlay;
     @FXML
     private JFXSlider sldTime;
     @FXML
@@ -70,7 +65,7 @@ public class MyTunesController implements Initializable {
     private Label lblCurrentPlaylist;
 
     private final PlaylistHandler playlistHandler = new PlaylistHandler();
-    private final MyTunesDAO myTunesDAO = new MyTunesDAO();
+    private final MyTunesModel myTunesModel = new MyTunesModel();
     private final MediaManager mediaManager = new MediaManager();
     private final DragAndDropHandler dragAndDropHandler = new DragAndDropHandler();
     private boolean isMuted;
@@ -123,7 +118,7 @@ public class MyTunesController implements Initializable {
 
     /**
      * Håndtere når vi slipper en fil / filer på vores program.
-     * @param dragEvent
+     * @param dragEvent dragEvent, hvor fra vi får de filer der bliver sluppet.
      */
     public void handleDragDropped(DragEvent dragEvent) {
         List<File> selectedFiles = dragEvent.getDragboard().getFiles();
@@ -137,7 +132,7 @@ public class MyTunesController implements Initializable {
 
     /**
      * Håndtere hvad der skal ske når vi trækker en fil henover vores program.
-     * @param dragEvent
+     * @param dragEvent dragEvent
      */
     public void handleDragOver(DragEvent dragEvent) {
         if (dragEvent.getDragboard().hasFiles()) {
@@ -151,17 +146,17 @@ public class MyTunesController implements Initializable {
      */
     public void handleToggleAction() {
         //TODO Lav getState i mediaManager, og opdater ikon derefter
+        tglPlay.setOnMouseEntered(mouseEvent -> tglPlay.setStyle("-fx-font-family: 'Material Design Icons'; -fx-fill: white; -fx-font-size: 40"));
+        tglPlay.setOnMouseExited(mouseEvent -> tglPlay.setStyle("-fx-font-family: 'Material Design Icons'; -fx-fill: #4f4f4f; -fx-font-size: 40"));
         if (lstCurrentPlayList.getSelectionModel().getSelectedItem() != null) {
-            mediaManager.setMedia(lstCurrentPlayList.getSelectionModel().getSelectedItem().getMedia());
-            if (tglPlay.isSelected()) {
-                isPlaying = true;
-                tglPlay.setText("| |");
 
+            if (!isPlaying) {
+                tglPlay.setIcon(MaterialDesignIcon.PAUSE_CIRCLE_OUTLINE);
+                isPlaying = true;
             } else {
+                tglPlay.setIcon(MaterialDesignIcon.PLAY_CIRCLE_OUTLINE);
                 isPlaying = false;
-                tglPlay.setText(">");
             }
-            mediaManager.play(isPlaying);
         }
     }
 
@@ -238,7 +233,7 @@ public class MyTunesController implements Initializable {
 
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Select a song you want to add to your playlist");
-        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("Sound files (*.mp3)", "*.mp3");
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("Sound files (*.wav , *.mp3)", "*.wav , *.mp3");
         fileChooser.getExtensionFilters().add(extFilter);
         File selectedFile = fileChooser.showOpenDialog(root.getScene().getWindow());
 
@@ -399,4 +394,7 @@ public class MyTunesController implements Initializable {
         }
     }
 
+    public void handleEditSong(ActionEvent actionEvent) {
+
+    }
 }

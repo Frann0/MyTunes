@@ -11,15 +11,10 @@
 }
 
 .playbutton{
-    -fx-shape: "M 400 300 A 150 150 0 1 1 700 300 A 150 150 0 1 1 400 300 ";
-    -fx-background-color: #1b1b1b;
-    -fx-border-color: #4f4f4f;
-    -fx-border-width: 1;
-    -fx-text-fill: #4f4f4f;
+    -fx-fill: #4f4f4f;
 }
 
 .playbutton:hover{
-    -fx-border-color: white;
     -fx-text-fill: white;
 }
 

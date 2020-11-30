@@ -28,6 +28,10 @@ public class Song implements Initializable {
         this.path = f.toURI().toString();
     }
 
+    public void setSongName(String songName) {
+        this.songName.set(songName);
+    }
+
     //TODO VIRKER IKKE D:
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -87,6 +91,7 @@ public class Song implements Initializable {
      */
     public Image getAlbumArt() {
         return m.getMetadata().get("image") != null ? (Image) m.getMetadata().get("image") : albumArt;
+
     }
 
     /**
