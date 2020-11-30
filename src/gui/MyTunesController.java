@@ -113,52 +113,9 @@ public class MyTunesController implements Initializable {
         sldVolume.setValue(50);
 
         prevVolume = sldVolume.getValue();
-
     }
 
-    /**
-     * Håndtere når vi slipper en fil / filer på vores program.
-     * @param dragEvent dragEvent, hvor fra vi får de filer der bliver sluppet.
-     */
-    public void handleDragDropped(DragEvent dragEvent) {
-        List<File> selectedFiles = dragEvent.getDragboard().getFiles();
-
-        currentPlaylist = playlistHandler.getPlaylists().get(lstPlaylist.getSelectionModel().getSelectedIndex());
-
-        dragAndDropHandler.handleDragDropped(selectedFiles, currentPlaylist);
-        checkEmptySongList();
-        updateMediaList();
-    }
-
-    /**
-     * Håndtere hvad der skal ske når vi trækker en fil henover vores program.
-     * @param dragEvent dragEvent
-     */
-    public void handleDragOver(DragEvent dragEvent) {
-        if (dragEvent.getDragboard().hasFiles()) {
-            dragEvent.acceptTransferModes(TransferMode.ANY);
-        }
-    }
-
-    /**
-     * Håndtere vores pause/unpause knap.
-     * TODO Skal opdateres.
-     */
-    public void handleToggleAction() {
-        //TODO Lav getState i mediaManager, og opdater ikon derefter
-        tglPlay.setOnMouseEntered(mouseEvent -> tglPlay.setStyle("-fx-font-family: 'Material Design Icons'; -fx-fill: white; -fx-font-size: 40"));
-        tglPlay.setOnMouseExited(mouseEvent -> tglPlay.setStyle("-fx-font-family: 'Material Design Icons'; -fx-fill: #4f4f4f; -fx-font-size: 40"));
-        if (lstCurrentPlayList.getSelectionModel().getSelectedItem() != null) {
-
-            if (!isPlaying) {
-                tglPlay.setIcon(MaterialDesignIcon.PAUSE_CIRCLE_OUTLINE);
-                isPlaying = true;
-            } else {
-                tglPlay.setIcon(MaterialDesignIcon.PLAY_CIRCLE_OUTLINE);
-                isPlaying = false;
-            }
-        }
-    }
+    //PLAYLIST FUNKTIONER
 
     /**
      * Håndtere hvad der skal ske når vi vælger en af vores playlister.
@@ -225,6 +182,16 @@ public class MyTunesController implements Initializable {
         }
     }
 
+    //SANG FUNKTIONER
+
+    /**
+     * Håndtere vores søge funktion. Og opdatere vores listview efter det.
+     *
+     */
+    public void handleSearch(KeyEvent event) {
+
+    }
+
     /**
      * Håndtere vores manuelle tilføj sang funktion.
      */
@@ -237,7 +204,9 @@ public class MyTunesController implements Initializable {
         fileChooser.getExtensionFilters().add(extFilter);
         File selectedFile = fileChooser.showOpenDialog(root.getScene().getWindow());
 
-        currentPlaylist.addSong(new Song(selectedFile));
+        if (selectedFile != null) {
+            currentPlaylist.addSong(new Song(selectedFile));
+        }
         checkEmptySongList();
         updateMediaList();
     }
@@ -249,6 +218,10 @@ public class MyTunesController implements Initializable {
         Playlist currentPlayList = lstPlaylist.getSelectionModel().getSelectedItem();
         currentPlayList.removeSong(lstCurrentPlayList.getSelectionModel().getSelectedItem());
         checkEmptySongList();
+    }
+
+    public void handleEditSong(ActionEvent actionEvent) {
+
     }
 
     /**
@@ -276,33 +249,26 @@ public class MyTunesController implements Initializable {
         }
     }
 
+    //UI KNAPPER FUNKTIONER
+
     /**
-     * Checker hvorvidt vores nuværende playliste indeholder sang elementer.
-     * Hvis ikke, så skal baggrunden være vores "Tutorial" altså vores
-     * "Oh no!" billede, ellers skal den være blank.
+     * Håndtere vores pause/unpause knap.
+     * TODO Skal opdateres.
      */
-    private void checkEmptySongList() {
-        if (lstCurrentPlayList.getItems().size() <= 0) {
-            lstCurrentPlayList.styleProperty().set("-fx-background-image: url(\"/Resources/emptyList.png\")");
-        } else {
-            lstCurrentPlayList.styleProperty().set("-fx-background-image: url(\"/Resources/empty.png\")");
+    public void handleToggleAction() {
+        //TODO Lav getState i mediaManager, og opdater ikon derefter
+        tglPlay.setOnMouseEntered(mouseEvent -> tglPlay.setStyle("-fx-font-family: 'Material Design Icons'; -fx-fill: white; -fx-font-size: 40"));
+        tglPlay.setOnMouseExited(mouseEvent -> tglPlay.setStyle("-fx-font-family: 'Material Design Icons'; -fx-fill: #4f4f4f; -fx-font-size: 40"));
+        if (lstCurrentPlayList.getSelectionModel().getSelectedItem() != null) {
+
+            if (!isPlaying) {
+                tglPlay.setIcon(MaterialDesignIcon.PAUSE_CIRCLE_OUTLINE);
+                isPlaying = true;
+            } else {
+                tglPlay.setIcon(MaterialDesignIcon.PLAY_CIRCLE_OUTLINE);
+                isPlaying = false;
+            }
         }
-        lstCurrentPlayList.refresh();
-    }
-
-    /**
-     * Håndtere vores luk knap.
-     */
-    public void handleExit() {
-        System.exit(0);
-    }
-
-    /**
-     * Håndtere vores minimer knap i vores custom title bar.
-     */
-    public void handleMinimize() {
-        Stage stage = (Stage) root.getScene().getWindow();
-        stage.setIconified(true);
     }
 
     /**
@@ -380,21 +346,64 @@ public class MyTunesController implements Initializable {
         }
     }
 
-    /**
-     * Håndtere vores søge funktion. Og opdatere vores listview efter det.
-     *
-     */
-    public void handleSearch(KeyEvent event) {
+    //ØVRIGE FUNKTIONER.
 
+    /**
+     * Håndtere når vi slipper en fil / filer på vores program.
+     * @param dragEvent dragEvent, hvor fra vi får de filer der bliver sluppet.
+     */
+    public void handleDragDropped(DragEvent dragEvent) {
+        List<File> selectedFiles = dragEvent.getDragboard().getFiles();
+
+        currentPlaylist = playlistHandler.getPlaylists().get(lstPlaylist.getSelectionModel().getSelectedIndex());
+
+        dragAndDropHandler.handleDragDropped(selectedFiles, currentPlaylist);
+        checkEmptySongList();
+        updateMediaList();
+    }
+
+    /**
+     * Håndtere hvad der skal ske når vi trækker en fil henover vores program.
+     * @param dragEvent dragEvent
+     */
+    public void handleDragOver(DragEvent dragEvent) {
+        if (dragEvent.getDragboard().hasFiles()) {
+            dragEvent.acceptTransferModes(TransferMode.ANY);
+        }
+    }
+
+    /**
+     * Håndtere vores luk knap.
+     */
+    public void handleExit() {
+        System.exit(0);
+    }
+
+    /**
+     * Håndtere vores minimer knap i vores custom title bar.
+     */
+    public void handleMinimize() {
+        Stage stage = (Stage) root.getScene().getWindow();
+        stage.setIconified(true);
+    }
+
+    /**
+     * Checker hvorvidt vores nuværende playliste indeholder sang elementer.
+     * Hvis ikke, så skal baggrunden være vores "Tutorial" altså vores
+     * "Oh no!" billede, ellers skal den være blank.
+     */
+    private void checkEmptySongList() {
+        if (lstCurrentPlayList.getItems().size() <= 0) {
+            lstCurrentPlayList.styleProperty().set("-fx-background-image: url(\"/Resources/emptyList.png\")");
+        } else {
+            lstCurrentPlayList.styleProperty().set("-fx-background-image: url(\"/Resources/empty.png\")");
+        }
+        lstCurrentPlayList.refresh();
     }
 
     private void updateMediaList(){
         for(Song s : currentPlaylist.getSongs()){
             s.updateMedia();
         }
-    }
-
-    public void handleEditSong(ActionEvent actionEvent) {
-
     }
 }
