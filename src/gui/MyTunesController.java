@@ -28,52 +28,55 @@ import java.util.ResourceBundle;
 
 public class MyTunesController implements Initializable {
     @FXML
-    private TextField txtSearchField;
-    @FXML
-    private FontAwesomeIconView icnShuffle;
-    @FXML
-    private MaterialDesignIconView icnRepeat;
-    @FXML
-    private Label lblTimeMin;
-    @FXML
-    private Label lblTimeMax;
+    private BorderPane root;
     @FXML
     private FontAwesomeIconView icnMute;
     @FXML
-    private Label lblTitlebar;
-    @FXML
-    private ListView<Song> lstCurrentPlayList;
-    @FXML
-    private JFXSlider sldVolume;
-    @FXML
-    private MaterialDesignIconView tglPlay;
-    @FXML
-    private JFXSlider sldTime;
+    private FontAwesomeIconView icnShuffle;
     @FXML
     private ImageView imgAlbumArt;
     @FXML
-    private Label lblArtist;
+    private JFXSlider sldTime;
+    @FXML
+    private JFXSlider sldVolume;
     @FXML
     private Label lblAlbumTitle;
     @FXML
+    private Label lblArtist;
+    @FXML
+    private Label lblCurrentPlaylist;
+    @FXML
     private Label lblSongTitle;
     @FXML
-    private BorderPane root;
+    private Label lblTimeMax;
+    @FXML
+    private Label lblTimeMin;
+    @FXML
+    private Label lblTitlebar;
     @FXML
     private ListView<Playlist> lstPlaylist;
     @FXML
-    private Label lblCurrentPlaylist;
+    private ListView<Song> lstCurrentPlayList;
+    @FXML
+    private MaterialDesignIconView icnRepeat;
+    @FXML
+    private MaterialDesignIconView tglPlay;
+    @FXML
+    private TextField txtSearchField;
 
     private final PlaylistHandler playlistHandler = new PlaylistHandler();
     private final MyTunesModel myTunesModel = new MyTunesModel();
     private final MediaManager mediaManager = new MediaManager();
     private final DragAndDropHandler dragAndDropHandler = new DragAndDropHandler();
+
     private boolean isMuted;
     private boolean isPlaying;
     private double prevVolume;
-    private Playlist currentPlaylist;
     private boolean shuffleActive;
     private boolean repeatActive;
+
+    private Playlist currentPlaylist;
+
 
     /**
      * Initialize bruger vi til at sætte mange af vores FXML værdier efter de er blevet
