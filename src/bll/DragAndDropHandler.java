@@ -1,5 +1,9 @@
 package bll;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.scene.media.MediaPlayer;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -9,16 +13,26 @@ public class DragAndDropHandler {
     //måske overflødig, men her bruger vi "responsibility-driven design"
     //altså det der med at hver klasse har en bestemt rolle de skal gøre.
 
+    private ArrayList<Song> songs = new ArrayList<>();
     /**
-     * håndtere vores droppede filer, laver alle de filer til sange og tilføjer dem til vores playliste
+     * håndtere vores droppede filer, laver alle de filer til sange, tilføjer dem til en liste
+     * returnere derefter den liste.
      * @param selectedFiles de filer der er dropped.
-     * @param currentPlaylist den nuværende playliste.
+     * @return listen af de nye sange.
      */
-    public void handleDragDropped(List<File> selectedFiles, Playlist currentPlaylist) {
+    public ArrayList<Song> handleDragDropped(List<File> selectedFiles) {
+
         selectedFiles.sort((Comparator.comparing(File::getName)));
         for (File f : selectedFiles){
             Song s = new Song(f);
-            currentPlaylist.addSong(s);
+
+            MediaPlayer mp = new MediaPlayer(s.getMedia());
+            mp.setOnReady(() -> {
+                songs.add(s);
+            });
         }
+        return songs;
     }
+
 }
+

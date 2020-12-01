@@ -5,16 +5,19 @@ import javafx.beans.property.StringProperty;
 import javafx.fxml.Initializable;
 import javafx.scene.image.Image;
 import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 
 import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.concurrent.TimeUnit;
 
 public class Song implements Initializable {
     private Image albumArt = new Image("Resources/DefaultAlbumArt.png");
-    private StringProperty songName = new SimpleStringProperty();
-    private StringProperty albumTitle = new SimpleStringProperty();
-    private StringProperty artist = new SimpleStringProperty();
+    private StringProperty songName = new SimpleStringProperty("");
+    private StringProperty albumTitle = new SimpleStringProperty("");
+    private StringProperty artist = new SimpleStringProperty("");
+    private StringProperty durationString = new SimpleStringProperty("");
     private String path;
     private Media m;
 
@@ -26,10 +29,38 @@ public class Song implements Initializable {
     public Song(File f) {
         this.m = new Media(f.toURI().toString());
         this.path = f.toURI().toString();
+
+        MediaPlayer mdp = new MediaPlayer(m);
+
+        mdp.setOnReady(()->{
+            double millis = getMedia().getDuration().toMillis();
+            long minutes = TimeUnit.MILLISECONDS.toMinutes((long) millis);
+            long seconds = TimeUnit.MILLISECONDS.toSeconds((long) millis) - (minutes * 60);
+            setDurationString(minutes + ":" + seconds);
+
+            setSongName(m.getMetadata().get("title").toString());
+            setArtist(m.getMetadata().get("artist").toString());
+            setAlbumTitle(m.getMetadata().get("album").toString());
+            setAlbumArt(m.getMetadata().get("image") != null ? (Image) m.getMetadata().get("image") : albumArt);
+
+            //System.out.println(songName.get() + " : " + artist.get() + " : " + albumTitle.get());
+        });
     }
 
     public void setSongName(String songName) {
         this.songName.set(songName);
+    }
+
+    public void setAlbumTitle(String albumTitle) {
+        this.albumTitle.set(albumTitle);
+    }
+
+    public void setArtist(String artist) {
+        this.artist.set(artist);
+    }
+
+    public void setAlbumArt(Image albumArt) {
+        this.albumArt = albumArt;
     }
 
     //TODO VIRKER IKKE D:
@@ -130,7 +161,6 @@ public class Song implements Initializable {
      * @return hvor langt vi er i sangen.
      */
     public String getCurrentTime() {
-        //TODO Lav current time funktion
         return "0:00";
     }
 
@@ -139,7 +169,11 @@ public class Song implements Initializable {
      *
      * @return
      */
-    public String getDuration() {
-        return String.valueOf(m.getDuration().toSeconds());
+    public StringProperty getDuration() {
+        return durationString;
+    }
+
+    private void setDurationString(String durationString) {
+        this.durationString.set(durationString);
     }
 }

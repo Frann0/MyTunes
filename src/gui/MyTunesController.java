@@ -7,6 +7,8 @@ import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon;
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -19,14 +21,14 @@ import javafx.scene.input.TransferMode;
 import javafx.scene.layout.BorderPane;
 
 import javafx.scene.layout.VBox;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.File;
 import java.net.URL;
-import java.util.List;
-import java.util.Optional;
-import java.util.ResourceBundle;
+import java.util.*;
 
 public class MyTunesController implements Initializable {
     @FXML
@@ -217,15 +219,18 @@ public class MyTunesController implements Initializable {
 
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Select a song you want to add to your playlist");
-        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("Sound files (*.wav , *.mp3)", "*.wav , *.mp3");
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("Sound files (*.wav , *.mp3)", "*.wav" , "*.mp3");
         fileChooser.getExtensionFilters().add(extFilter);
         File selectedFile = fileChooser.showOpenDialog(root.getScene().getWindow());
 
         if (selectedFile != null) {
-            currentPlaylist.addSong(new Song(selectedFile));
+            Song s = new Song(selectedFile);
+            MediaPlayer mp = new MediaPlayer(s.getMedia());
+            mp.setOnReady(() -> {
+                currentPlaylist.addSong(s);
+                checkEmptySongList();
+            });
         }
-        checkEmptySongList();
-        updateMediaList();
     }
 
     /**
@@ -255,7 +260,7 @@ public class MyTunesController implements Initializable {
             lstCurrentPlayList.refresh();
 
             lblTimeMin.setText(cSong.getCurrentTime());
-            lblTimeMax.setText(mediaManager.getDuration().getValue());
+            lblTimeMax.setText(cSong.getDuration().get());
             imgAlbumArt.setImage(cSong.getAlbumArt());
             lblArtist.setText(cSong.getArtist());
             lblAlbumTitle.setText(cSong.getAlbumTitle());
@@ -373,12 +378,15 @@ public class MyTunesController implements Initializable {
      */
     public void handleDragDropped(DragEvent dragEvent) {
         List<File> selectedFiles = dragEvent.getDragboard().getFiles();
+        ArrayList<Song> songList = dragAndDropHandler.handleDragDropped(selectedFiles);
 
-        currentPlaylist = playlistHandler.getPlaylists().get(lstPlaylist.getSelectionModel().getSelectedIndex());
-
-        dragAndDropHandler.handleDragDropped(selectedFiles, currentPlaylist);
-        checkEmptySongList();
-        updateMediaList();
+        MediaPlayer mp = new MediaPlayer(new Media(selectedFiles.get(0).toURI().toString()));
+        mp.setOnReady(() -> {
+            for (Song s : songList){
+                currentPlaylist.addSong(s);
+            }
+            checkEmptySongList();
+        });
     }
 
     /**
