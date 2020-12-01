@@ -1,6 +1,7 @@
 package gui;
 
 import bll.*;
+import bll.Util.SongSearcher;
 import com.jfoenix.controls.JFXSlider;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
@@ -17,6 +18,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.BorderPane;
 
+import javafx.scene.paint.Paint;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -33,6 +35,8 @@ public class MyTunesController implements Initializable {
     private FontAwesomeIconView icnMute;
     @FXML
     private FontAwesomeIconView icnShuffle;
+    @FXML
+    private FontAwesomeIconView icnSearch;
     @FXML
     private ImageView imgAlbumArt;
     @FXML
@@ -191,8 +195,11 @@ public class MyTunesController implements Initializable {
      * Håndtere vores søge funktion. Og opdatere vores listview efter det.
      *
      */
-    public void handleSearch(KeyEvent event) {
-
+    public void handleSearch() {
+        if (!txtSearchField.getText().isEmpty() || txtSearchField.getText() != null && !currentPlaylist.getSongs().isEmpty()){
+            lstCurrentPlayList.setItems(SongSearcher.search(currentPlaylist.getSongs(),txtSearchField.getText()));
+        }
+        checkEmptySongList();
     }
 
     /**
@@ -404,6 +411,11 @@ public class MyTunesController implements Initializable {
         lstCurrentPlayList.refresh();
     }
 
+    /**
+     * Opdatere alle vores medier i vores nuværende playliste listview.
+     * fikser null metadata problem, ved at reloade alle sangenes titler osv
+     * da metadata fra fil, ikke er tilgængeligt med det samme.
+     */
     private void updateMediaList(){
         for(Song s : currentPlaylist.getSongs()){
             s.updateMedia();

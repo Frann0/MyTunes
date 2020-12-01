@@ -154,3 +154,7 @@
 .search{
     -fx-fill: #71BA51;
 }
+
+.search:hover{
+    -fx-fill: white;
+}
