@@ -14,11 +14,11 @@ import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.DragEvent;
-import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.BorderPane;
 
-import javafx.scene.paint.Paint;
+import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -36,7 +36,7 @@ public class MyTunesController implements Initializable {
     @FXML
     private FontAwesomeIconView icnShuffle;
     @FXML
-    private FontAwesomeIconView icnSearch;
+    private FontAwesomeIconView icnQueue;
     @FXML
     private ImageView imgAlbumArt;
     @FXML
@@ -62,15 +62,21 @@ public class MyTunesController implements Initializable {
     @FXML
     private ListView<Song> lstCurrentPlayList;
     @FXML
+    private ListView<Song> lstQueue;
+    @FXML
     private MaterialDesignIconView icnRepeat;
     @FXML
     private MaterialDesignIconView tglPlay;
     @FXML
     private TextField txtSearchField;
+    @FXML
+    private VBox vboxQueue;
+
+    private Playlist currentPlaylist;
 
     private final PlaylistHandler playlistHandler = new PlaylistHandler();
     private final MyTunesModel myTunesModel = new MyTunesModel();
-    private final MediaManager mediaManager = new MediaManager();
+    private final MediaManager mediaManager = new MediaManager(currentPlaylist);
     private final DragAndDropHandler dragAndDropHandler = new DragAndDropHandler();
 
     private boolean isMuted;
@@ -78,9 +84,7 @@ public class MyTunesController implements Initializable {
     private double prevVolume;
     private boolean shuffleActive;
     private boolean repeatActive;
-
-    private Playlist currentPlaylist;
-
+    private boolean queueShowing;
 
     /**
      * Initialize bruger vi til at sætte mange af vores FXML værdier efter de er blevet
@@ -96,10 +100,11 @@ public class MyTunesController implements Initializable {
         isPlaying = false;
         shuffleActive = false;
         repeatActive = false;
+        queueShowing = false;
 
-        playlistHandler.addPlaylist("test1");
-        playlistHandler.addPlaylist("test2");
-        playlistHandler.addPlaylist("test3");
+        playlistHandler.addPlaylist("test1", mediaManager);
+        playlistHandler.addPlaylist("test2", mediaManager);
+        playlistHandler.addPlaylist("test3", mediaManager);
 
         lstPlaylist.setItems(playlistHandler.getPlaylists());
 
@@ -120,6 +125,8 @@ public class MyTunesController implements Initializable {
         sldVolume.setValue(50);
 
         prevVolume = sldVolume.getValue();
+        vboxQueue.setVisible(false);
+        vboxQueue.setMaxWidth(0);
     }
 
     //PLAYLIST FUNKTIONER
@@ -147,7 +154,7 @@ public class MyTunesController implements Initializable {
         dialog.setContentText("Please enter your desired playlist name: ");
 
         Optional<String> result = dialog.showAndWait();
-        result.ifPresent(playlistHandler::addPlaylist);
+        result.ifPresent(navn -> playlistHandler.addPlaylist(navn, mediaManager));
     }
 
     /**
@@ -299,7 +306,9 @@ public class MyTunesController implements Initializable {
             icnShuffle.setOnMouseExited(mouseEvent -> icnShuffle.setStyle("-fx-font-family: FontAwesome; -fx-fill: #4f4f4f; -fx-font-size: 15"));
             shuffleActive = false;
         }
-        currentPlaylist.shuffle(shuffleActive);
+        mediaManager.setCurrentPlaylist(currentPlaylist);
+        mediaManager.shuffle(shuffleActive);
+        lstQueue.setItems(mediaManager.getPlayOrder());
     }
 
     /**
@@ -420,5 +429,50 @@ public class MyTunesController implements Initializable {
         for(Song s : currentPlaylist.getSongs()){
             s.updateMedia();
         }
+
+        for (Song s : mediaManager.getPlayOrder()){
+            s.updateMedia();
+        }
+    }
+
+    public void handleQueueSelect(MouseEvent mouseEvent) {
+        updateMediaList();
+    }
+
+    public void handleAddQueue(ActionEvent actionEvent) {
+        if (lstCurrentPlayList.getSelectionModel().getSelectedItem() != null){
+            mediaManager.getPlayOrder().add(lstCurrentPlayList.getSelectionModel().getSelectedItem());
+            mediaManager.getUnShuffledPlayOrder().add(lstCurrentPlayList.getSelectionModel().getSelectedItem());
+        }
+    }
+
+    public void handleRemoveQueue(ActionEvent actionEvent) {
+        if (lstQueue.getSelectionModel().getSelectedItem() != null){
+            mediaManager.getPlayOrder().remove(lstQueue.getSelectionModel().getSelectedItem());
+            mediaManager.getUnShuffledPlayOrder().remove(lstQueue.getSelectionModel().getSelectedItem());
+        }
+    }
+
+    public void handleShowQueue() {
+        icnQueue.setOnMouseEntered(mouseEvent -> icnQueue.setStyle("-fx-font-family: FontAwesome; -fx-fill: white; -fx-font-size: 20"));
+
+        if (!queueShowing){
+            icnQueue.setStyle("-fx-font-family: FontAwesome; -fx-fill: #71BA51; -fx-font-size: 20");
+            icnQueue.setOnMouseExited(mouseEvent -> icnQueue.setStyle("-fx-font-family: FontAwesome; -fx-fill: #71BA51; -fx-font-size: 20"));
+
+            queueShowing = true;
+            vboxQueue.setVisible(true);
+            vboxQueue.setMaxWidth(240);
+
+        } else{
+            icnQueue.setStyle("-fx-font-family: FontAwesome; -fx-fill: #4f4f4f; -fx-font-size: 20");
+            icnQueue.setOnMouseExited(mouseEvent -> icnQueue.setStyle("-fx-font-family: FontAwesome; -fx-fill: #4f4f4f; -fx-font-size: 20"));
+            vboxQueue.setMaxWidth(0);
+            queueShowing = false;
+            vboxQueue.setVisible(false);
+
+        }
+        lstQueue.setItems(mediaManager.getPlayOrder());
+        lstQueue.refresh();
     }
 }

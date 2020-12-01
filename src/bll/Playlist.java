@@ -1,24 +1,20 @@
 package bll;
 
-import bll.Util.SongSearcher;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.media.Media;
-
-import java.io.File;
-import java.util.*;
 
 public class Playlist {
     private String name;
     private final ObservableList<Song> songs = FXCollections.observableArrayList();
-    private final ArrayList<Song> playOrder = new ArrayList<>();
+    private final MediaManager mediaManager;
 
     /**
      * Vores constructor, som tager et navn ind på den playliste vi vil lave.
      * @param name
      */
-    public Playlist(String name) {
+    public Playlist(String name, MediaManager mediaManager) {
         this.name = name;
+        this.mediaManager = mediaManager;
     }
 
     /**
@@ -45,13 +41,7 @@ public class Playlist {
         return songs;
     }
 
-    /**
-     * Getter for vores nuværende playorder.
-     * @return Arrayliste for vores playorder.
-     */
-    public ArrayList<Song> getPlayOrder() {
-        return playOrder;
-    }
+
 
     /**
      * Tilføjer en sang til vores liste.
@@ -59,7 +49,6 @@ public class Playlist {
      */
     public void addSong(Song song) {
         songs.add(song);
-        playOrder.add(song);
     }
 
     /**
@@ -68,20 +57,10 @@ public class Playlist {
      */
     public void removeSong(Song song) {
         songs.remove(song);
-        playOrder.remove(song);
+        mediaManager.getPlayOrder().remove(song);
     }
 
-    /**
-     * Shuffler vores playorder liste, så sangene er på en tilfældig plads.
-     * @param shuffleActive håndtere om playorderen skal shuffles eller ej.
-     */
-    public void shuffle(boolean shuffleActive){
-        playOrder.clear();
-        playOrder.addAll(songs);
-        if(shuffleActive) {
-            Collections.shuffle(playOrder);
-        }
-    }
+
     /**
      * overrider toString metoden. Bliver egentligt ikke brugt.
      * brugte den til at prøve at få lidt padding på top baren.
