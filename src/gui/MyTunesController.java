@@ -14,6 +14,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.MouseEvent;
@@ -68,6 +69,18 @@ public class MyTunesController implements Initializable {
     @FXML
     private MaterialDesignIconView icnRepeat;
     @FXML
+    private TableView<Song> tblAllsongs;
+    @FXML
+    private TableColumn<Song, String> tblClmArtist;
+    @FXML
+    private TableColumn<Song, String> tblClmAlbumtitle;
+    @FXML
+    private TableColumn<Song, String> tblClmSongTitle;
+    @FXML
+    private TableColumn<Song, String> tblClmGenre;
+    @FXML
+    private TableColumn<Song, String> tblClmTime;
+    @FXML
     private MaterialDesignIconView tglPlay;
     @FXML
     private TextField txtSearchField;
@@ -75,6 +88,7 @@ public class MyTunesController implements Initializable {
     private VBox vboxQueue;
 
     private Playlist currentPlaylist;
+    private final ObservableList<Song> allSongs = FXCollections.observableArrayList();
 
     private final PlaylistHandler playlistHandler = new PlaylistHandler();
     private final MyTunesModel myTunesModel = new MyTunesModel();
@@ -114,9 +128,17 @@ public class MyTunesController implements Initializable {
             lstPlaylist.getSelectionModel().select(0);
             Playlist firstPlaylist = lstPlaylist.getItems().get(0);
             lblCurrentPlaylist.setText(firstPlaylist.getName());
-            lstCurrentPlayList.setItems(firstPlaylist.getSongs());
+            tblAllsongs.setItems(firstPlaylist.getSongs());
             currentPlaylist = firstPlaylist;
         }
+
+        tblClmArtist.setCellValueFactory(new PropertyValueFactory<>("artist"));
+        tblClmAlbumtitle.setCellValueFactory(new PropertyValueFactory<>("albumTitle"));
+        tblClmSongTitle.setCellValueFactory(new PropertyValueFactory<>("songName"));
+        tblClmGenre.setCellValueFactory(new PropertyValueFactory<>("genre"));
+        tblClmTime.setCellValueFactory(new PropertyValueFactory<>("durationString"));
+
+        tblAllsongs.setItems(allSongs);
 
         sldTime.setMin(0);
         sldTime.setMax(0);
@@ -141,8 +163,8 @@ public class MyTunesController implements Initializable {
         if (lstPlaylist.getSelectionModel().getSelectedItem() != null) {
             currentPlaylist = lstPlaylist.getSelectionModel().getSelectedItem();
             lblCurrentPlaylist.setText(currentPlaylist.getName());
-            lstCurrentPlayList.setItems(currentPlaylist.getSongs());
-            checkEmptySongList();
+            lstQueue.setItems(currentPlaylist.getSongs());
+
         }
     }
 
@@ -205,8 +227,8 @@ public class MyTunesController implements Initializable {
      *
      */
     public void handleSearch() {
-        if (!txtSearchField.getText().isEmpty() || txtSearchField.getText() != null && !currentPlaylist.getSongs().isEmpty()){
-            lstCurrentPlayList.setItems(SongSearcher.search(currentPlaylist.getSongs(),txtSearchField.getText()));
+        if (!txtSearchField.getText().isEmpty() || txtSearchField.getText() != null && !tblAllsongs.getItems().isEmpty()){
+            tblAllsongs.setItems(SongSearcher.search(allSongs,txtSearchField.getText()));
         }
         checkEmptySongList();
     }
@@ -227,7 +249,7 @@ public class MyTunesController implements Initializable {
             Song s = new Song(selectedFile);
             MediaPlayer mp = new MediaPlayer(s.getMedia());
             mp.setOnReady(() -> {
-                currentPlaylist.addSong(s);
+                allSongs.add(s);
                 checkEmptySongList();
             });
         }
@@ -237,8 +259,7 @@ public class MyTunesController implements Initializable {
      * Håndtere hvad der skal ske når vi vil slette en sang fra vores playliste
      */
     public void handleRemoveSong() {
-        Playlist currentPlayList = lstPlaylist.getSelectionModel().getSelectedItem();
-        currentPlayList.removeSong(lstCurrentPlayList.getSelectionModel().getSelectedItem());
+        allSongs.remove(tblAllsongs.getSelectionModel().getSelectedItem());
         checkEmptySongList();
     }
 
@@ -250,14 +271,14 @@ public class MyTunesController implements Initializable {
      * Håndtere hvad der skal ske når vi vælger en sang fra listen.
      */
     public void handleSongSelect() {
-        if (lstCurrentPlayList.getSelectionModel().getSelectedItem() != null) {
-            Song cSong = lstCurrentPlayList.getSelectionModel().getSelectedItem();
+        if (tblAllsongs.getSelectionModel().getSelectedItem() != null) {
+            Song cSong = tblAllsongs.getSelectionModel().getSelectedItem();
 
             mediaManager.setMedia(cSong.getMedia());
             //Test for null metadata problem.
             updateMediaList();
 
-            lstCurrentPlayList.refresh();
+            tblAllsongs.refresh();
 
             lblTimeMin.setText(cSong.getCurrentTime());
             lblTimeMax.setText(cSong.getDuration().get());
@@ -383,8 +404,9 @@ public class MyTunesController implements Initializable {
         MediaPlayer mp = new MediaPlayer(new Media(selectedFiles.get(0).toURI().toString()));
         mp.setOnReady(() -> {
             for (Song s : songList){
-                currentPlaylist.addSong(s);
+                allSongs.add(s);
             }
+            tblAllsongs.refresh();
             checkEmptySongList();
         });
     }
@@ -420,12 +442,12 @@ public class MyTunesController implements Initializable {
      * "Oh no!" billede, ellers skal den være blank.
      */
     private void checkEmptySongList() {
-        if (lstCurrentPlayList.getItems().size() <= 0) {
-            lstCurrentPlayList.styleProperty().set("-fx-background-image: url(\"/Resources/emptyList.png\")");
+        if (tblAllsongs.getItems().size() <= 0) {
+            tblAllsongs.styleProperty().set("-fx-background-image: url(\"/Resources/emptyList.png\")");
         } else {
-            lstCurrentPlayList.styleProperty().set("-fx-background-image: url(\"/Resources/empty.png\")");
+            tblAllsongs.styleProperty().set("-fx-background-image: url(\"/Resources/empty.png\")");
         }
-        lstCurrentPlayList.refresh();
+        tblAllsongs.refresh();
     }
 
     /**
@@ -443,14 +465,11 @@ public class MyTunesController implements Initializable {
         }
     }
 
-    public void handleQueueSelect(MouseEvent mouseEvent) {
-        updateMediaList();
-    }
-
     public void handleAddQueue(ActionEvent actionEvent) {
-        if (lstCurrentPlayList.getSelectionModel().getSelectedItem() != null){
-            mediaManager.getPlayOrder().add(lstCurrentPlayList.getSelectionModel().getSelectedItem());
-            mediaManager.getUnShuffledPlayOrder().add(lstCurrentPlayList.getSelectionModel().getSelectedItem());
+        if (tblAllsongs.getSelectionModel().getSelectedItem() != null){
+            mediaManager.getPlayOrder().add(tblAllsongs.getSelectionModel().getSelectedItem());
+            mediaManager.getUnShuffledPlayOrder().add(tblAllsongs.getSelectionModel().getSelectedItem());
+            currentPlaylist.addSong(tblAllsongs.getSelectionModel().getSelectedItem());
         }
     }
 
@@ -458,6 +477,7 @@ public class MyTunesController implements Initializable {
         if (lstQueue.getSelectionModel().getSelectedItem() != null){
             mediaManager.getPlayOrder().remove(lstQueue.getSelectionModel().getSelectedItem());
             mediaManager.getUnShuffledPlayOrder().remove(lstQueue.getSelectionModel().getSelectedItem());
+            currentPlaylist.removeSong(lstQueue.getSelectionModel().getSelectedItem());
         }
     }
 

@@ -187,7 +187,7 @@ public class Song implements Initializable {
      */
     @Override
     public String toString() {
-        return String.format("%-50s%-45s%-50s%40s%40s", artist.getValue(), albumTitle.getValue(), songName.getValue(), genre.getValue(), durationString.getValue());
+        return getArtist() + " - " + getSongName();
     }
 
     /**

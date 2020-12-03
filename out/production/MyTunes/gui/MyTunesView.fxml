@@ -9,6 +9,8 @@
 <?import javafx.scene.control.ButtonBar?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
@@ -91,7 +93,7 @@
                <top>
                   <Pane maxHeight="-Infinity" prefHeight="43.0" prefWidth="1043.0" styleClass="playlistTitleBar" BorderPane.alignment="CENTER">
                      <children>
-                        <Label fx:id="lblCurrentPlaylist" layoutX="14.0" layoutY="4.0" text="Playlist Title" textFill="WHITE">
+                        <Label fx:id="lblCurrentPlaylist" layoutX="14.0" layoutY="4.0" text="All Songs" textFill="WHITE">
                            <font>
                               <Font size="24.0" />
                            </font>
@@ -111,24 +113,21 @@
                      </children>
                   </Pane>
                </top>
-               <center>
-                  <ListView fx:id="lstCurrentPlayList" onMouseClicked="#handleSongSelect" prefHeight="200.0" prefWidth="200.0" styleClass="currentPlaylistList" BorderPane.alignment="CENTER_LEFT" />
-               </center>
                <right>
                   <VBox fx:id="vboxQueue" prefHeight="617.0" prefWidth="240.0" styleClass="playlist-bar" stylesheets="@css/Styles.css" BorderPane.alignment="CENTER">
                      <children>
                         <Pane prefHeight="40.0" prefWidth="200.0" styleClass="bottombar" stylesheets="@css/Styles.css">
                            <children>
-                              <Label layoutX="84.0" layoutY="7.0" text="Queue" textAlignment="CENTER" textFill="WHITE">
+                              <Label fx:id="lblCurrentPlaylist" layoutX="64.0" layoutY="1.0" text="Playlist Title" textAlignment="CENTER" textFill="WHITE">
                                  <font>
-                                    <Font name="MS Outlook" size="20.0" />
+                                    <Font size="20.0" />
                                  </font>
                               </Label>
                            </children>
                         </Pane>
                         <Pane prefHeight="519.0" prefWidth="237.0">
                            <children>
-                              <ListView fx:id="lstQueue" layoutX="-4.0" layoutY="12.0" onMouseClicked="#handleQueueSelect" prefHeight="495.0" prefWidth="240.0" />
+                              <ListView fx:id="lstQueue" layoutX="-4.0" layoutY="12.0" onMouseClicked="#handleSongSelect" prefHeight="495.0" prefWidth="240.0" />
                            </children>
                         </Pane>
                         <Pane prefHeight="51.0" prefWidth="240.0" styleClass="bottombar">
@@ -140,6 +139,18 @@
                      </children>
                   </VBox>
                </right>
+               <center>
+                  <TableView fx:id="tblAllsongs" onMouseClicked="#handleSongSelect" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+                    <columns>
+                      <TableColumn fx:id="tblClmArtist" editable="false" prefWidth="142.6666921377182" resizable="false" sortable="false" text="Artist" />
+                      <TableColumn fx:id="tblClmAlbumtitle" editable="false" minWidth="0.0" prefWidth="239.3332977294922" resizable="false" sortable="false" text="Album title" />
+                        <TableColumn fx:id="tblClmSongTitle" editable="false" minWidth="0.0" prefWidth="225.33340454101562" resizable="false" sortable="false" text="Song title" />
+                        <TableColumn fx:id="tblClmGenre" editable="false" prefWidth="99.33331298828125" resizable="false" sortable="false" text="Genre" />
+                        <TableColumn fx:id="tblClmTime" editable="false" prefWidth="91.99993896484375" resizable="false" sortable="false" text="Time" />
+                        <TableColumn editable="false" minWidth="233.0" prefWidth="233.0" resizable="false" sortable="false" />
+                    </columns>
+                  </TableView>
+               </center>
             </BorderPane>
          </center>
          <top>
