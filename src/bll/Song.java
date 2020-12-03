@@ -15,6 +15,7 @@ import java.util.concurrent.TimeUnit;
 public class Song implements Initializable {
     private Image albumArt = new Image("Resources/DefaultAlbumArt.png");
     private final StringProperty songName = new SimpleStringProperty("");
+    private final StringProperty albumTitle = new SimpleStringProperty("");
     private final StringProperty artist = new SimpleStringProperty("");
     private final StringProperty genre = new SimpleStringProperty("");
     private final StringProperty durationString = new SimpleStringProperty("");
@@ -44,6 +45,7 @@ public class Song implements Initializable {
 
             setSongName(m.getMetadata().get("title").toString());
             setArtist(m.getMetadata().get("artist").toString());
+            setAlbumTitle(m.getMetadata().get("album").toString());
             setAlbumArt(m.getMetadata().get("image") != null ? (Image) m.getMetadata().get("image") : albumArt);
             setGenre(m.getMetadata().get("genre").toString());
         });
@@ -55,6 +57,14 @@ public class Song implements Initializable {
      */
     public void setSongName(String songName) {
         this.songName.set(songName);
+    }
+
+    /**
+     * setteren af album tilten
+     * @param albumTitle titlen på albummet sangen er fra.
+     */
+    public void setAlbumTitle(String albumTitle) {
+        this.albumTitle.set(albumTitle);
     }
 
     /**
@@ -96,6 +106,14 @@ public class Song implements Initializable {
         return this.m.getMetadata().get("artist").toString();
     }
 
+    /**
+     * getter for album title, sangen er fra.
+     *
+     * @return album titlen
+     */
+    public String getAlbumTitle() {
+        return this.m.getMetadata().get("album").toString();
+    }
 
     /**
      * getter for sang navnet.
@@ -153,9 +171,11 @@ public class Song implements Initializable {
         if (!m.getMetadata().isEmpty()) {
             songName.setValue(m.getMetadata().get("title").toString());
             artist.setValue(m.getMetadata().get("artist").toString());
+            albumTitle.setValue(m.getMetadata().get("album").toString());
         } else {
             songName.setValue("Missing Title");
             artist.setValue("Missing Artist");
+            albumTitle.setValue("Missing Album title");
         }
     }
 
@@ -187,6 +207,12 @@ public class Song implements Initializable {
      */
     public StringProperty getDuration() {
         return durationString;
+    }
+
+    public int getDurationInSeconds(){
+        String duration = durationString.getValue();
+        String[] secArr = duration.split(":");
+        return Integer.parseInt(secArr[0] + secArr[1]);
     }
 
     /**

@@ -49,6 +49,7 @@ public class Playlist {
      */
     public void addSong(Song song) {
         songs.add(song);
+        //System.out.println(song.getSongName());
     }
 
     /**
