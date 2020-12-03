@@ -14,12 +14,13 @@ import java.util.concurrent.TimeUnit;
 
 public class Song implements Initializable {
     private Image albumArt = new Image("Resources/DefaultAlbumArt.png");
-    private StringProperty songName = new SimpleStringProperty("");
-    private StringProperty albumTitle = new SimpleStringProperty("");
-    private StringProperty artist = new SimpleStringProperty("");
-    private StringProperty durationString = new SimpleStringProperty("");
+    private final StringProperty songName = new SimpleStringProperty("");
+    private final StringProperty albumTitle = new SimpleStringProperty("");
+    private final StringProperty artist = new SimpleStringProperty("");
+    private final StringProperty genre = new SimpleStringProperty("");
+    private final StringProperty durationString = new SimpleStringProperty("");
     private String path;
-    private Media m;
+    private final Media m;
 
     /**
      * Constructor for song klassen.
@@ -36,29 +37,56 @@ public class Song implements Initializable {
             double millis = getMedia().getDuration().toMillis();
             long minutes = TimeUnit.MILLISECONDS.toMinutes((long) millis);
             long seconds = TimeUnit.MILLISECONDS.toSeconds((long) millis) - (minutes * 60);
-            setDurationString(minutes + ":" + seconds);
+            if (seconds > 10) {
+                setDurationString(minutes + ":" + seconds);
+            }else{
+                setDurationString(minutes + ":0" + seconds);
+            }
 
             setSongName(m.getMetadata().get("title").toString());
             setArtist(m.getMetadata().get("artist").toString());
             setAlbumTitle(m.getMetadata().get("album").toString());
             setAlbumArt(m.getMetadata().get("image") != null ? (Image) m.getMetadata().get("image") : albumArt);
-
-            //System.out.println(songName.get() + " : " + artist.get() + " : " + albumTitle.get());
+            setGenre(m.getMetadata().get("genre").toString());
         });
     }
 
+    /**
+     * setter for sangens navn
+     * @param songName navnet på sangen
+     */
     public void setSongName(String songName) {
         this.songName.set(songName);
     }
 
+    /**
+     * setteren af album tilten
+     * @param albumTitle titlen på albummet sangen er fra.
+     */
     public void setAlbumTitle(String albumTitle) {
         this.albumTitle.set(albumTitle);
     }
 
+    /**
+     * setter for kunstneren
+     * @param artist kunstneren af sangen
+     */
     public void setArtist(String artist) {
         this.artist.set(artist);
     }
 
+    /**
+     * setter for genren
+     * @param genre genren af sangen
+     */
+    public void setGenre(String genre){
+        this.genre.set(genre);
+    }
+
+    /**
+     * setter for albumart
+     * @param albumArt billede af albummet sangen er fra
+     */
     public void setAlbumArt(Image albumArt) {
         this.albumArt = albumArt;
     }
@@ -125,6 +153,14 @@ public class Song implements Initializable {
 
     }
 
+    public String getGenre() {
+        return genre.get();
+    }
+
+    public String getDurationString() {
+        return durationString.get();
+    }
+
     /**
      * TODO Mangler fiks for at vi ikke skal bruge den her funktion.
      * har en ide om at det er en asyncron task at hente metadata. så man
@@ -151,7 +187,7 @@ public class Song implements Initializable {
      */
     @Override
     public String toString() {
-        return String.format("%-50s%-45s%-50s", artist.getValue(), albumTitle.getValue(), songName.getValue());
+        return String.format("%-50s%-45s%-50s%40s%40s", artist.getValue(), albumTitle.getValue(), songName.getValue(), genre.getValue(), durationString.getValue());
     }
 
     /**
@@ -173,6 +209,12 @@ public class Song implements Initializable {
         return durationString;
     }
 
+    /**
+     * setter for durationString, vi sætter længden af filen til tekst.
+     * OBS den er private, fordi vi ikke vil lade brugeren
+     * definere hvor lang sangen er. Det kunne blive noget juks.
+     * @param durationString længden på filen.
+     */
     private void setDurationString(String durationString) {
         this.durationString.set(durationString);
     }

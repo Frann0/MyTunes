@@ -57,6 +57,7 @@ public class Playlist {
      */
     public void removeSong(Song song) {
         songs.remove(song);
+        if (mediaManager.getPlayOrder().contains(song))
         mediaManager.getPlayOrder().remove(song);
     }
 

@@ -13,7 +13,7 @@ public class DragAndDropHandler {
     //måske overflødig, men her bruger vi "responsibility-driven design"
     //altså det der med at hver klasse har en bestemt rolle de skal gøre.
 
-    private ArrayList<Song> songs = new ArrayList<>();
+
     /**
      * håndtere vores droppede filer, laver alle de filer til sange, tilføjer dem til en liste
      * returnere derefter den liste.
@@ -21,7 +21,7 @@ public class DragAndDropHandler {
      * @return listen af de nye sange.
      */
     public ArrayList<Song> handleDragDropped(List<File> selectedFiles) {
-
+        ArrayList<Song> songs = new ArrayList<>();
         selectedFiles.sort((Comparator.comparing(File::getName)));
         for (File f : selectedFiles){
             Song s = new Song(f);
