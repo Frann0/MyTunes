@@ -73,13 +73,13 @@ public class MyTunesController implements Initializable {
     @FXML
     private TableColumn<Song, String> tblClmArtist;
     @FXML
-    private TableColumn<Song, String> tblClmAlbumtitle;
-    @FXML
     private TableColumn<Song, String> tblClmSongTitle;
     @FXML
     private TableColumn<Song, String> tblClmGenre;
     @FXML
     private TableColumn<Song, String> tblClmTime;
+    @FXML
+    private TableColumn tblClmSpacer;
     @FXML
     private MaterialDesignIconView tglPlay;
     @FXML
@@ -133,7 +133,6 @@ public class MyTunesController implements Initializable {
         }
 
         tblClmArtist.setCellValueFactory(new PropertyValueFactory<>("artist"));
-        tblClmAlbumtitle.setCellValueFactory(new PropertyValueFactory<>("albumTitle"));
         tblClmSongTitle.setCellValueFactory(new PropertyValueFactory<>("songName"));
         tblClmGenre.setCellValueFactory(new PropertyValueFactory<>("genre"));
         tblClmTime.setCellValueFactory(new PropertyValueFactory<>("durationString"));
@@ -151,6 +150,8 @@ public class MyTunesController implements Initializable {
         prevVolume = sldVolume.getValue();
         vboxQueue.setVisible(false);
         vboxQueue.setMaxWidth(0);
+
+        tblClmSpacer.setPrefWidth(405);
     }
 
     //PLAYLIST FUNKTIONER
@@ -260,6 +261,7 @@ public class MyTunesController implements Initializable {
      */
     public void handleRemoveSong() {
         allSongs.remove(tblAllsongs.getSelectionModel().getSelectedItem());
+        currentPlaylist.removeSong(tblAllsongs.getSelectionModel().getSelectedItem());
         checkEmptySongList();
     }
 
@@ -271,20 +273,15 @@ public class MyTunesController implements Initializable {
      * Håndtere hvad der skal ske når vi vælger en sang fra listen.
      */
     public void handleSongSelect() {
-        if (tblAllsongs.getSelectionModel().getSelectedItem() != null) {
-            Song cSong = tblAllsongs.getSelectionModel().getSelectedItem();
+        if (lstQueue.getSelectionModel().getSelectedItem() != null) {
+            Song cSong = lstQueue.getSelectionModel().getSelectedItem();
 
             mediaManager.setMedia(cSong.getMedia());
-            //Test for null metadata problem.
-            updateMediaList();
-
-            tblAllsongs.refresh();
 
             lblTimeMin.setText(cSong.getCurrentTime());
             lblTimeMax.setText(cSong.getDuration().get());
             imgAlbumArt.setImage(cSong.getAlbumArt());
             lblArtist.setText(cSong.getArtist());
-            lblAlbumTitle.setText(cSong.getAlbumTitle());
             lblSongTitle.setText(cSong.getSongName());
             lblTitlebar.setText("Codify - " + cSong.getSongName() + " by " + cSong.getArtist());
 
@@ -302,7 +299,7 @@ public class MyTunesController implements Initializable {
         //TODO Lav getState i mediaManager, og opdater ikon derefter
         tglPlay.setOnMouseEntered(mouseEvent -> tglPlay.setStyle("-fx-font-family: 'Material Design Icons'; -fx-fill: white; -fx-font-size: 40"));
         tglPlay.setOnMouseExited(mouseEvent -> tglPlay.setStyle("-fx-font-family: 'Material Design Icons'; -fx-fill: #4f4f4f; -fx-font-size: 40"));
-        if (lstCurrentPlayList.getSelectionModel().getSelectedItem() != null) {
+        if (tblAllsongs.getSelectionModel().getSelectedItem() != null) {
 
             if (!isPlaying) {
                 tglPlay.setIcon(MaterialDesignIcon.PAUSE_CIRCLE_OUTLINE);
@@ -491,13 +488,14 @@ public class MyTunesController implements Initializable {
             queueShowing = true;
             vboxQueue.setVisible(true);
             vboxQueue.setMaxWidth(240);
-
+            tblClmSpacer.setPrefWidth(172);
         } else{
             icnQueue.setStyle("-fx-font-family: FontAwesome; -fx-fill: #4f4f4f; -fx-font-size: 20");
             icnQueue.setOnMouseExited(mouseEvent -> icnQueue.setStyle("-fx-font-family: FontAwesome; -fx-fill: #4f4f4f; -fx-font-size: 20"));
             vboxQueue.setMaxWidth(0);
             queueShowing = false;
             vboxQueue.setVisible(false);
+            tblClmSpacer.setPrefWidth(406);
 
         }
         lstQueue.setItems(mediaManager.getPlayOrder());

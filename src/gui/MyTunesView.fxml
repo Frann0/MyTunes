@@ -28,13 +28,12 @@
                   <Pane prefHeight="75.0" prefWidth="255.0">
                      <children>
                         <ImageView fx:id="imgAlbumArt" fitHeight="50.0" fitWidth="50.0" layoutX="18.0" layoutY="13.0" pickOnBounds="true" preserveRatio="true" />
-                        <Label fx:id="lblArtist" layoutX="84.0" layoutY="9.0" text="Artist" textFill="WHITE">
+                        <Label fx:id="lblArtist" layoutX="84.0" layoutY="19.0" text="Artist" textFill="WHITE">
                            <font>
                               <Font name="System Bold" size="16.0" />
                            </font>
                         </Label>
-                        <Label fx:id="lblAlbumTitle" layoutX="84.0" layoutY="32.0" text="Album Title" textFill="#b9b9b9" />
-                        <Label fx:id="lblSongTitle" layoutX="84.0" layoutY="50.0" text="Song Title" textFill="WHITE" />
+                        <Label fx:id="lblSongTitle" layoutX="84.0" layoutY="40.0" text="Song Title" textFill="WHITE" />
                      </children>
                   </Pane>
                   <Pane prefHeight="75.0" prefWidth="764.0">
@@ -142,12 +141,11 @@
                <center>
                   <TableView fx:id="tblAllsongs" onMouseClicked="#handleSongSelect" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                     <columns>
-                      <TableColumn fx:id="tblClmArtist" editable="false" prefWidth="142.6666921377182" resizable="false" sortable="false" text="Artist" />
-                      <TableColumn fx:id="tblClmAlbumtitle" editable="false" minWidth="0.0" prefWidth="239.3332977294922" resizable="false" sortable="false" text="Album title" />
-                        <TableColumn fx:id="tblClmSongTitle" editable="false" minWidth="0.0" prefWidth="225.33340454101562" resizable="false" sortable="false" text="Song title" />
-                        <TableColumn fx:id="tblClmGenre" editable="false" prefWidth="99.33331298828125" resizable="false" sortable="false" text="Genre" />
-                        <TableColumn fx:id="tblClmTime" editable="false" prefWidth="91.99993896484375" resizable="false" sortable="false" text="Time" />
-                        <TableColumn editable="false" minWidth="233.0" prefWidth="233.0" resizable="false" sortable="false" />
+                      <TableColumn fx:id="tblClmArtist" editable="false" prefWidth="193.9999237060547" resizable="false" sortable="false" text="Artist" />
+                        <TableColumn fx:id="tblClmSongTitle" editable="false" minWidth="0.0" prefWidth="278.6667175292969" resizable="false" sortable="false" text="Song title" />
+                        <TableColumn fx:id="tblClmGenre" editable="false" prefWidth="91.333251953125" resizable="false" sortable="false" text="Genre" />
+                        <TableColumn fx:id="tblClmTime" editable="false" minWidth="-Infinity" prefWidth="63.33331298828125" resizable="false" sortable="false" text="Time" />
+                        <TableColumn fx:id="tblClmSpacer" editable="false" minWidth="-Infinity" prefWidth="173.33335367838538" resizable="false" sortable="false" />
                     </columns>
                   </TableView>
                </center>
