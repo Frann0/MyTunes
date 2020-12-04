@@ -34,8 +34,10 @@ import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 public class MyTunesController implements Initializable {
+
     @FXML
     private BorderPane root;
     @FXML
@@ -55,6 +57,8 @@ public class MyTunesController implements Initializable {
     @FXML
     private Label lblArtist;
     @FXML
+    private Label lblAmountOfSongs;
+    @FXML
     private Label lblCurrentPlaylist;
     @FXML
     private Label lblSongTitle;
@@ -64,6 +68,8 @@ public class MyTunesController implements Initializable {
     private Label lblTimeMin;
     @FXML
     private Label lblTitlebar;
+    @FXML
+    private Label lblTotalTime;
     @FXML
     private ListView<Playlist> lstPlaylist;
     @FXML
@@ -433,6 +439,7 @@ public class MyTunesController implements Initializable {
             }
             tblAllsongs.refresh();
             checkEmptySongList();
+
         });
     }
 
@@ -552,4 +559,5 @@ public class MyTunesController implements Initializable {
         }
         lstQueue.refresh();
     }
+
 }
