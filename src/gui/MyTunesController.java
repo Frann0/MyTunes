@@ -7,12 +7,15 @@ import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon;
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView;
+import javafx.animation.FadeTransition;
+import javafx.animation.Transition;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
@@ -28,6 +31,7 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 import java.io.File;
 import java.io.IOException;
@@ -483,22 +487,7 @@ public class MyTunesController implements Initializable {
         tblAllsongs.refresh();
     }
 
-    /**
-     * Opdatere alle vores medier i vores nuværende playliste listview.
-     * fikser null metadata problem, ved at reloade alle sangenes titler osv
-     * da metadata fra fil, ikke er tilgængeligt med det samme.
-     */
-    private void updateMediaList() {
-        for (Song s : currentPlaylist.getSongs()) {
-            s.updateMedia();
-        }
-
-        for (Song s : mediaManager.getPlayOrder()) {
-            s.updateMedia();
-        }
-    }
-
-    public void handleAddQueue(ActionEvent actionEvent) {
+    public void handleAddToPlaylist(ActionEvent actionEvent) {
         if (tblAllsongs.getSelectionModel().getSelectedItem() != null) {
             mediaManager.getPlayOrder().add(tblAllsongs.getSelectionModel().getSelectedItem());
             mediaManager.getUnShuffledPlayOrder().add(tblAllsongs.getSelectionModel().getSelectedItem());
@@ -506,7 +495,7 @@ public class MyTunesController implements Initializable {
         }
     }
 
-    public void handleRemoveQueue(ActionEvent actionEvent) {
+    public void handleRemoveFromPlaylist(ActionEvent actionEvent) {
         if (lstQueue.getSelectionModel().getSelectedItem() != null) {
             mediaManager.getPlayOrder().remove(lstQueue.getSelectionModel().getSelectedItem());
             mediaManager.getUnShuffledPlayOrder().remove(lstQueue.getSelectionModel().getSelectedItem());
@@ -514,8 +503,9 @@ public class MyTunesController implements Initializable {
         }
     }
 
-    public void handleShowQueue() {
+    public void handleShowPlaylist() {
         icnQueue.setOnMouseEntered(mouseEvent -> icnQueue.setStyle("-fx-font-family: FontAwesome; -fx-fill: white; -fx-font-size: 20"));
+        FadeTransition fadeT = new FadeTransition(Duration.millis(500), vboxQueue);
 
         if (!queueShowing) {
             icnQueue.setStyle("-fx-font-family: FontAwesome; -fx-fill: #71BA51; -fx-font-size: 20");
@@ -525,12 +515,23 @@ public class MyTunesController implements Initializable {
             vboxQueue.setVisible(true);
             vboxQueue.setMaxWidth(240);
             tblClmSpacer.setPrefWidth(172);
+            fadeT.setFromValue(0);
+            fadeT.setToValue(1);
+            fadeT.play();
         } else {
             icnQueue.setStyle("-fx-font-family: FontAwesome; -fx-fill: #4f4f4f; -fx-font-size: 20");
             icnQueue.setOnMouseExited(mouseEvent -> icnQueue.setStyle("-fx-font-family: FontAwesome; -fx-fill: #4f4f4f; -fx-font-size: 20"));
-            vboxQueue.setMaxWidth(0);
             queueShowing = false;
-            vboxQueue.setVisible(false);
+
+            fadeT.setFromValue(1);
+            fadeT.setToValue(0);
+            fadeT.play();
+
+            fadeT.onFinishedProperty().set((event) -> {
+                vboxQueue.setVisible(false);
+                vboxQueue.setMaxWidth(0);
+            });
+
             tblClmSpacer.setPrefWidth(406);
 
         }
@@ -542,7 +543,7 @@ public class MyTunesController implements Initializable {
      * Flytter en sang i vores nuværende playliste op, hvis indexet valgt ikke et toppen.
      */
     public void handleMoveUpList() {
-        if (lstQueue.getSelectionModel().getSelectedIndex() != 0) {
+        if (lstQueue.getSelectionModel().getSelectedIndex() != 0 && lstQueue.getSelectionModel().getSelectedItem() != null) {
             Collections.swap(lstQueue.getItems(),lstQueue.getSelectionModel().getSelectedIndex(),lstQueue.getSelectionModel().getSelectedIndex()-1);
             lstQueue.getSelectionModel().select(lstQueue.getSelectionModel().getSelectedIndex()-1);
         }
@@ -553,7 +554,7 @@ public class MyTunesController implements Initializable {
      * Flytter en sang i vores nuværende playliste ned, hvis ikke indexet er bunden af listen
      */
     public void handleMoveDownList() {
-        if (lstQueue.getSelectionModel().getSelectedIndex() != lstQueue.getItems().size()-1) {
+        if (lstQueue.getSelectionModel().getSelectedIndex() != lstQueue.getItems().size()-1 && lstQueue.getSelectionModel().getSelectedItem() != null) {
             Collections.swap(lstQueue.getItems(),lstQueue.getSelectionModel().getSelectedIndex(),lstQueue.getSelectionModel().getSelectedIndex()+1);
             lstQueue.getSelectionModel().select(lstQueue.getSelectionModel().getSelectedIndex()+1);
         }
