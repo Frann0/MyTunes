@@ -32,6 +32,7 @@ import javafx.stage.Stage;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.*;
 
 public class MyTunesController implements Initializable {
@@ -105,6 +106,9 @@ public class MyTunesController implements Initializable {
     private boolean shuffleActive;
     private boolean repeatActive;
     private boolean queueShowing;
+
+    public MyTunesController() throws SQLException {
+    }
 
     /**
      * Initialize bruger vi til at sætte mange af vores FXML værdier efter de er blevet
@@ -182,6 +186,7 @@ public class MyTunesController implements Initializable {
 
         Optional<String> result = dialog.showAndWait();
         result.ifPresent(navn -> playlistHandler.addPlaylist(navn, mediaManager));
+        // dbPlaylistModel.addPlaylist(navn);
     }
 
     /**
@@ -239,7 +244,7 @@ public class MyTunesController implements Initializable {
     /**
      * Håndtere vores manuelle tilføj sang funktion.
      */
-    public void handleAddSong() {
+    public void handleAddSong() throws SQLException {
         currentPlaylist = playlistHandler.getPlaylists().get(lstPlaylist.getSelectionModel().getSelectedIndex());
 
         FileChooser fileChooser = new FileChooser();
@@ -250,9 +255,21 @@ public class MyTunesController implements Initializable {
 
         if (selectedFile != null) {
             Song s = new Song(selectedFile);
+
+
             MediaPlayer mp = new MediaPlayer(s.getMedia());
             mp.setOnReady(() -> {
                 allSongs.add(s);
+                try {
+                    dbsongModel.addSong(s);
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                }
+                //System.out.println(s.getSongName());
+                //System.out.println(s.getGenre());
+                //System.out.println(s.getDurationInSeconds());
+                //System.out.println(s.getPath());
+                //System.out.println(s.getArtist());
                 checkEmptySongList();
             });
         }
@@ -264,6 +281,7 @@ public class MyTunesController implements Initializable {
     public void handleRemoveSong() {
         allSongs.remove(tblAllsongs.getSelectionModel().getSelectedItem());
         checkEmptySongList();
+
     }
 
     public void handleEditSong() throws IOException {

@@ -2,13 +2,17 @@ package bll;
 
 public class dbSong {
     private String title;
+    private String genre;
+    private String filePath;
     private String artist;
-    private int durationInSeconds;
+    private String durationInSeconds;
 
-    public dbSong(String title, String artist, int durationInSeconds){
+    public dbSong(String title, String genre, String durationInSeconds, String filePath, String artist){
         this.title = title;
         this.artist = artist;
         this.durationInSeconds = durationInSeconds;
+        this.genre = genre;
+        this.filePath = filePath;
     }
 
     public String getTitle() {
@@ -27,21 +31,17 @@ public class dbSong {
         this.artist = artist;
     }
 
-    public int getDurationInSeconds() {
+    public String getDurationInSeconds() {
         return durationInSeconds;
     }
 
-    public void setDurationInSeconds(int durationInSeconds) {
+    public void setDurationInSeconds(String durationInSeconds) {
         this.durationInSeconds = durationInSeconds;
     }
 
     @Override
     public String toString() {
-        return "dbSong{" +
-                "title='" + title + '\'' +
-                ", artist='" + artist + '\'' +
-                ", durationInSeconds=" + durationInSeconds +
-                '}';
+        return title + " " + genre + " " + durationInSeconds + " " + filePath + " " + artist;
     }
 
 /*

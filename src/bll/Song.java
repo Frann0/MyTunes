@@ -212,7 +212,9 @@ public class Song implements Initializable {
     public int getDurationInSeconds(){
         String duration = durationString.getValue();
         String[] secArr = duration.split(":");
-        return Integer.parseInt(secArr[0] + secArr[1]);
+        int minutesToSeconds = 60 * (Integer.parseInt(secArr[0]));
+        int seconds = Integer.parseInt(secArr[1]);
+        return minutesToSeconds + seconds;
     }
 
     /**
