@@ -98,6 +98,7 @@ public class MyTunesController implements Initializable {
     private final MyTunesModel myTunesModel = new MyTunesModel();
     private final MediaManager mediaManager = new MediaManager(currentPlaylist);
     private final DragAndDropHandler dragAndDropHandler = new DragAndDropHandler();
+    private dbSongModel dbsongModel = new dbSongModel();
 
     private boolean isMuted;
     private boolean isPlaying;
