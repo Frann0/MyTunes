@@ -113,6 +113,7 @@ public class MyTunesController implements Initializable {
     /**
      * Initialize bruger vi til at sætte mange af vores FXML værdier efter de er blevet
      * initialiseret.
+     *
      * @param url
      * @param rb
      */
@@ -234,11 +235,10 @@ public class MyTunesController implements Initializable {
 
     /**
      * Håndtere vores søge funktion. Og opdatere vores listview efter det.
-     *
      */
     public void handleSearch() {
-        if (!txtSearchField.getText().isEmpty() || txtSearchField.getText() != null && !tblAllsongs.getItems().isEmpty()){
-            tblAllsongs.setItems(SongSearcher.search(allSongs,txtSearchField.getText()));
+        if (!txtSearchField.getText().isEmpty() || txtSearchField.getText() != null && !tblAllsongs.getItems().isEmpty()) {
+            tblAllsongs.setItems(SongSearcher.search(allSongs, txtSearchField.getText()));
         }
         checkEmptySongList();
     }
@@ -251,7 +251,7 @@ public class MyTunesController implements Initializable {
 
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Select a song you want to add to your playlist");
-        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("Sound files (*.wav , *.mp3)", "*.wav" , "*.mp3");
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("Sound files (*.wav , *.mp3)", "*.wav", "*.mp3");
         fileChooser.getExtensionFilters().add(extFilter);
         File selectedFile = fileChooser.showOpenDialog(root.getScene().getWindow());
 
@@ -347,11 +347,11 @@ public class MyTunesController implements Initializable {
     public void handleShufflePlay() {
         icnShuffle.setOnMouseEntered(mouseEvent -> icnShuffle.setStyle("-fx-font-family: FontAwesome; -fx-fill: white; -fx-font-size: 15"));
 
-        if (!shuffleActive){
+        if (!shuffleActive) {
             icnShuffle.setStyle("-fx-font-family: FontAwesome; -fx-fill: #71BA51; -fx-font-size: 15");
             icnShuffle.setOnMouseExited(mouseEvent -> icnShuffle.setStyle("-fx-font-family: FontAwesome; -fx-fill: #71BA51; -fx-font-size: 15"));
             shuffleActive = true;
-        }else{
+        } else {
             icnShuffle.setStyle("-fx-font-family: FontAwesome; -fx-fill: #4f4f4f; -fx-font-size: 15");
             icnShuffle.setOnMouseExited(mouseEvent -> icnShuffle.setStyle("-fx-font-family: FontAwesome; -fx-fill: #4f4f4f; -fx-font-size: 15"));
             shuffleActive = false;
@@ -367,11 +367,11 @@ public class MyTunesController implements Initializable {
     public void handleRepeat() {
         icnRepeat.setOnMouseEntered(mouseEvent -> icnRepeat.setStyle("-fx-font-family: 'Material Design Icons'; -fx-fill: white; -fx-font-size: 20"));
 
-        if (!repeatActive){
+        if (!repeatActive) {
             icnRepeat.setStyle("-fx-font-family: 'Material Design Icons'; -fx-fill: #71BA51; -fx-font-size: 20");
             icnRepeat.setOnMouseExited(mouseEvent -> icnRepeat.setStyle("-fx-font-family: 'Material Design Icons'; -fx-fill: #71BA51; -fx-font-size: 20"));
             repeatActive = true;
-        }else{
+        } else {
             icnRepeat.setStyle("-fx-font-family: 'Material Design Icons'; -fx-fill: #4f4f4f; -fx-font-size: 20");
             icnRepeat.setOnMouseExited(mouseEvent -> icnRepeat.setStyle("-fx-font-family: 'Material Design Icons'; -fx-fill: #4f4f4f; -fx-font-size: 20"));
             repeatActive = false;
@@ -419,6 +419,7 @@ public class MyTunesController implements Initializable {
 
     /**
      * Håndtere når vi slipper en fil / filer på vores program.
+     *
      * @param dragEvent dragEvent, hvor fra vi får de filer der bliver sluppet.
      */
     public void handleDragDropped(DragEvent dragEvent) {
@@ -427,7 +428,7 @@ public class MyTunesController implements Initializable {
 
         MediaPlayer mp = new MediaPlayer(new Media(selectedFiles.get(0).toURI().toString()));
         mp.setOnReady(() -> {
-            for (Song s : songList){
+            for (Song s : songList) {
                 allSongs.add(s);
             }
             tblAllsongs.refresh();
@@ -437,6 +438,7 @@ public class MyTunesController implements Initializable {
 
     /**
      * Håndtere hvad der skal ske når vi trækker en fil henover vores program.
+     *
      * @param dragEvent dragEvent
      */
     public void handleDragOver(DragEvent dragEvent) {
@@ -479,18 +481,18 @@ public class MyTunesController implements Initializable {
      * fikser null metadata problem, ved at reloade alle sangenes titler osv
      * da metadata fra fil, ikke er tilgængeligt med det samme.
      */
-    private void updateMediaList(){
-        for(Song s : currentPlaylist.getSongs()){
+    private void updateMediaList() {
+        for (Song s : currentPlaylist.getSongs()) {
             s.updateMedia();
         }
 
-        for (Song s : mediaManager.getPlayOrder()){
+        for (Song s : mediaManager.getPlayOrder()) {
             s.updateMedia();
         }
     }
 
     public void handleAddQueue(ActionEvent actionEvent) {
-        if (tblAllsongs.getSelectionModel().getSelectedItem() != null){
+        if (tblAllsongs.getSelectionModel().getSelectedItem() != null) {
             mediaManager.getPlayOrder().add(tblAllsongs.getSelectionModel().getSelectedItem());
             mediaManager.getUnShuffledPlayOrder().add(tblAllsongs.getSelectionModel().getSelectedItem());
             currentPlaylist.addSong(tblAllsongs.getSelectionModel().getSelectedItem());
@@ -498,7 +500,7 @@ public class MyTunesController implements Initializable {
     }
 
     public void handleRemoveQueue(ActionEvent actionEvent) {
-        if (lstQueue.getSelectionModel().getSelectedItem() != null){
+        if (lstQueue.getSelectionModel().getSelectedItem() != null) {
             mediaManager.getPlayOrder().remove(lstQueue.getSelectionModel().getSelectedItem());
             mediaManager.getUnShuffledPlayOrder().remove(lstQueue.getSelectionModel().getSelectedItem());
             currentPlaylist.removeSong(lstQueue.getSelectionModel().getSelectedItem());
@@ -508,7 +510,7 @@ public class MyTunesController implements Initializable {
     public void handleShowQueue() {
         icnQueue.setOnMouseEntered(mouseEvent -> icnQueue.setStyle("-fx-font-family: FontAwesome; -fx-fill: white; -fx-font-size: 20"));
 
-        if (!queueShowing){
+        if (!queueShowing) {
             icnQueue.setStyle("-fx-font-family: FontAwesome; -fx-fill: #71BA51; -fx-font-size: 20");
             icnQueue.setOnMouseExited(mouseEvent -> icnQueue.setStyle("-fx-font-family: FontAwesome; -fx-fill: #71BA51; -fx-font-size: 20"));
 
@@ -516,7 +518,7 @@ public class MyTunesController implements Initializable {
             vboxQueue.setVisible(true);
             vboxQueue.setMaxWidth(240);
             tblClmSpacer.setPrefWidth(172);
-        } else{
+        } else {
             icnQueue.setStyle("-fx-font-family: FontAwesome; -fx-fill: #4f4f4f; -fx-font-size: 20");
             icnQueue.setOnMouseExited(mouseEvent -> icnQueue.setStyle("-fx-font-family: FontAwesome; -fx-fill: #4f4f4f; -fx-font-size: 20"));
             vboxQueue.setMaxWidth(0);
@@ -529,9 +531,25 @@ public class MyTunesController implements Initializable {
         lstQueue.refresh();
     }
 
-    public void handleMoveUpList(ActionEvent actionEvent) {
+    /**
+     * Flytter en sang i vores nuværende playliste op, hvis indexet valgt ikke et toppen.
+     */
+    public void handleMoveUpList() {
+        if (lstQueue.getSelectionModel().getSelectedIndex() != 0) {
+            Collections.swap(lstQueue.getItems(),lstQueue.getSelectionModel().getSelectedIndex(),lstQueue.getSelectionModel().getSelectedIndex()-1);
+            lstQueue.getSelectionModel().select(lstQueue.getSelectionModel().getSelectedIndex()-1);
+        }
+        lstQueue.refresh();
     }
 
-    public void handleMoveDownList(ActionEvent actionEvent) {
+    /**
+     * Flytter en sang i vores nuværende playliste ned, hvis ikke indexet er bunden af listen
+     */
+    public void handleMoveDownList() {
+        if (lstQueue.getSelectionModel().getSelectedIndex() != lstQueue.getItems().size()-1) {
+            Collections.swap(lstQueue.getItems(),lstQueue.getSelectionModel().getSelectedIndex(),lstQueue.getSelectionModel().getSelectedIndex()+1);
+            lstQueue.getSelectionModel().select(lstQueue.getSelectionModel().getSelectedIndex()+1);
+        }
+        lstQueue.refresh();
     }
 }
