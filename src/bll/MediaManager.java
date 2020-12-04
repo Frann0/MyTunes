@@ -15,6 +15,9 @@ public class MediaManager {
     private final ObservableList<Song> playOrder = FXCollections.observableArrayList();
     private final ObservableList<Song> unShuffledPlayOrder = FXCollections.observableArrayList();
     private double duration = 0;
+    private double defaultvolume = 1;
+    private double currentvolume = 1;
+    private boolean isPause = true;
     private StringProperty durationProperty = new SimpleStringProperty("");
     private StringProperty currentTimeProperty = new SimpleStringProperty("");
     private Playlist currentPlaylist;
@@ -38,6 +41,7 @@ public class MediaManager {
     /**
      * Sætter sætter det medie der skal afspilles på, og laver en ny mediaPlayer ud fra det.
      * @param me mediet der skal afspilles.
+     *           Sætter også volumen til 1, dvs den normale volume
      */
     public void setMedia(Media me) {
         mediaPlayer = new MediaPlayer(me);
@@ -46,17 +50,53 @@ public class MediaManager {
             long seconds = TimeUnit.MILLISECONDS.toSeconds((long) millis);
             long minutes = seconds/60;
             durationProperty.set(minutes + ":" + seconds);
+            mediaPlayer.setVolume(defaultvolume);
+            isPause = false;
         });
+    }
+    /**
+     * sætter musiken på pause
+     */
+    public void pause() {
+        if (mediaPlayer != null && isPause == false){
+            mediaPlayer.pause();
+        }
     }
 
     /**
-     * TODO VIRKER IKKE PT.
+     * starter sangen efter den er sat på pause
+     */
+    public void resume() {
+        if (mediaPlayer != null && isPause == true) {
+            mediaPlayer.play();
+        }
+    }
+
+    /**
+     * stopper sangen, således at den starter fra begyndelsen igen, hvis genstartet
+     */
+    public void stop(){
+        if(mediaPlayer != null) {
+            mediaPlayer.stop();
+        }
+    }
+    
+    /**
+     * Ændret, men ikke testet, virker formentligt. i stedet for at bruge mute metoden, bruges setvolume
+     * som sætter volumen til 0.
      * håndtere når vi muter sangen.
      * @param mute hvorvidt den er mutet eller ej.
      */
     public void setMute(boolean mute){
         if (mediaPlayer != null)
-            mediaPlayer.setMute(mute);
+            if(mute == true) {
+                mediaPlayer.setVolume(0);
+                currentvolume = 0;
+            }
+        if (mute == false) {
+            mediaPlayer.setVolume(1);
+            currentvolume = 1;
+        }
     }
 
     /**
@@ -64,12 +104,26 @@ public class MediaManager {
      * @param volume Værdien fra slideren.
      */
     public void setVolume(double volume) {
-        if (volume <= 0){
-            setMute(true);
-        } else{
-            setMute(false);
-            mediaPlayer.setVolume(volume);
-        }
+        mediaPlayer.setVolume(volume);
+        currentvolume = volume;
+    }
+
+    /**
+     * hæver volumen med 10%
+     */
+    public void increaseVolume() {
+        double raise = currentvolume + 0.1;
+        mediaPlayer.setVolume(raise);
+        currentvolume = raise;
+    }
+
+    /**
+     * sænker volumen med 10%
+     */
+    public void lowerVolume() {
+        double lower = currentvolume - 0.1;
+        mediaPlayer.setVolume(lower);
+        currentvolume = lower;
     }
 
     /**
