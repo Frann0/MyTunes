@@ -131,8 +131,10 @@
                         </Pane>
                         <Pane prefHeight="51.0" prefWidth="240.0" styleClass="bottombar">
                            <children>
-                              <Button fx:id="btnAddQueue" layoutX="68.0" layoutY="4.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleAddQueue" prefHeight="35.0" prefWidth="35.0" styleClass="addPlaylist" text="+" />
+                              <Button fx:id="btnAddQueue" layoutX="78.0" layoutY="4.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleAddQueue" prefHeight="35.0" prefWidth="35.0" styleClass="addPlaylist" text="+" />
                               <Button fx:id="btnRemoveQueue" layoutX="130.0" layoutY="4.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleRemoveQueue" prefHeight="35.0" prefWidth="35.0" styleClass="addPlaylist" text="-" />
+                              <Button layoutX="28.0" layoutY="4.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleMoveUpList" prefHeight="35.0" prefWidth="35.0" styleClass="addPlaylist" text="^" />
+                              <Button layoutX="180.0" layoutY="4.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleMoveDownList" prefHeight="35.0" prefWidth="35.0" styleClass="addPlaylist" text="v" />
                            </children>
                         </Pane>
                      </children>
