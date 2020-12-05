@@ -187,7 +187,7 @@ public class Song implements Initializable {
      */
     @Override
     public String toString() {
-        return getArtist() + " - " + getSongName();
+        return getArtist() + " - " + getSongName() + " - " + getGenre();
     }
 
     /**
