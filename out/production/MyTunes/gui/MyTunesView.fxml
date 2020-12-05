@@ -54,7 +54,7 @@
                      <children>
                         <FontAwesomeIconView fx:id="icnMute" fill="WHITE" glyphName="VOLUME_UP" layoutX="71.0" layoutY="55.0" onMouseClicked="#handleMute" size="20" styleClass="UIButtons" />
                         <JFXSlider fx:id="sldVolume" layoutX="103.0" layoutY="40.0" onMouseReleased="#handleManuelMute" prefHeight="14.0" prefWidth="114.0" />
-                        <FontAwesomeIconView fx:id="icnQueue" fill="WHITE" glyphName="LIST" layoutX="31.0" layoutY="55.0" onMouseReleased="#handleShowQueue" size="20" styleClass="UIButtons" />
+                        <FontAwesomeIconView fx:id="icnQueue" fill="WHITE" glyphName="LIST" layoutX="31.0" layoutY="55.0" onMouseReleased="#handleShowPlaylist" size="20" styleClass="UIButtons" />
                      </children>
                   </Pane>
                </children>
@@ -92,7 +92,7 @@
                <top>
                   <Pane maxHeight="-Infinity" prefHeight="43.0" prefWidth="1043.0" styleClass="playlistTitleBar" BorderPane.alignment="CENTER">
                      <children>
-                        <Label fx:id="lblCurrentPlaylist" layoutX="14.0" layoutY="4.0" text="All Songs" textFill="WHITE">
+                        <Label fx:id="lblAllSongs" layoutX="14.0" layoutY="4.0" text="All Songs" textFill="WHITE">
                            <font>
                               <Font size="24.0" />
                            </font>
@@ -109,6 +109,16 @@
                         </ButtonBar>
                         <JFXTextField fx:id="txtSearchField" focusColor="#71ba51" layoutX="741.0" layoutY="9.0" onKeyTyped="#handleSearch" promptText="Search" unFocusColor="#4f4f4f" />
                         <FontAwesomeIconView fx:id="icnSearch" fill="WHITE" glyphName="SEARCH" layoutX="724.0" layoutY="28.0" onMouseClicked="#handleSearch" styleClass="search" />
+                        <Label fx:id="lblTotalTime" layoutX="287.0" layoutY="8.0" text="total tid" textFill="WHITE">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="lblAmountOfSongs" layoutX="157.0" layoutY="8.0" text="antal sange" textFill="WHITE">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Label>
                      </children>
                   </Pane>
                </top>
@@ -117,7 +127,7 @@
                      <children>
                         <Pane prefHeight="40.0" prefWidth="200.0" styleClass="bottombar" stylesheets="@css/Styles.css">
                            <children>
-                              <Label fx:id="lblCurrentPlaylist" layoutX="64.0" layoutY="1.0" text="Playlist Title" textAlignment="CENTER" textFill="WHITE">
+                              <Label fx:id="lblCurrentPlaylist" layoutX="10.0" layoutY="1.0" text="Playlist Title" textFill="WHITE">
                                  <font>
                                     <Font size="20.0" />
                                  </font>
@@ -131,10 +141,10 @@
                         </Pane>
                         <Pane prefHeight="51.0" prefWidth="240.0" styleClass="bottombar">
                            <children>
-                              <Button fx:id="btnAddQueue" layoutX="78.0" layoutY="4.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleAddQueue" prefHeight="35.0" prefWidth="35.0" styleClass="addPlaylist" text="+" />
-                              <Button fx:id="btnRemoveQueue" layoutX="130.0" layoutY="4.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleRemoveQueue" prefHeight="35.0" prefWidth="35.0" styleClass="addPlaylist" text="-" />
-                              <Button layoutX="28.0" layoutY="4.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleMoveUpList" prefHeight="35.0" prefWidth="35.0" styleClass="addPlaylist" text="^" />
-                              <Button layoutX="180.0" layoutY="4.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleMoveDownList" prefHeight="35.0" prefWidth="35.0" styleClass="addPlaylist" text="v" />
+                              <Button fx:id="btnAddQueue" layoutX="68.0" layoutY="4.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleAddToPlaylist" prefHeight="35.0" prefWidth="35.0" styleClass="addPlaylist" text="+" />
+                              <Button fx:id="btnRemoveQueue" layoutX="130.0" layoutY="4.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleRemoveFromPlaylist" prefHeight="35.0" prefWidth="35.0" styleClass="addPlaylist" text="-" />
+                              <Button fx:id="btnAddQueue1" layoutX="8.0" layoutY="4.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleMoveUpList" prefHeight="35.0" prefWidth="35.0" styleClass="addPlaylist" text="^" />
+                              <Button fx:id="btnRemoveQueue1" layoutX="190.0" layoutY="4.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleMoveDownList" prefHeight="35.0" prefWidth="35.0" styleClass="addPlaylist" text="v" />
                            </children>
                         </Pane>
                      </children>

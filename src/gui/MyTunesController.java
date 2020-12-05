@@ -100,7 +100,6 @@ public class MyTunesController implements Initializable {
     private final DragAndDropHandler dragAndDropHandler = new DragAndDropHandler();
     private dbSongModel dbsongModel = new dbSongModel();
 
-
     private boolean isMuted;
     private boolean isPlaying;
     private double prevVolume;
@@ -281,8 +280,7 @@ public class MyTunesController implements Initializable {
     /**
      * Håndtere hvad der skal ske når vi vil slette en sang fra vores playliste
      */
-    public void handleRemoveSong() throws SQLException {
-        dbsongModel.deleteSong(tblAllsongs.getSelectionModel().getSelectedItem());
+    public void handleRemoveSong() {
         allSongs.remove(tblAllsongs.getSelectionModel().getSelectedItem());
         currentPlaylist.removeSong(tblAllsongs.getSelectionModel().getSelectedItem());
         checkEmptySongList();
@@ -290,19 +288,12 @@ public class MyTunesController implements Initializable {
     }
 
     public void handleEditSong(ActionEvent actionEvent) throws IOException {
-        dbsongModel.setOldSong(tblAllsongs.getSelectionModel().getSelectedItem());
         Stage stage = new Stage();
         FXMLLoader fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(getClass().getResource("EditSongView.fxml"));
-
         Scene scene = new Scene(fxmlLoader.load());
         stage.setScene(scene);
         stage.show();
-
-        EditSongViewController editSongViewController = fxmlLoader.getController();
-        editSongViewController.setDbsongModel(dbsongModel);
-        editSongViewController.setFields();
-
     }
 
     /**
@@ -542,14 +533,5 @@ public class MyTunesController implements Initializable {
     }
 
     public void handleMoveDownList(ActionEvent actionEvent) {
-    }
-
-    /**
-     * Returns a reference to the dbSongModel that MyTunesController uses. This way EditSongView can access
-     * the same fields in dbSongModel (important for the implementation of the updateSong method).
-     * @return
-     */
-    public dbSongModel getDbsongModel() {
-        return dbsongModel;
     }
 }
