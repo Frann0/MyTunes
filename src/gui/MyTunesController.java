@@ -12,10 +12,12 @@ import javafx.animation.Transition;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
@@ -32,6 +34,7 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.util.Duration;
 
 import java.io.File;
@@ -98,7 +101,6 @@ public class MyTunesController implements Initializable {
     private final ObservableList<Song> allSongs = FXCollections.observableArrayList();
 
     private final PlaylistHandler playlistHandler = new PlaylistHandler();
-    private final MyTunesModel myTunesModel = new MyTunesModel();
     private final MediaManager mediaManager = new MediaManager(currentPlaylist);
     private final DragAndDropHandler dragAndDropHandler = new DragAndDropHandler();
     private dbSongModel dbsongModel = new dbSongModel();
@@ -293,8 +295,14 @@ public class MyTunesController implements Initializable {
         FXMLLoader fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(getClass().getResource("EditSongView.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
+        stage.initStyle(StageStyle.UNDECORATED);
         stage.setScene(scene);
         stage.show();
+
+        EditSongViewController controller = fxmlLoader.getController();
+        dbsongModel.setOldSong(tblAllsongs.getSelectionModel().getSelectedItem());
+        controller.setDbsongModel(dbsongModel);
+        controller.setFields();
     }
 
     /**

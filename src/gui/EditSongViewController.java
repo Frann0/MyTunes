@@ -2,6 +2,7 @@ package gui;
 
 import bll.Song;
 import bll.dbSong;
+import com.jfoenix.controls.JFXTextField;
 import com.sun.media.jfxmediaimpl.platform.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -22,13 +23,13 @@ import java.util.ResourceBundle;
 public class EditSongViewController implements Initializable {
     private dbSongModel dbsongModel;
     @FXML
-    private TextField titleField;
+    private JFXTextField titleField;
     @FXML
-    private TextField artistField;
+    private JFXTextField artistField;
     @FXML
     private Label timeLabel;
     @FXML
-    private TextField categoryField;
+    private JFXTextField categoryField;
     @FXML
     private AnchorPane anchorPane;
 
@@ -38,13 +39,6 @@ public class EditSongViewController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
 
-
-
-    }
-
-
-
-    public void handleCancelEdit(ActionEvent actionEvent) {
 
 
     }
@@ -63,21 +57,13 @@ public class EditSongViewController implements Initializable {
 
 
     public void handleSaveEdit() throws SQLException {
-
-
         Song oldSong = dbsongModel.getOldSong();
-
 
         String title = titleField.getText();
         String artist = artistField.getText();
         String genre = categoryField.getText();
 
         dbSong newSong = new dbSong(title,genre,oldSong.getDuration().getValue(), oldSong.getPath(), artist);
-
-
-
-
-
         dbsongModel.updateSong(newSong);
 
         Stage window = (Stage) anchorPane.getScene().getWindow();
@@ -86,5 +72,7 @@ public class EditSongViewController implements Initializable {
 
 
     public void handleCancel(ActionEvent actionEvent) {
+        Stage window = (Stage) anchorPane.getScene().getWindow();
+        window.close();
     }
 }

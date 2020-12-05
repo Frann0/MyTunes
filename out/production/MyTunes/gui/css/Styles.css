@@ -200,7 +200,36 @@
     -fx-text-background-color: white;
 }
 .table-row-cell:filled:focused:selected, .table-row-cell:filled:selected {
-    -fx-background-color: linear-gradient(#71ba51 0%, #599f3c 25%, #4c9233 75%, #488030 100%);
-
+    -fx-background-color: linear-gradient(#71BA51 0%, #599f3c 25%, #4c9233 75%, #488030 100%);
     -fx-text-background-color: white;
+}
+
+
+/**
+    EDIT SONG VIEW CSS
+ */
+
+.saveButton{
+    -fx-shape: "M 400 300 A 50 50 0 1 1 400 200 L 700 200 A 50 50 0 1 1 700 300 L 400 300 ";
+    -fx-background-color: #1b1b1b;
+    -fx-border-color: #4f4f4f;
+    -fx-border-width: 1;
+    -fx-text-fill: #4f4f4f;
+}
+.saveButton:hover{
+    -fx-border-color: #71BA51;
+    -fx-text-fill: #71BA51;
+}
+
+.cancelButton{
+    -fx-shape: "M 400 300 A 50 50 0 1 1 400 200 L 700 200 A 50 50 0 1 1 700 300 L 400 300 ";
+    -fx-background-color: #1b1b1b;
+    -fx-border-color: #4f4f4f;
+    -fx-border-width: 1;
+    -fx-text-fill: #4f4f4f;
+}
+
+.cancelButton:hover{
+    -fx-border-color: #d42727;
+    -fx-text-fill: #d42727;
 }

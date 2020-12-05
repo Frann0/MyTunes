@@ -1,37 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import com.jfoenix.controls.JFXTextField?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ButtonBar?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="283.0" prefWidth="298.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.EditSongViewController">
+<AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="283.0" prefWidth="298.0" styleClass="background" stylesheets="@css/Styles.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.EditSongViewController">
    <children>
       <HBox layoutX="-23.0" layoutY="91.0" prefHeight="141.0" prefWidth="326.0">
          <children>
             <VBox alignment="TOP_RIGHT" prefHeight="200.0" prefWidth="100.0">
                <children>
-                  <Label text="Title:">
+                  <Label text="Title:" textFill="WHITE">
                      <VBox.margin>
                         <Insets bottom="5.0" top="5.0" />
                      </VBox.margin>
                   </Label>
-                  <Label text="Artist:">
+                  <Label text="Artist:" textFill="WHITE">
                      <VBox.margin>
                         <Insets top="2.0" />
                      </VBox.margin>
                   </Label>
-                  <Label text="Category:">
+                  <Label text="Category:" textFill="WHITE">
                      <VBox.margin>
                         <Insets bottom="5.0" top="7.0" />
                      </VBox.margin>
                   </Label>
-                  <Label text="Time:">
+                  <Label text="Time:" textFill="WHITE">
                      <VBox.margin>
                         <Insets top="2.0" />
                      </VBox.margin>
@@ -43,14 +43,10 @@
             </VBox>
             <VBox prefHeight="131.0" prefWidth="169.0">
                <children>
-                  <TextField fx:id="titleField" />
-                  <TextField fx:id="artistField" />
-                  <HBox prefHeight="26.0" prefWidth="169.0">
-                     <children>
-                        <TextField fx:id="categoryField" prefHeight="25.0" prefWidth="171.0" />
-                     </children>
-                  </HBox>
-                  <Label fx:id="timeLabel" text="0:00">
+                  <JFXTextField fx:id="titleField" focusColor="#71ba51" unFocusColor="#4f4f4f" />
+                  <JFXTextField fx:id="artistField" focusColor="#71ba51" unFocusColor="#4f4f4f" />
+                  <JFXTextField fx:id="categoryField" focusColor="#71ba51" unFocusColor="#4f4f4f" />
+                  <Label fx:id="timeLabel" text="0:00" textFill="#71ba51">
                      <VBox.margin>
                         <Insets bottom="2.0" left="5.0" top="3.0" />
                      </VBox.margin>
@@ -61,11 +57,11 @@
       </HBox>
       <ButtonBar layoutX="56.0" layoutY="212.0" prefHeight="40.0" prefWidth="200.0">
         <buttons>
-          <Button mnemonicParsing="false" onAction="#handleSaveEdit" text="Save" />
-            <Button mnemonicParsing="false" onAction="#handleCancel" text="Cancel" />
+          <Button mnemonicParsing="false" onAction="#handleSaveEdit" styleClass="saveButton" text="Save" />
+            <Button mnemonicParsing="false" onAction="#handleCancel" styleClass="cancelButton" text="Cancel" />
         </buttons>
       </ButtonBar>
-      <Label layoutX="102.0" layoutY="32.0" text="Edit Song">
+      <Label layoutX="102.0" layoutY="32.0" text="Edit Song" textFill="WHITE">
          <font>
             <Font size="22.0" />
          </font>
