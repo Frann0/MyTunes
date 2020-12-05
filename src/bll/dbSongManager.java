@@ -20,12 +20,12 @@ public class dbSongManager {
         return dbmySongDAO.getAllSongs();
     }
 
-    public void deleteSong(String title, String artist) throws SQLException {
-        dbmySongDAO.deleteSong(title, artist);
+    public void deleteSong(Song song) throws SQLException {
+        dbmySongDAO.deleteSong(song);
     }
 
-    public void updateSong(dbSong song){
-        dbmySongDAO.editSong(song);
+    public void updateSong(dbSong newSong) throws SQLException {
+        dbmySongDAO.editSong(newSong);
     }
 
 }

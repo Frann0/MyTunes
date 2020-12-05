@@ -31,6 +31,22 @@ public class dbSong {
         this.artist = artist;
     }
 
+    public String getFilePath() {
+        return filePath;
+    }
+
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
+    }
+
+    public String getGenre() {
+        return genre;
+    }
+
+    public void setGenre(String genre) {
+        this.genre = genre;
+    }
+
     public String getDurationInSeconds() {
         return durationInSeconds;
     }
