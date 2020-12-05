@@ -20,6 +20,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.MouseEvent;
@@ -57,11 +58,7 @@ public class MyTunesController implements Initializable {
     @FXML
     private JFXSlider sldVolume;
     @FXML
-    private Label lblAlbumTitle;
-    @FXML
     private Label lblArtist;
-    @FXML
-    private Label lblAmountOfSongs;
     @FXML
     private Label lblCurrentPlaylist;
     @FXML
@@ -73,11 +70,7 @@ public class MyTunesController implements Initializable {
     @FXML
     private Label lblTitlebar;
     @FXML
-    private Label lblTotalTime;
-    @FXML
     private ListView<Playlist> lstPlaylist;
-    @FXML
-    private ListView<Song> lstCurrentPlayList;
     @FXML
     private ListView<Song> lstQueue;
     @FXML
@@ -171,6 +164,7 @@ public class MyTunesController implements Initializable {
         vboxQueue.setMaxWidth(0);
 
         tblClmSpacer.setPrefWidth(405);
+        tblAllsongs.setPlaceholder(new ImageView(new Image("Resources/DefaultAlbumArt.png")));
     }
 
     //PLAYLIST FUNKTIONER
@@ -250,7 +244,6 @@ public class MyTunesController implements Initializable {
         if (!txtSearchField.getText().isEmpty() || txtSearchField.getText() != null && !tblAllsongs.getItems().isEmpty()) {
             tblAllsongs.setItems(SongSearcher.search(allSongs, txtSearchField.getText()));
         }
-        checkEmptySongList();
     }
 
     /**
@@ -282,7 +275,7 @@ public class MyTunesController implements Initializable {
                 //System.out.println(s.getDurationInSeconds());
                 //System.out.println(s.getPath());
                 //System.out.println(s.getArtist());
-                checkEmptySongList();
+
             });
         }
     }
@@ -293,8 +286,6 @@ public class MyTunesController implements Initializable {
     public void handleRemoveSong() {
         allSongs.remove(tblAllsongs.getSelectionModel().getSelectedItem());
         currentPlaylist.removeSong(tblAllsongs.getSelectionModel().getSelectedItem());
-        checkEmptySongList();
-
     }
 
     public void handleEditSong(ActionEvent actionEvent) throws IOException {
@@ -442,7 +433,6 @@ public class MyTunesController implements Initializable {
                 allSongs.add(s);
             }
             tblAllsongs.refresh();
-            checkEmptySongList();
 
         });
     }
@@ -471,20 +461,6 @@ public class MyTunesController implements Initializable {
     public void handleMinimize() {
         Stage stage = (Stage) root.getScene().getWindow();
         stage.setIconified(true);
-    }
-
-    /**
-     * Checker hvorvidt vores nuværende playliste indeholder sang elementer.
-     * Hvis ikke, så skal baggrunden være vores "Tutorial" altså vores
-     * "Oh no!" billede, ellers skal den være blank.
-     */
-    private void checkEmptySongList() {
-        if (tblAllsongs.getItems().size() <= 0) {
-            tblAllsongs.styleProperty().set("-fx-background-image: url(\"/Resources/emptyList.png\")");
-        } else {
-            tblAllsongs.styleProperty().set("-fx-background-image: url(\"/Resources/empty.png\")");
-        }
-        tblAllsongs.refresh();
     }
 
     public void handleAddToPlaylist(ActionEvent actionEvent) {
