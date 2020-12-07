@@ -166,7 +166,9 @@ public class MyTunesController implements Initializable {
         vboxQueue.setMaxWidth(0);
 
         tblClmSpacer.setPrefWidth(405);
-        tblAllsongs.setPlaceholder(new ImageView(new Image("Resources/DefaultAlbumArt.png")));
+
+        //Hvis all songs er tom, display dette billede istedet for "This table is empty" string.
+        tblAllsongs.setPlaceholder(new ImageView(new Image("Resources/emptyListNew.png")));
     }
 
     //PLAYLIST FUNKTIONER

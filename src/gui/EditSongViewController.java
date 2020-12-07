@@ -5,23 +5,28 @@ import bll.dbSong;
 import com.jfoenix.controls.JFXTextField;
 import com.sun.media.jfxmediaimpl.platform.Platform;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 import java.net.URL;
+import java.nio.file.Path;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
 
 public class EditSongViewController implements Initializable {
     private dbSongModel dbsongModel;
+
     @FXML
     private JFXTextField titleField;
     @FXML
@@ -34,11 +39,8 @@ public class EditSongViewController implements Initializable {
     private AnchorPane anchorPane;
 
 
-
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-
-
 
 
     }
