@@ -6,6 +6,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import javafx.util.Duration;
 
 import java.util.Collections;
 import java.util.concurrent.TimeUnit;
@@ -59,6 +60,13 @@ public class MediaManager {
         });
     }
 
+    /**
+     * sets the time of the audio file
+     * @param time tiden, som filen skal sætes til
+     */
+    public void settime(Duration time){
+        mediaPlayer.seek(time);
+    }
 
     /**
      * gets the current time of the song
