@@ -52,8 +52,13 @@ public class MediaManager {
             durationProperty.set(minutes + ":" + seconds);
             mediaPlayer.setVolume(defaultvolume);
             isPause = true;
+
+        });
+        mediaPlayer.setOnEndOfMedia(() -> {
+            setMedia(me);
         });
     }
+
 
     /**
      * gets the current time of the song
