@@ -340,9 +340,11 @@ public class MyTunesController implements Initializable {
         if (tblAllsongs.getSelectionModel().getSelectedItem() != null) {
 
             if (!isPlaying) {
+                mediaManager.resume();
                 tglPlay.setIcon(MaterialDesignIcon.PAUSE_CIRCLE_OUTLINE);
                 isPlaying = true;
             } else {
+                mediaManager.pause();
                 tglPlay.setIcon(MaterialDesignIcon.PLAY_CIRCLE_OUTLINE);
                 isPlaying = false;
             }
