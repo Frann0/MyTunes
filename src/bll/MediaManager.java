@@ -57,9 +57,6 @@ public class MediaManager {
         mediaPlayer.setOnEndOfMedia(() -> {
             setMedia(me);
         });
-        mediaPlayer.setOnEndOfMedia(()->{
-            setMedia(me);
-        });
     }
 
 
