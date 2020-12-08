@@ -54,6 +54,19 @@ public class MediaManager {
             isPause = false;
         });
     }
+
+    /**
+     * gets the current time of the song
+     */
+    public void currentTime(){
+        if(mediaPlayer != null) {
+            double millis = mediaPlayer.getCurrentTime().toMillis();
+            long seconds = TimeUnit.MILLISECONDS.toSeconds((long) millis);
+            long minutes = seconds / 60;
+            X.set(minutes + ":" + seconds);
+        }
+    }
+
     /**
      * sætter musiken på pause
      */
@@ -80,7 +93,7 @@ public class MediaManager {
             mediaPlayer.stop();
         }
     }
-    
+
     /**
      * Ændret, men ikke testet, virker formentligt. i stedet for at bruge mute metoden, bruges setvolume
      * som sætter volumen til 0.
