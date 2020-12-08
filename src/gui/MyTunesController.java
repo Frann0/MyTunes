@@ -239,6 +239,80 @@ public class MyTunesController implements Initializable {
         }
     }
 
+    public void handleAddToPlaylist(ActionEvent actionEvent) {
+        if (tblAllsongs.getSelectionModel().getSelectedItem() != null) {
+            mediaManager.getPlayOrder().add(tblAllsongs.getSelectionModel().getSelectedItem());
+            mediaManager.getUnShuffledPlayOrder().add(tblAllsongs.getSelectionModel().getSelectedItem());
+            currentPlaylist.addSong(tblAllsongs.getSelectionModel().getSelectedItem());
+        }
+    }
+
+    public void handleRemoveFromPlaylist(ActionEvent actionEvent) {
+        if (lstQueue.getSelectionModel().getSelectedItem() != null) {
+            mediaManager.getPlayOrder().remove(lstQueue.getSelectionModel().getSelectedItem());
+            mediaManager.getUnShuffledPlayOrder().remove(lstQueue.getSelectionModel().getSelectedItem());
+            currentPlaylist.removeSong(lstQueue.getSelectionModel().getSelectedItem());
+        }
+    }
+
+    public void handleShowPlaylist() {
+        icnQueue.setOnMouseEntered(mouseEvent -> icnQueue.setStyle("-fx-font-family: FontAwesome; -fx-fill: white; -fx-font-size: 20"));
+        FadeTransition fadeT = new FadeTransition(Duration.millis(500), vboxQueue);
+
+        if (!queueShowing) {
+            icnQueue.setStyle("-fx-font-family: FontAwesome; -fx-fill: #71BA51; -fx-font-size: 20");
+            icnQueue.setOnMouseExited(mouseEvent -> icnQueue.setStyle("-fx-font-family: FontAwesome; -fx-fill: #71BA51; -fx-font-size: 20"));
+
+            queueShowing = true;
+            vboxQueue.setVisible(true);
+            vboxQueue.setMaxWidth(240);
+            tblClmSpacer.setPrefWidth(172);
+            fadeT.setFromValue(0);
+            fadeT.setToValue(1);
+            fadeT.play();
+        } else {
+            icnQueue.setStyle("-fx-font-family: FontAwesome; -fx-fill: #4f4f4f; -fx-font-size: 20");
+            icnQueue.setOnMouseExited(mouseEvent -> icnQueue.setStyle("-fx-font-family: FontAwesome; -fx-fill: #4f4f4f; -fx-font-size: 20"));
+            queueShowing = false;
+
+            fadeT.setFromValue(1);
+            fadeT.setToValue(0);
+            fadeT.play();
+
+            fadeT.onFinishedProperty().set((event) -> {
+                vboxQueue.setVisible(false);
+                vboxQueue.setMaxWidth(0);
+            });
+
+            tblClmSpacer.setPrefWidth(406);
+
+        }
+        lstQueue.setItems(mediaManager.getPlayOrder());
+        lstQueue.refresh();
+    }
+
+    /**
+     * Flytter en sang i vores nuværende playliste op, hvis indexet valgt ikke et toppen.
+     */
+    public void handleMoveUpList() {
+        if (lstQueue.getSelectionModel().getSelectedIndex() != 0 && lstQueue.getSelectionModel().getSelectedItem() != null) {
+            Collections.swap(lstQueue.getItems(),lstQueue.getSelectionModel().getSelectedIndex(),lstQueue.getSelectionModel().getSelectedIndex()-1);
+            lstQueue.getSelectionModel().select(lstQueue.getSelectionModel().getSelectedIndex()-1);
+        }
+        lstQueue.refresh();
+    }
+
+    /**
+     * Flytter en sang i vores nuværende playliste ned, hvis ikke indexet er bunden af listen
+     */
+    public void handleMoveDownList() {
+        if (lstQueue.getSelectionModel().getSelectedIndex() != lstQueue.getItems().size()-1 && lstQueue.getSelectionModel().getSelectedItem() != null) {
+            Collections.swap(lstQueue.getItems(),lstQueue.getSelectionModel().getSelectedIndex(),lstQueue.getSelectionModel().getSelectedIndex()+1);
+            lstQueue.getSelectionModel().select(lstQueue.getSelectionModel().getSelectedIndex()+1);
+        }
+        lstQueue.refresh();
+    }
+
     //SANG FUNKTIONER
 
     /**
@@ -323,7 +397,8 @@ public class MyTunesController implements Initializable {
             lblSongTitle.setText(cSong.getSongName());
             lblTitlebar.setText("Codify - " + cSong.getSongName() + " by " + cSong.getArtist());
 
-            sldTime.setMax(100);
+            sldTime.setMax(cSong.getDurationInSeconds());
+
         }
     }
 
@@ -472,79 +547,4 @@ public class MyTunesController implements Initializable {
         Stage stage = (Stage) root.getScene().getWindow();
         stage.setIconified(true);
     }
-
-    public void handleAddToPlaylist(ActionEvent actionEvent) {
-        if (tblAllsongs.getSelectionModel().getSelectedItem() != null) {
-            mediaManager.getPlayOrder().add(tblAllsongs.getSelectionModel().getSelectedItem());
-            mediaManager.getUnShuffledPlayOrder().add(tblAllsongs.getSelectionModel().getSelectedItem());
-            currentPlaylist.addSong(tblAllsongs.getSelectionModel().getSelectedItem());
-        }
-    }
-
-    public void handleRemoveFromPlaylist(ActionEvent actionEvent) {
-        if (lstQueue.getSelectionModel().getSelectedItem() != null) {
-            mediaManager.getPlayOrder().remove(lstQueue.getSelectionModel().getSelectedItem());
-            mediaManager.getUnShuffledPlayOrder().remove(lstQueue.getSelectionModel().getSelectedItem());
-            currentPlaylist.removeSong(lstQueue.getSelectionModel().getSelectedItem());
-        }
-    }
-
-    public void handleShowPlaylist() {
-        icnQueue.setOnMouseEntered(mouseEvent -> icnQueue.setStyle("-fx-font-family: FontAwesome; -fx-fill: white; -fx-font-size: 20"));
-        FadeTransition fadeT = new FadeTransition(Duration.millis(500), vboxQueue);
-
-        if (!queueShowing) {
-            icnQueue.setStyle("-fx-font-family: FontAwesome; -fx-fill: #71BA51; -fx-font-size: 20");
-            icnQueue.setOnMouseExited(mouseEvent -> icnQueue.setStyle("-fx-font-family: FontAwesome; -fx-fill: #71BA51; -fx-font-size: 20"));
-
-            queueShowing = true;
-            vboxQueue.setVisible(true);
-            vboxQueue.setMaxWidth(240);
-            tblClmSpacer.setPrefWidth(172);
-            fadeT.setFromValue(0);
-            fadeT.setToValue(1);
-            fadeT.play();
-        } else {
-            icnQueue.setStyle("-fx-font-family: FontAwesome; -fx-fill: #4f4f4f; -fx-font-size: 20");
-            icnQueue.setOnMouseExited(mouseEvent -> icnQueue.setStyle("-fx-font-family: FontAwesome; -fx-fill: #4f4f4f; -fx-font-size: 20"));
-            queueShowing = false;
-
-            fadeT.setFromValue(1);
-            fadeT.setToValue(0);
-            fadeT.play();
-
-            fadeT.onFinishedProperty().set((event) -> {
-                vboxQueue.setVisible(false);
-                vboxQueue.setMaxWidth(0);
-            });
-
-            tblClmSpacer.setPrefWidth(406);
-
-        }
-        lstQueue.setItems(mediaManager.getPlayOrder());
-        lstQueue.refresh();
-    }
-
-    /**
-     * Flytter en sang i vores nuværende playliste op, hvis indexet valgt ikke et toppen.
-     */
-    public void handleMoveUpList() {
-        if (lstQueue.getSelectionModel().getSelectedIndex() != 0 && lstQueue.getSelectionModel().getSelectedItem() != null) {
-            Collections.swap(lstQueue.getItems(),lstQueue.getSelectionModel().getSelectedIndex(),lstQueue.getSelectionModel().getSelectedIndex()-1);
-            lstQueue.getSelectionModel().select(lstQueue.getSelectionModel().getSelectedIndex()-1);
-        }
-        lstQueue.refresh();
-    }
-
-    /**
-     * Flytter en sang i vores nuværende playliste ned, hvis ikke indexet er bunden af listen
-     */
-    public void handleMoveDownList() {
-        if (lstQueue.getSelectionModel().getSelectedIndex() != lstQueue.getItems().size()-1 && lstQueue.getSelectionModel().getSelectedItem() != null) {
-            Collections.swap(lstQueue.getItems(),lstQueue.getSelectionModel().getSelectedIndex(),lstQueue.getSelectionModel().getSelectedIndex()+1);
-            lstQueue.getSelectionModel().select(lstQueue.getSelectionModel().getSelectedIndex()+1);
-        }
-        lstQueue.refresh();
-    }
-
 }

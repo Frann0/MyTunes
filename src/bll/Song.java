@@ -15,7 +15,6 @@ import java.util.concurrent.TimeUnit;
 public class Song implements Initializable {
     private Image albumArt = new Image("Resources/DefaultAlbumArt.png");
     private final StringProperty songName = new SimpleStringProperty("");
-    private final StringProperty albumTitle = new SimpleStringProperty("");
     private final StringProperty artist = new SimpleStringProperty("");
     private final StringProperty genre = new SimpleStringProperty("");
     private final StringProperty durationString = new SimpleStringProperty("");
@@ -45,7 +44,6 @@ public class Song implements Initializable {
 
             setSongName(m.getMetadata().get("title").toString());
             setArtist(m.getMetadata().get("artist").toString());
-            setAlbumTitle(m.getMetadata().get("album").toString());
             setAlbumArt(m.getMetadata().get("image") != null ? (Image) m.getMetadata().get("image") : albumArt);
             setGenre(m.getMetadata().get("genre").toString());
         });
@@ -59,13 +57,6 @@ public class Song implements Initializable {
         this.songName.set(songName);
     }
 
-    /**
-     * setteren af album tilten
-     * @param albumTitle titlen på albummet sangen er fra.
-     */
-    public void setAlbumTitle(String albumTitle) {
-        this.albumTitle.set(albumTitle);
-    }
 
     /**
      * setter for kunstneren
@@ -159,24 +150,6 @@ public class Song implements Initializable {
 
     public String getDurationString() {
         return durationString.get();
-    }
-
-    /**
-     * TODO Mangler fiks for at vi ikke skal bruge den her funktion.
-     * har en ide om at det er en asyncron task at hente metadata. så man
-     * kan ikke bare hente det med det samme sangen er oprettet. derfor
-     * null metadata problem. FIND FIKS
-     */
-    public void updateMedia() {
-        if (!m.getMetadata().isEmpty()) {
-            songName.setValue(m.getMetadata().get("title").toString());
-            artist.setValue(m.getMetadata().get("artist").toString());
-            albumTitle.setValue(m.getMetadata().get("album").toString());
-        } else {
-            songName.setValue("Missing Title");
-            artist.setValue("Missing Artist");
-            albumTitle.setValue("Missing Album title");
-        }
     }
 
     /**

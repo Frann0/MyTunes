@@ -47,6 +47,9 @@ public class MediaManager {
             long minutes = seconds/60;
             durationProperty.set(minutes + ":" + seconds);
         });
+        mediaPlayer.setOnEndOfMedia(()->{
+            setMedia(me);
+        });
     }
 
     /**
