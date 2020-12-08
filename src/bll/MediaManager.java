@@ -62,10 +62,11 @@ public class MediaManager {
 
     /**
      * sets the time of the audio file
-     * @param time tiden, som filen skal sætes til
+     * @param time tiden, som filen skal sætes til, er af typen javafx.util.Duration
      */
-    public void settime(Duration time){
-        mediaPlayer.seek(time);
+    public void settime(double time){
+        Duration seeked = new Duration(time);
+        mediaPlayer.seek(seeked);
     }
 
     /**
