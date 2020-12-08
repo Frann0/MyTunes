@@ -60,6 +60,7 @@ public class dbPlaylistDao {
         List<dbSong> playlist = new ArrayList<>();
 
 
+
         try(Connection con = databaseConnector.getConnection()) {
 
             String sql = "SELECT * FROM Playlist;";
@@ -104,10 +105,36 @@ public class dbPlaylistDao {
         return playlist;
     }
 
-    // TODO
-    public void getAllPlaylists(){
-        List<Playlist> allPlaylists = new ArrayList<>();
 
+    public List<Playlist> getAllPlaylists() throws SQLException {
+        List<Playlist> playlists = new ArrayList<>();
+        List<String> playlistNames = new ArrayList<>();
+
+
+
+        try(Connection con = databaseConnector.getConnection()) {
+
+            String sql = "SELECT * FROM Playlist;";
+
+            Statement statement = con.createStatement();
+
+            if (statement.execute(sql)) {
+                ResultSet resultSet = statement.getResultSet();
+
+                while (resultSet.next()) {
+                    if (!playlistNames.contains(resultSet.getString("playlistname"))) {
+                        playlistNames.add(resultSet.getString("playlistname"));
+                    }
+                }
+            }
+        }
+
+
+        for (int i = 0; i < playlistNames.size(); i++){
+            List<dbSong> songs = getPlaylist(playlistNames.get(i));
+            playlists.add(new Playlist(playlistNames.get(i), songs));
+        }
+        return playlists;
     }
 
     public void removeSongFromPlaylist(String playlistName, dbSong song) throws SQLException {

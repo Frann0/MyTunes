@@ -21,6 +21,12 @@ public class Playlist {
         songs = new ArrayList<>();
     }
 
+    public Playlist(String name, List<dbSong> playlist){
+        this.name = name;
+        songs = playlist;
+
+    }
+
     /**
      * Getter for navnet på playlisten
      * @return navnet på playlisten
@@ -88,5 +94,14 @@ public class Playlist {
     @Override
     public String toString() {
         return String.format("%s", getName());
+    }
+
+    public String printPlaylist(){
+        String name = this.name;
+        String songs = "";
+        for (dbSong song : this.songs){
+            songs += song.getTitle() + " ,";
+        }
+        return name + songs;
     }
 }
