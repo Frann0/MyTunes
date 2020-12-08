@@ -10,17 +10,18 @@ import java.sql.SQLException;
 
 public class dbSongModel {
     dbSongManager dbsongManager;
-    private ObservableList<dbSong> songs;
+    //private ObservableList<dbSong> songs;
+    private ObservableList<Song> allSongs;
     private Song oldSong;
 
     public dbSongModel() throws SQLException {
         dbsongManager = new dbSongManager();
-        songs = FXCollections.observableArrayList();
-        songs.addAll(dbsongManager.getAllSongs());
+        allSongs = FXCollections.observableArrayList();
+        allSongs.addAll(dbsongManager.getAllSongs());
     }
 
 
-    public void addSong(Song song) throws SQLException {
+    public void addSong(dbSong song) throws SQLException {
         dbsongManager.addSong(song);
     }
 
@@ -32,13 +33,13 @@ public class dbSongModel {
         return oldSong;
     }
 
-    public ObservableList<dbSong> getSongs() {
-        return songs;
+    public ObservableList<Song> getSongs() {
+        return allSongs;
     }
 
 
     public void deleteSong(Song song) throws SQLException {
-        songs.remove(song);
+        allSongs.remove(song);
         dbsongManager.deleteSong(song);
     }
 
@@ -48,8 +49,8 @@ public class dbSongModel {
     }
 
     private void updateSongList() throws SQLException {
-        songs.clear();
-        songs.addAll(dbsongManager.getAllSongs());
+        allSongs.clear();
+        allSongs.addAll(dbsongManager.getAllSongs());
     }
 
 }

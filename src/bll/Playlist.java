@@ -2,24 +2,23 @@ package bll;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-import java.sql.Time;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class Playlist {
     private String name;
-    private final ObservableList<Song> songs = FXCollections.observableArrayList();
-    private final MediaManager mediaManager;
+    private final List<dbSong> songs;
 
     /**
      * Vores constructor, som tager et navn ind på den playliste vi vil lave.
      * @param name
      */
-    public Playlist(String name, MediaManager mediaManager) {
+    public Playlist(String name) {
         this.name = name;
-        this.mediaManager = mediaManager;
+        songs = new ArrayList<>();
     }
 
     /**
@@ -42,7 +41,7 @@ public class Playlist {
      * Getter for alle sang elementer der er i den nuværende playliste.
      * @return en observable liste med type Song.
      */
-    public ObservableList<Song> getSongs() {
+    public List<dbSong> getSongs() {
         return songs;
     }
 
@@ -52,7 +51,7 @@ public class Playlist {
      * Tilføjer en sang til vores liste.
      * @param song Den sang der skal tilføjes
      */
-    public void addSong(Song song) {
+    public void addSong(dbSong song) {
         songs.add(song);
         //System.out.println(song.getSongName());
     }
@@ -61,13 +60,12 @@ public class Playlist {
      * fjerner sangen fra listen.
      * @param song sangen der skal fjernes
      */
-    public void removeSong(Song song) {
+    public void removeSong(dbSong song) {
         songs.remove(song);
-        if (mediaManager.getPlayOrder().contains(song))
-        mediaManager.getPlayOrder().remove(song);
+
     }
 
-    public StringProperty getTotalDuration(){
+    /*public StringProperty getTotalDuration(){
         StringProperty time = new SimpleStringProperty();
         long millis = 0;
         for (Song s : songs){
@@ -80,7 +78,7 @@ public class Playlist {
         time.set(hours + ":" + minutes + ":" + seconds);
         return time;
 
-    }
+    }*/
 
     /**
      * overrider toString metoden. Bliver egentligt ikke brugt.

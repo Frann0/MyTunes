@@ -20,7 +20,7 @@ public class PlaylistHandler {
      * @param name navnet på den nye playliste der skal laves.
      */
     public void addPlaylist(String name, MediaManager mediaManager){
-        playlists.add(new Playlist(name, mediaManager));
+        //playlists.add(new Playlist(name, mediaManager, songs));
     }
 
     /**

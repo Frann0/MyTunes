@@ -1,8 +1,11 @@
 package bll;
 
 import dal.dbSongDAO;
+import javafx.stage.FileChooser;
 
+import java.io.File;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class dbSongManager {
@@ -12,12 +15,22 @@ public class dbSongManager {
         dbmySongDAO = new dbSongDAO();
     }
 
-    public void addSong(Song song) throws SQLException {
+    public void addSong(dbSong song) throws SQLException {
         dbmySongDAO.addSong(song);
     }
 
-    public List<dbSong> getAllSongs() throws SQLException {
-        return dbmySongDAO.getAllSongs();
+    public List<Song> getAllSongs() throws SQLException {
+        List<dbSong> allDbSongs = dbmySongDAO.getAllSongs();
+        List<Song> allSongs = new ArrayList<>();
+        for(dbSong song : allDbSongs){
+            String path = song.getFilePath();
+            File file = new File(path);
+            allSongs.add(new Song(file));
+        }
+
+        return allSongs;
+
+
     }
 
     public void deleteSong(Song song) throws SQLException {

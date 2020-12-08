@@ -77,12 +77,12 @@ public class dbSongDAO {
      * @param song
      * @throws SQLException
      */
-    public void addSong(Song song) throws SQLException {
+    public void addSong(dbSong song) throws SQLException {
 
-        String songTitle = song.getSongName();
+        String songTitle = song.getTitle();
         String genre = song.getGenre();
-        String duration = song.getDuration().getValue();
-        String filePath = song.getPath();
+        String duration = song.getDurationInSeconds();
+        String filePath = song.getFilePath();
         String artist = song.getArtist();
 
         try(Connection con = databaseConnector.getConnection()) {

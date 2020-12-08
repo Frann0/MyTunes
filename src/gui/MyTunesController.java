@@ -142,7 +142,7 @@ public class MyTunesController implements Initializable {
             lstPlaylist.getSelectionModel().select(0);
             Playlist firstPlaylist = lstPlaylist.getItems().get(0);
             lblCurrentPlaylist.setText(firstPlaylist.getName());
-            tblAllsongs.setItems(firstPlaylist.getSongs());
+            //tblAllsongs.setItems(firstPlaylist.getSongs());
             currentPlaylist = firstPlaylist;
         }
 
@@ -181,7 +181,7 @@ public class MyTunesController implements Initializable {
         if (lstPlaylist.getSelectionModel().getSelectedItem() != null) {
             currentPlaylist = lstPlaylist.getSelectionModel().getSelectedItem();
             lblCurrentPlaylist.setText(currentPlaylist.getName());
-            lstQueue.setItems(currentPlaylist.getSongs());
+            //lstQueue.setItems(currentPlaylist.getSongs());
 
         }
     }
@@ -265,7 +265,7 @@ public class MyTunesController implements Initializable {
         if (selectedFile != null) {
             Song s = new Song(selectedFile);
 
-
+            /*
             MediaPlayer mp = new MediaPlayer(s.getMedia());
             mp.setOnReady(() -> {
                 allSongs.add(s);
@@ -280,7 +280,7 @@ public class MyTunesController implements Initializable {
                 //System.out.println(s.getPath());
                 //System.out.println(s.getArtist());
 
-            });
+            });*/
         }
     }
 
@@ -289,7 +289,7 @@ public class MyTunesController implements Initializable {
      */
     public void handleRemoveSong() {
         allSongs.remove(tblAllsongs.getSelectionModel().getSelectedItem());
-        currentPlaylist.removeSong(tblAllsongs.getSelectionModel().getSelectedItem());
+       // currentPlaylist.removeSong(tblAllsongs.getSelectionModel().getSelectedItem());
     }
 
     public void handleEditSong(ActionEvent actionEvent) throws IOException {
@@ -477,7 +477,7 @@ public class MyTunesController implements Initializable {
         if (tblAllsongs.getSelectionModel().getSelectedItem() != null) {
             mediaManager.getPlayOrder().add(tblAllsongs.getSelectionModel().getSelectedItem());
             mediaManager.getUnShuffledPlayOrder().add(tblAllsongs.getSelectionModel().getSelectedItem());
-            currentPlaylist.addSong(tblAllsongs.getSelectionModel().getSelectedItem());
+            //currentPlaylist.addSong(tblAllsongs.getSelectionModel().getSelectedItem());
         }
     }
 
@@ -485,7 +485,7 @@ public class MyTunesController implements Initializable {
         if (lstQueue.getSelectionModel().getSelectedItem() != null) {
             mediaManager.getPlayOrder().remove(lstQueue.getSelectionModel().getSelectedItem());
             mediaManager.getUnShuffledPlayOrder().remove(lstQueue.getSelectionModel().getSelectedItem());
-            currentPlaylist.removeSong(lstQueue.getSelectionModel().getSelectedItem());
+            //currentPlaylist.removeSong(lstQueue.getSelectionModel().getSelectedItem());
         }
     }
 
