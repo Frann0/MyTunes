@@ -63,7 +63,7 @@ public class MediaManager {
             double millis = mediaPlayer.getCurrentTime().toMillis();
             long seconds = TimeUnit.MILLISECONDS.toSeconds((long) millis);
             long minutes = seconds / 60;
-            X.set(minutes + ":" + seconds);
+   //         X.set(minutes + ":" + seconds);
         }
     }
 
