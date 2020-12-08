@@ -182,7 +182,6 @@ public class MyTunesController implements Initializable {
             currentPlaylist = lstPlaylist.getSelectionModel().getSelectedItem();
             lblCurrentPlaylist.setText(currentPlaylist.getName());
             lstQueue.setItems(currentPlaylist.getSongs());
-
         }
     }
 
@@ -339,7 +338,6 @@ public class MyTunesController implements Initializable {
         if (selectedFile != null) {
             Song s = new Song(selectedFile);
 
-
             MediaPlayer mp = new MediaPlayer(s.getMedia());
             mp.setOnReady(() -> {
                 allSongs.add(s);
@@ -348,12 +346,6 @@ public class MyTunesController implements Initializable {
                 } catch (SQLException throwables) {
                     throwables.printStackTrace();
                 }
-                //System.out.println(s.getSongName());
-                //System.out.println(s.getGenre());
-                //System.out.println(s.getDurationInSeconds());
-                //System.out.println(s.getPath());
-                //System.out.println(s.getArtist());
-
             });
         }
     }
@@ -388,7 +380,7 @@ public class MyTunesController implements Initializable {
         if (lstQueue.getSelectionModel().getSelectedItem() != null) {
             Song cSong = lstQueue.getSelectionModel().getSelectedItem();
 
-            mediaManager.setMedia(cSong.getMedia());
+            mediaManager.setMedia(cSong.getPath());
 
             lblTimeMin.setText(cSong.getCurrentTime());
             lblTimeMax.setText(cSong.getDuration().get());

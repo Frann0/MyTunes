@@ -7,6 +7,7 @@ import javafx.collections.ObservableList;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 
+import java.io.File;
 import java.util.Collections;
 import java.util.concurrent.TimeUnit;
 
@@ -40,10 +41,12 @@ public class MediaManager {
 
     /**
      * Sætter sætter det medie der skal afspilles på, og laver en ny mediaPlayer ud fra det.
-     * @param me mediet der skal afspilles.
+     * @param path pathen for filen der skal afspilles
      *           Sætter også volumen til 1, dvs den normale volume
      */
-    public void setMedia(Media me) {
+    public void setMedia(String path) {
+        System.out.println(path);
+        Media me = new Media(path);
         mediaPlayer = new MediaPlayer(me);
         mediaPlayer.setOnReady(() -> {
             double millis = me.getDuration().toMillis();
@@ -52,10 +55,6 @@ public class MediaManager {
             durationProperty.set(minutes + ":" + seconds);
             mediaPlayer.setVolume(defaultvolume);
             isPause = true;
-
-        });
-        mediaPlayer.setOnEndOfMedia(() -> {
-            setMedia(me);
         });
     }
 

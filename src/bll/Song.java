@@ -12,13 +12,13 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.concurrent.TimeUnit;
 
-public class Song implements Initializable {
+public class Song {
     private Image albumArt = new Image("Resources/DefaultAlbumArt.png");
     private final StringProperty songName = new SimpleStringProperty("");
     private final StringProperty artist = new SimpleStringProperty("");
     private final StringProperty genre = new SimpleStringProperty("");
     private final StringProperty durationString = new SimpleStringProperty("");
-    private String path;
+    private final String path;
     private final Media m;
 
     /**
@@ -82,11 +82,6 @@ public class Song implements Initializable {
         this.albumArt = albumArt;
     }
 
-    //TODO VIRKER IKKE D:
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-    }
-
     /**
      * getter for artisten der har lavet sangen.
      * Fundet gennem mediaets metadata.
@@ -97,14 +92,6 @@ public class Song implements Initializable {
         return this.m.getMetadata().get("artist").toString();
     }
 
-    /**
-     * getter for album title, sangen er fra.
-     *
-     * @return album titlen
-     */
-    public String getAlbumTitle() {
-        return this.m.getMetadata().get("album").toString();
-    }
 
     /**
      * getter for sang navnet.
@@ -121,7 +108,7 @@ public class Song implements Initializable {
      * @return stien til den lokale fil.
      */
     public String getPath() {
-        return m.getSource();
+        return path;
     }
 
     /**
