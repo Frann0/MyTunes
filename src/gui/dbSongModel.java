@@ -11,6 +11,7 @@ import java.sql.SQLException;
 public class dbSongModel {
     dbSongManager dbsongManager;
     private ObservableList<dbSong> songs;
+    private Song oldSong;
 
     public dbSongModel() throws SQLException {
         dbsongManager = new dbSongManager();
@@ -23,19 +24,26 @@ public class dbSongModel {
         dbsongManager.addSong(song);
     }
 
+    public void setOldSong(Song oldSong) {
+        this.oldSong = oldSong;
+    }
+
+    public Song getOldSong() {
+        return oldSong;
+    }
+
     public ObservableList<dbSong> getSongs() {
         return songs;
     }
 
-    /*
-    public void deleteSong(String title, String genre, int duration, String filePath, String artist) throws SQLException {
-        dbSong song = new dbSong(title, genre, duration, filePath, artist);
-        songs.remove(song);
-        dbsongManager.deleteSong(title, artist);
-    }*/
 
-    public void updateSong(dbSong song) throws SQLException {
-        dbsongManager.updateSong(song);
+    public void deleteSong(Song song) throws SQLException {
+        songs.remove(song);
+        dbsongManager.deleteSong(song);
+    }
+
+    public void updateSong(dbSong newSong) throws SQLException {
+        dbsongManager.updateSong(newSong);
         updateSongList();
     }
 

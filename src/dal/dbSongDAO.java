@@ -4,6 +4,7 @@ import bll.Song;
 import bll.dbSong;
 
 
+import com.microsoft.sqlserver.jdbc.SQLServerException;
 import dal.db.MyDatabaseConnector;
 
 import java.sql.*;
@@ -102,11 +103,12 @@ public class dbSongDAO {
     /**
      * Delete a song from the Song table in the database, IF the database subject is by the
      * specified artist, and has the specified song title.
-     * @param title
-     * @param artist
+     * @param song
      * @throws SQLException
      */
-    public void deleteSong(String title, String artist) throws SQLException {
+    public void deleteSong(Song song) throws SQLException {
+        String title = song.getSongName();
+        String artist = song.getArtist();
 
         try(Connection con = databaseConnector.getConnection()){
 
@@ -129,9 +131,33 @@ public class dbSongDAO {
             }
         }
 
-    public void editSong(dbSong song){
+    public void editSong(dbSong newSong) throws SQLException {
+        String Title = newSong.getTitle();
+        String Genre = newSong.getGenre();
+        String Path = newSong.getFilePath();
+        String Artist = newSong.getArtist();
 
-    }
+        try(Connection con = databaseConnector.getConnection()){
+            /*String SqlString = "UPDATE Song " +
+                    "SET Songtitle=? , Category=? , Artist=? " +
+                    "WHERE Filepath=?";*/
+
+            Statement statement = con.createStatement();
+            statement.addBatch("UPDATE Song SET Songtitle= '" + Title + "' WHERE Filepath= '" + Path + "'");
+            statement.addBatch("UPDATE Song SET Artist= '" + Artist + "' WHERE Filepath= '" + Path + "'");
+            statement.addBatch("UPDATE Song SET Category= '" + Genre + "' WHERE Filepath= '" + Path + "'");
+
+            statement.executeBatch();
+
+            if(statement != null){
+                statement.close();
+            }
+
+        }
+
+        }
+
+
 
 
 
