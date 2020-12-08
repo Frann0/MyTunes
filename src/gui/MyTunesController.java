@@ -158,8 +158,8 @@ public class MyTunesController implements Initializable {
         sldTime.setValue(0);
 
         sldVolume.setMin(0);
-        sldVolume.setMax(100);
-        sldVolume.setValue(50);
+        sldVolume.setMax(2);
+        sldVolume.setValue(1);
 
         prevVolume = sldVolume.getValue();
         vboxQueue.setVisible(false);
