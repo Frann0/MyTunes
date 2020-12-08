@@ -197,7 +197,7 @@ public class MyTunesController implements Initializable {
 
         Optional<String> result = dialog.showAndWait();
         result.ifPresent(navn -> playlistHandler.addPlaylist(navn, mediaManager));
-        // dbPlaylistModel.addPlaylist(navn);
+        //dbPlaylistModel.addPlaylist(navn);
     }
 
     /**
@@ -264,23 +264,7 @@ public class MyTunesController implements Initializable {
 
         if (selectedFile != null) {
             Song s = new Song(selectedFile);
-
-            /*
-            MediaPlayer mp = new MediaPlayer(s.getMedia());
-            mp.setOnReady(() -> {
-                allSongs.add(s);
-                try {
-                    dbsongModel.addSong(s);
-                } catch (SQLException throwables) {
-                    throwables.printStackTrace();
-                }
-                //System.out.println(s.getSongName());
-                //System.out.println(s.getGenre());
-                //System.out.println(s.getDurationInSeconds());
-                //System.out.println(s.getPath());
-                //System.out.println(s.getArtist());
-
-            });*/
+            dbsongModel.addSong(new dbSong(s.getSongName(), s.getGenre(), s.getDuration().getValue(), s.getPath(), s.getArtist()));
         }
     }
 

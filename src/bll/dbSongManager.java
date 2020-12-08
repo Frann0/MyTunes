@@ -19,21 +19,15 @@ public class dbSongManager {
         dbmySongDAO.addSong(song);
     }
 
-    public List<Song> getAllSongs() throws SQLException {
+    public List<dbSong> getAllSongs() throws SQLException {
         List<dbSong> allDbSongs = dbmySongDAO.getAllSongs();
-        List<Song> allSongs = new ArrayList<>();
-        for(dbSong song : allDbSongs){
-            String path = song.getFilePath();
-            File file = new File(path);
-            allSongs.add(new Song(file));
-        }
 
-        return allSongs;
+        return allDbSongs;
 
 
     }
 
-    public void deleteSong(Song song) throws SQLException {
+    public void deleteSong(dbSong song) throws SQLException {
         dbmySongDAO.deleteSong(song);
     }
 

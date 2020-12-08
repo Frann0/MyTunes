@@ -47,7 +47,6 @@ public class dbSongDAO {
         return allSongs;
     }
 
-    // Do we even need this????? :O LOLOLOLOL
     public int getNextAvailableSongId() throws SQLException {
         try(Connection con = databaseConnector.getConnection()){
             int id = -1 ;
@@ -86,7 +85,6 @@ public class dbSongDAO {
         String artist = song.getArtist();
 
         try(Connection con = databaseConnector.getConnection()) {
-            //String sql = "INSERT INTO Song " + "Values ('" + songTitle + "', '" + category + "'," + durationInSeconds + ", '" + filePath + ;
 
             PreparedStatement pSql = con.prepareStatement("INSERT INTO Song VALUES(?,?,?,?,?)");
             pSql.setString(1,songTitle);
@@ -96,7 +94,6 @@ public class dbSongDAO {
             pSql.setString(5, artist);
 
             pSql.execute();
-
         }
     }
 
@@ -106,8 +103,8 @@ public class dbSongDAO {
      * @param song
      * @throws SQLException
      */
-    public void deleteSong(Song song) throws SQLException {
-        String title = song.getSongName();
+    public void deleteSong(dbSong song) throws SQLException {
+        String title = song.getTitle();
         String artist = song.getArtist();
 
         try(Connection con = databaseConnector.getConnection()){
@@ -138,9 +135,6 @@ public class dbSongDAO {
         String Artist = newSong.getArtist();
 
         try(Connection con = databaseConnector.getConnection()){
-            /*String SqlString = "UPDATE Song " +
-                    "SET Songtitle=? , Category=? , Artist=? " +
-                    "WHERE Filepath=?";*/
 
             Statement statement = con.createStatement();
             statement.addBatch("UPDATE Song SET Songtitle= '" + Title + "' WHERE Filepath= '" + Path + "'");
@@ -155,7 +149,7 @@ public class dbSongDAO {
 
         }
 
-        }
+    }
 
 
 

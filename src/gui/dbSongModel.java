@@ -11,7 +11,7 @@ import java.sql.SQLException;
 public class dbSongModel {
     dbSongManager dbsongManager;
     //private ObservableList<dbSong> songs;
-    private ObservableList<Song> allSongs;
+    private ObservableList<dbSong> allSongs;
     private Song oldSong;
 
     public dbSongModel() throws SQLException {
@@ -33,12 +33,12 @@ public class dbSongModel {
         return oldSong;
     }
 
-    public ObservableList<Song> getSongs() {
+    public ObservableList<dbSong> getSongs() {
         return allSongs;
     }
 
 
-    public void deleteSong(Song song) throws SQLException {
+    public void deleteSong(dbSong song) throws SQLException {
         allSongs.remove(song);
         dbsongManager.deleteSong(song);
     }
