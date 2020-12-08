@@ -51,7 +51,7 @@ public class MediaManager {
             long minutes = seconds/60;
             durationProperty.set(minutes + ":" + seconds);
             mediaPlayer.setVolume(defaultvolume);
-            isPause = false;
+            isPause = true;
         });
     }
 
@@ -71,7 +71,7 @@ public class MediaManager {
      * sætter musiken på pause
      */
     public void pause() {
-        if (mediaPlayer != null && isPause == false){
+        if (mediaPlayer != null){
             mediaPlayer.pause();
         }
     }
@@ -80,7 +80,7 @@ public class MediaManager {
      * starter sangen efter den er sat på pause
      */
     public void resume() {
-        if (mediaPlayer != null && isPause == true) {
+        if (mediaPlayer != null) {
             mediaPlayer.play();
         }
     }
