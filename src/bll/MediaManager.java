@@ -24,8 +24,7 @@ public class MediaManager {
     private StringProperty currentTimeProperty = new SimpleStringProperty("");
     private Playlist currentPlaylist;
 
-    public MediaManager(Playlist currentPlaylist){
-        this.currentPlaylist = currentPlaylist;
+    public MediaManager(){
     }
 
     /**
@@ -46,7 +45,6 @@ public class MediaManager {
      *           Sætter også volumen til 1, dvs den normale volume
      */
     public void setMedia(String path) {
-        System.out.println(path);
         Media me = new Media(path);
         mediaPlayer = new MediaPlayer(me);
         mediaPlayer.setOnReady(() -> {

@@ -8,9 +8,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 public class dbPlaylistModel {
-   private dbPlaylistManager dbplaylistManager;
-
-
+    private final dbPlaylistManager dbplaylistManager = new dbPlaylistManager();
 
     // TODO getallplaylist
     public List<Playlist> getALlPlaylists() throws SQLException {

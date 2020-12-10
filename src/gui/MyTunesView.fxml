@@ -38,7 +38,7 @@
                   </Pane>
                   <Pane prefHeight="75.0" prefWidth="764.0">
                      <children>
-                        <JFXSlider fx:id="sldTime" layoutX="91.0" layoutY="44.0"  prefHeight="14.0" prefWidth="581.0" />
+                        <JFXSlider fx:id="sldTime" layoutX="91.0" layoutY="44.0" prefHeight="14.0" prefWidth="581.0" />
                         <Label fx:id="lblTimeMin" layoutX="50.0" layoutY="42.0" textAlignment="RIGHT" textFill="WHITE" />
                         <Label fx:id="lblTimeMax" layoutX="672.0" layoutY="42.0" textFill="WHITE" />
                         <FontAwesomeIconView fill="WHITE" glyphName="BACKWARD" layoutX="319.0" layoutY="28.0" size="15" styleClass="UIButtons" />

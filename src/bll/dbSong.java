@@ -1,34 +1,61 @@
 package bll;
 
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+import javafx.scene.image.Image;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+
+import java.util.concurrent.TimeUnit;
+
 public class dbSong {
-    private String title;
-    private String genre;
+
+    private Image albumArt = new Image("Resources/DefaultAlbumArt.png");
+    private final StringProperty title = new SimpleStringProperty("");
+    private final StringProperty artist = new SimpleStringProperty("");
+    private final StringProperty genre = new SimpleStringProperty("");
+    private final StringProperty durationString = new SimpleStringProperty("");
     private String filePath;
-    private String artist;
     private String durationInSeconds;
 
     public dbSong(String title, String genre, String durationInSeconds, String filePath, String artist){
-        this.title = title;
-        this.artist = artist;
-        this.durationInSeconds = durationInSeconds;
-        this.genre = genre;
-        this.filePath = filePath;
+
+        Media m = new Media(filePath);
+        MediaPlayer mdp = new MediaPlayer(m);
+
+        mdp.setOnReady(()-> {
+            double millis = m.getDuration().toMillis();
+            long minutes = TimeUnit.MILLISECONDS.toMinutes((long) millis);
+            long seconds = TimeUnit.MILLISECONDS.toSeconds((long) millis) - (minutes * 60);
+            if (seconds > 10) {
+                durationString.set(minutes + ":" + seconds);
+            } else {
+                durationString.set(minutes + ":0" + seconds);
+            }
+            setAlbumArt(m.getMetadata().get("image") != null ? (Image) m.getMetadata().get("image") : albumArt);
+            setTitle(title);
+            setArtist(artist);
+            setGenre(genre);
+            setFilePath(filePath);
+            setDurationInSeconds(durationInSeconds);
+        });
+
     }
 
     public String getTitle() {
-        return title;
+        return title.get();
     }
 
     public void setTitle(String title) {
-        this.title = title;
+        this.title.set(title);
     }
 
     public String getArtist() {
-        return artist;
+        return artist.get();
     }
 
     public void setArtist(String artist) {
-        this.artist = artist;
+        this.artist.set(artist);
     }
 
     public String getFilePath() {
@@ -40,11 +67,11 @@ public class dbSong {
     }
 
     public String getGenre() {
-        return genre;
+        return genre.get();
     }
 
     public void setGenre(String genre) {
-        this.genre = genre;
+        this.genre.set(genre);
     }
 
     public String getDurationInSeconds() {
@@ -53,6 +80,18 @@ public class dbSong {
 
     public void setDurationInSeconds(String durationInSeconds) {
         this.durationInSeconds = durationInSeconds;
+    }
+
+    public String getDurationString() {
+        return durationString.get();
+    }
+
+    public Image getAlbumArt() {
+        return albumArt;
+    }
+
+    public void setAlbumArt(Image albumArt) {
+        this.albumArt = albumArt;
     }
 
     @Override

@@ -73,9 +73,9 @@ public class MyTunesController implements Initializable {
     @FXML
     private Label lblTitlebar;
     @FXML
-    private ListView<Playlist> lstPlaylist;
+    private ListView<String> lstPlaylist;
     @FXML
-    private ListView<Song> lstQueue;
+    private ListView<dbSong> lstQueue;
     @FXML
     private MaterialDesignIconView icnRepeat;
     @FXML
@@ -97,13 +97,16 @@ public class MyTunesController implements Initializable {
     @FXML
     private VBox vboxQueue;
 
-    private Playlist currentPlaylist;
+    private String currentPlaylist;
     private final ObservableList<Song> allSongs = FXCollections.observableArrayList();
+    private final ObservableList<String> allPlaylists = FXCollections.observableArrayList();
+    private final ObservableList<dbSong> playlistSongs = FXCollections.observableArrayList();
 
     private final PlaylistHandler playlistHandler = new PlaylistHandler();
-    private final MediaManager mediaManager = new MediaManager(currentPlaylist);
+    private final MediaManager mediaManager = new MediaManager();
     private final DragAndDropHandler dragAndDropHandler = new DragAndDropHandler();
     private dbSongModel dbsongModel = new dbSongModel();
+    private dbPlaylistModel dbPlaylistModel = new dbPlaylistModel();
 
     private boolean isMuted;
     private boolean isPlaying;
@@ -132,19 +135,13 @@ public class MyTunesController implements Initializable {
         repeatActive = false;
         queueShowing = false;
 
-        playlistHandler.addPlaylist("test1", mediaManager);
-        playlistHandler.addPlaylist("test2", mediaManager);
-        playlistHandler.addPlaylist("test3", mediaManager);
-
-        lstPlaylist.setItems(playlistHandler.getPlaylists());
-
-        if (!lstPlaylist.getItems().isEmpty()) {
-            lstPlaylist.getSelectionModel().select(0);
-            Playlist firstPlaylist = lstPlaylist.getItems().get(0);
-            lblCurrentPlaylist.setText(firstPlaylist.getName());
-            //tblAllsongs.setItems(firstPlaylist.getSongs());
-            currentPlaylist = firstPlaylist;
+        try {
+            allPlaylists.addAll(dbPlaylistModel.getPlaylistNames());
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
         }
+
+        lstPlaylist.setItems(allPlaylists);
 
         tblClmArtist.setCellValueFactory(new PropertyValueFactory<>("artist"));
         tblClmSongTitle.setCellValueFactory(new PropertyValueFactory<>("songName"));
@@ -180,8 +177,8 @@ public class MyTunesController implements Initializable {
 
         if (lstPlaylist.getSelectionModel().getSelectedItem() != null) {
             currentPlaylist = lstPlaylist.getSelectionModel().getSelectedItem();
-            lblCurrentPlaylist.setText(currentPlaylist.getName());
-            //lstQueue.setItems(currentPlaylist.getSongs());
+            lblCurrentPlaylist.setText(currentPlaylist);
+            lstQueue.setItems(playlistSongs);
 
         }
     }
@@ -189,35 +186,50 @@ public class MyTunesController implements Initializable {
     /**
      * Håndtere hvad der skal ske når vi vil tilføje en ny playliste.
      */
-    public void handleAddPlaylist() {
+    public void handleAddPlaylist() throws SQLException {
         TextInputDialog dialog = new TextInputDialog("Playlist");
         dialog.setTitle("Add playlist");
         dialog.setHeaderText("Add playlist");
         dialog.setContentText("Please enter your desired playlist name: ");
 
         Optional<String> result = dialog.showAndWait();
-        result.ifPresent(navn -> playlistHandler.addPlaylist(navn, mediaManager));
+        result.ifPresent(navn -> {
+            try {
+                dbPlaylistModel.addPlaylist(navn);
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+        });
+
+        allPlaylists.clear();
+        allPlaylists.addAll(dbPlaylistModel.getPlaylistNames());
+
+        lstPlaylist.setItems(allPlaylists);
         //dbPlaylistModel.addPlaylist(navn);
     }
 
     /**
      * Håndtere vores slet playliste funktion.
      */
-    public void handleRemovePlaylist() {
+    public void handleRemovePlaylist() throws SQLException {
         if (lstPlaylist.getSelectionModel().getSelectedItem() != null) {
             Alert alert = new Alert(AlertType.CONFIRMATION);
-            alert.setTitle("Remove " + lstPlaylist.getSelectionModel().getSelectedItem().getName() + "?");
-            alert.setHeaderText("Remove " + lstPlaylist.getSelectionModel().getSelectedItem().getName() + "?");
-            alert.setContentText("Are you sure, you want to remove " + lstPlaylist.getSelectionModel().getSelectedItem().getName() + " playlist?\n" +
+            alert.setTitle("Remove " + lstPlaylist.getSelectionModel().getSelectedItem() + "?");
+            alert.setHeaderText("Remove " + lstPlaylist.getSelectionModel().getSelectedItem() + "?");
+            alert.setContentText("Are you sure, you want to remove " + lstPlaylist.getSelectionModel().getSelectedItem() + " playlist?\n" +
                     "All songs in the playlist will be lost, and will need to be readded");
 
 
             Optional<ButtonType> result = alert.showAndWait();
             if (result.isPresent()) {
                 if (result.get() == ButtonType.OK) {
-                    playlistHandler.removePlaylist(lstPlaylist.getSelectionModel().getSelectedIndex());
+                    dbPlaylistModel.deletePlaylist(currentPlaylist);
                 }
             }
+            allPlaylists.clear();
+            allPlaylists.addAll(dbPlaylistModel.getPlaylistNames());
+
+            lstPlaylist.setItems(allPlaylists);
         }
     }
 
@@ -225,7 +237,7 @@ public class MyTunesController implements Initializable {
      * Håndtere hvad der skal ske når vi ville ændre i vores playliste.
      * Det vil sige, opdatere dens navn.
      */
-    public void handleEditPlaylist() {
+    public void handleEditPlaylist() throws SQLException {
         if (lstPlaylist.getSelectionModel().getSelectedItem() != null) {
             TextInputDialog dialog = new TextInputDialog("New Playlist Name");
             dialog.setTitle("Edit playlist");
@@ -233,9 +245,19 @@ public class MyTunesController implements Initializable {
             dialog.setContentText("Please enter your new playlist name: ");
 
             Optional<String> result = dialog.showAndWait();
-                result.ifPresent(s -> playlistHandler.updatePlaylist(lstPlaylist.getSelectionModel().getSelectedIndex(), s));
-            lblCurrentPlaylist.setText(lstPlaylist.getSelectionModel().getSelectedItem().getName());
-            lstPlaylist.refresh();
+            result.ifPresent(s -> {
+                try {
+                    dbPlaylistModel.editPlaylistName(currentPlaylist, s);
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                }
+            });
+            lblCurrentPlaylist.setText(currentPlaylist);
+
+            allPlaylists.clear();
+            allPlaylists.addAll(dbPlaylistModel.getPlaylistNames());
+
+            lstPlaylist.setItems(allPlaylists);
         }
     }
 
@@ -254,7 +276,6 @@ public class MyTunesController implements Initializable {
      * Håndtere vores manuelle tilføj sang funktion.
      */
     public void handleAddSong() throws SQLException {
-        currentPlaylist = playlistHandler.getPlaylists().get(lstPlaylist.getSelectionModel().getSelectedIndex());
 
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Select a song you want to add to your playlist");
@@ -296,16 +317,16 @@ public class MyTunesController implements Initializable {
      */
     public void handleSongSelect() {
         if (lstQueue.getSelectionModel().getSelectedItem() != null) {
-            Song cSong = lstQueue.getSelectionModel().getSelectedItem();
+            dbSong cSong = lstQueue.getSelectionModel().getSelectedItem();
 
-            mediaManager.setMedia(cSong.getPath());
+            mediaManager.setMedia(cSong.getFilePath());
 
-            lblTimeMin.setText(cSong.getCurrentTime());
-            lblTimeMax.setText(cSong.getDuration().get());
+            lblTimeMin.setText("0:00");
+            lblTimeMax.setText(cSong.getDurationString());
             imgAlbumArt.setImage(cSong.getAlbumArt());
             lblArtist.setText(cSong.getArtist());
-            lblSongTitle.setText(cSong.getSongName());
-            lblTitlebar.setText("Codify - " + cSong.getSongName() + " by " + cSong.getArtist());
+            lblSongTitle.setText(cSong.getTitle());
+            lblTitlebar.setText("Codify - " + cSong.getTitle() + " by " + cSong.getArtist());
 
             sldTime.setMax(100);
         }
@@ -351,9 +372,9 @@ public class MyTunesController implements Initializable {
             icnShuffle.setOnMouseExited(mouseEvent -> icnShuffle.setStyle("-fx-font-family: FontAwesome; -fx-fill: #4f4f4f; -fx-font-size: 15"));
             shuffleActive = false;
         }
-        mediaManager.setCurrentPlaylist(currentPlaylist);
+        //mediaManager.setCurrentPlaylist(currentPlaylist);
         mediaManager.shuffle(shuffleActive);
-        lstQueue.setItems(mediaManager.getPlayOrder());
+        //lstQueue.setItems(mediaManager.getPlayOrder());
     }
 
     /**
@@ -427,7 +448,6 @@ public class MyTunesController implements Initializable {
                 allSongs.add(s);
             }
             tblAllsongs.refresh();
-
         });
     }
 
@@ -505,7 +525,7 @@ public class MyTunesController implements Initializable {
             tblClmSpacer.setPrefWidth(406);
 
         }
-        lstQueue.setItems(mediaManager.getPlayOrder());
+        //lstQueue.setItems(mediaManager.getPlayOrder());
         lstQueue.refresh();
     }
 

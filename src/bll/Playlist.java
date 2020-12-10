@@ -1,12 +1,9 @@
 package bll;
 
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 public class Playlist {
     private String name;
@@ -47,8 +44,8 @@ public class Playlist {
      * Getter for alle sang elementer der er i den nuværende playliste.
      * @return en observable liste med type Song.
      */
-    public List<dbSong> getSongs() {
-        return songs;
+    public ObservableList<Song> getSongs() {
+        return null;
     }
 
 
