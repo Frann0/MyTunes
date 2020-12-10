@@ -46,11 +46,11 @@ public class EditSongViewController implements Initializable {
     }
 
     public void setFields(){
-        Song oldSong = dbsongModel.getOldSong();
-        titleField.setText(oldSong.getSongName());
+        dbSong oldSong = dbsongModel.getOldSong();
+        titleField.setText(oldSong.getTitle());
         artistField.setText(oldSong.getArtist());
         categoryField.setText(oldSong.getGenre());
-        timeLabel.setText(oldSong.getDuration().getValue());
+        timeLabel.setText(oldSong.getDurationString());
     }
 
     public void setDbsongModel(dbSongModel dbsongModel) {
@@ -59,13 +59,13 @@ public class EditSongViewController implements Initializable {
 
     // TODO Update according to the dbSong updates in MyTunesController
     public void handleSaveEdit() throws SQLException {
-        Song oldSong = dbsongModel.getOldSong();
+        dbSong oldSong = dbsongModel.getOldSong();
 
         String title = titleField.getText();
         String artist = artistField.getText();
         String genre = categoryField.getText();
 
-        dbSong newSong = new dbSong(title,genre,oldSong.getDuration().getValue(), oldSong.getPath(), artist);
+        dbSong newSong = new dbSong(title,genre,oldSong.getDurationString(), oldSong.getFilePath(), artist);
         dbsongModel.updateSong(newSong);
 
         Stage window = (Stage) anchorPane.getScene().getWindow();

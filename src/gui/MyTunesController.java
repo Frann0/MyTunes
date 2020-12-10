@@ -79,15 +79,15 @@ public class MyTunesController implements Initializable {
     @FXML
     private MaterialDesignIconView icnRepeat;
     @FXML
-    private TableView<Song> tblAllsongs;
+    private TableView<dbSong> tblAllsongs;
     @FXML
-    private TableColumn<Song, String> tblClmArtist;
+    private TableColumn<dbSong, String> tblClmArtist;
     @FXML
-    private TableColumn<Song, String> tblClmSongTitle;
+    private TableColumn<dbSong, String> tblClmSongTitle;
     @FXML
-    private TableColumn<Song, String> tblClmGenre;
+    private TableColumn<dbSong, String> tblClmGenre;
     @FXML
-    private TableColumn<Song, String> tblClmTime;
+    private TableColumn<dbSong, String> tblClmTime;
     @FXML
     private TableColumn tblClmSpacer;
     @FXML
@@ -98,7 +98,7 @@ public class MyTunesController implements Initializable {
     private VBox vboxQueue;
 
     private String currentPlaylist;
-    private final ObservableList<Song> allSongs = FXCollections.observableArrayList();
+    private final ObservableList<dbSong> allSongs = FXCollections.observableArrayList();
     private final ObservableList<String> allPlaylists = FXCollections.observableArrayList();
     private final ObservableList<dbSong> playlistSongs = FXCollections.observableArrayList();
 
@@ -141,12 +141,19 @@ public class MyTunesController implements Initializable {
             throwables.printStackTrace();
         }
 
+        MediaPlayer mediaPlayer = new MediaPlayer(new Media(new File("src/Resources/123.mp3").toURI().toString()));
+        mediaPlayer.setOnReady(() -> {
+            allSongs.addAll(dbsongModel.getSongs());
+        });
+
+
         lstPlaylist.setItems(allPlaylists);
 
         tblClmArtist.setCellValueFactory(new PropertyValueFactory<>("artist"));
-        tblClmSongTitle.setCellValueFactory(new PropertyValueFactory<>("songName"));
+        tblClmSongTitle.setCellValueFactory(new PropertyValueFactory<>("title"));
         tblClmGenre.setCellValueFactory(new PropertyValueFactory<>("genre"));
         tblClmTime.setCellValueFactory(new PropertyValueFactory<>("durationString"));
+
 
         tblAllsongs.setItems(allSongs);
 
@@ -173,11 +180,13 @@ public class MyTunesController implements Initializable {
     /**
      * Håndtere hvad der skal ske når vi vælger en af vores playlister.
      */
-    public void handlePlaylistSelect() {
+    public void handlePlaylistSelect() throws SQLException {
 
         if (lstPlaylist.getSelectionModel().getSelectedItem() != null) {
             currentPlaylist = lstPlaylist.getSelectionModel().getSelectedItem();
             lblCurrentPlaylist.setText(currentPlaylist);
+            playlistSongs.clear();
+            playlistSongs.addAll(dbPlaylistModel.getPlaylist(currentPlaylist));
             lstQueue.setItems(playlistSongs);
 
         }
@@ -276,25 +285,33 @@ public class MyTunesController implements Initializable {
      * Håndtere vores manuelle tilføj sang funktion.
      */
     public void handleAddSong() throws SQLException {
-
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Select a song you want to add to your playlist");
         FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("Sound files (*.wav , *.mp3)", "*.wav", "*.mp3");
         fileChooser.getExtensionFilters().add(extFilter);
         File selectedFile = fileChooser.showOpenDialog(root.getScene().getWindow());
+        MediaPlayer mp = new MediaPlayer(new Media(selectedFile.toURI().toString()));
 
-        if (selectedFile != null) {
-            Song s = new Song(selectedFile);
-            dbsongModel.addSong(new dbSong(s.getSongName(), s.getGenre(), s.getDuration().getValue(), s.getPath(), s.getArtist()));
-        }
+        dbSong s = new dbSong(selectedFile);
+        mp.setOnReady(() -> {
+            allSongs.add(s);
+            try {
+                dbsongModel.addSong(s);
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+            tblAllsongs.refresh();
+        });
+
     }
 
     /**
      * Håndtere hvad der skal ske når vi vil slette en sang fra vores playliste
      */
-    public void handleRemoveSong() {
+    public void handleRemoveSong() throws SQLException {
+        dbsongModel.deleteSong(tblAllsongs.getSelectionModel().getSelectedItem());
         allSongs.remove(tblAllsongs.getSelectionModel().getSelectedItem());
-       // currentPlaylist.removeSong(tblAllsongs.getSelectionModel().getSelectedItem());
+        // currentPlaylist.removeSong(tblAllsongs.getSelectionModel().getSelectedItem());
     }
 
     public void handleEditSong(ActionEvent actionEvent) throws IOException {
@@ -440,12 +457,17 @@ public class MyTunesController implements Initializable {
      */
     public void handleDragDropped(DragEvent dragEvent) {
         List<File> selectedFiles = dragEvent.getDragboard().getFiles();
-        ArrayList<Song> songList = dragAndDropHandler.handleDragDropped(selectedFiles);
+        ArrayList<dbSong> songList = dragAndDropHandler.handleDragDropped(selectedFiles);
 
         MediaPlayer mp = new MediaPlayer(new Media(selectedFiles.get(0).toURI().toString()));
         mp.setOnReady(() -> {
-            for (Song s : songList) {
+            for (dbSong s : songList) {
                 allSongs.add(s);
+                try {
+                    dbsongModel.addSong(s);
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                }
             }
             tblAllsongs.refresh();
         });
@@ -477,19 +499,26 @@ public class MyTunesController implements Initializable {
         stage.setIconified(true);
     }
 
-    public void handleAddToPlaylist(ActionEvent actionEvent) {
+    public void handleAddToPlaylist(ActionEvent actionEvent) throws SQLException {
         if (tblAllsongs.getSelectionModel().getSelectedItem() != null) {
-            mediaManager.getPlayOrder().add(tblAllsongs.getSelectionModel().getSelectedItem());
-            mediaManager.getUnShuffledPlayOrder().add(tblAllsongs.getSelectionModel().getSelectedItem());
+            //mediaManager.getPlayOrder().add(tblAllsongs.getSelectionModel().getSelectedItem());
+            //mediaManager.getUnShuffledPlayOrder().add(tblAllsongs.getSelectionModel().getSelectedItem());
             //currentPlaylist.addSong(tblAllsongs.getSelectionModel().getSelectedItem());
+            dbPlaylistModel.addSongToPlaylist(currentPlaylist, tblAllsongs.getSelectionModel().getSelectedItem());
+            playlistSongs.clear();
+            playlistSongs.addAll(dbPlaylistModel.getPlaylist(currentPlaylist));
+
+            lstQueue.setItems(playlistSongs);
+            lstQueue.refresh();
         }
     }
 
-    public void handleRemoveFromPlaylist(ActionEvent actionEvent) {
+    public void handleRemoveFromPlaylist(ActionEvent actionEvent) throws SQLException {
         if (lstQueue.getSelectionModel().getSelectedItem() != null) {
-            mediaManager.getPlayOrder().remove(lstQueue.getSelectionModel().getSelectedItem());
-            mediaManager.getUnShuffledPlayOrder().remove(lstQueue.getSelectionModel().getSelectedItem());
-            //currentPlaylist.removeSong(lstQueue.getSelectionModel().getSelectedItem());
+            dbPlaylistModel.removeSongFromPlaylist(currentPlaylist, lstQueue.getSelectionModel().getSelectedItem());
+            playlistSongs.clear();
+            playlistSongs.addAll(dbPlaylistModel.getPlaylist(currentPlaylist));
+            lstQueue.setItems(playlistSongs);
         }
     }
 
@@ -534,8 +563,8 @@ public class MyTunesController implements Initializable {
      */
     public void handleMoveUpList() {
         if (lstQueue.getSelectionModel().getSelectedIndex() != 0 && lstQueue.getSelectionModel().getSelectedItem() != null) {
-            Collections.swap(lstQueue.getItems(),lstQueue.getSelectionModel().getSelectedIndex(),lstQueue.getSelectionModel().getSelectedIndex()-1);
-            lstQueue.getSelectionModel().select(lstQueue.getSelectionModel().getSelectedIndex()-1);
+            Collections.swap(lstQueue.getItems(), lstQueue.getSelectionModel().getSelectedIndex(), lstQueue.getSelectionModel().getSelectedIndex() - 1);
+            lstQueue.getSelectionModel().select(lstQueue.getSelectionModel().getSelectedIndex() - 1);
         }
         lstQueue.refresh();
     }
@@ -544,9 +573,9 @@ public class MyTunesController implements Initializable {
      * Flytter en sang i vores nuværende playliste ned, hvis ikke indexet er bunden af listen
      */
     public void handleMoveDownList() {
-        if (lstQueue.getSelectionModel().getSelectedIndex() != lstQueue.getItems().size()-1 && lstQueue.getSelectionModel().getSelectedItem() != null) {
-            Collections.swap(lstQueue.getItems(),lstQueue.getSelectionModel().getSelectedIndex(),lstQueue.getSelectionModel().getSelectedIndex()+1);
-            lstQueue.getSelectionModel().select(lstQueue.getSelectionModel().getSelectedIndex()+1);
+        if (lstQueue.getSelectionModel().getSelectedIndex() != lstQueue.getItems().size() - 1 && lstQueue.getSelectionModel().getSelectedItem() != null) {
+            Collections.swap(lstQueue.getItems(), lstQueue.getSelectionModel().getSelectedIndex(), lstQueue.getSelectionModel().getSelectedIndex() + 1);
+            lstQueue.getSelectionModel().select(lstQueue.getSelectionModel().getSelectedIndex() + 1);
         }
         lstQueue.refresh();
     }

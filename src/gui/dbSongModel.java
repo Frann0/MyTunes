@@ -12,7 +12,7 @@ public class dbSongModel {
     dbSongManager dbsongManager;
     //private ObservableList<dbSong> songs;
     private ObservableList<dbSong> allSongs;
-    private Song oldSong;
+    private dbSong oldSong;
 
     public dbSongModel() throws SQLException {
         dbsongManager = new dbSongManager();
@@ -23,13 +23,14 @@ public class dbSongModel {
 
     public void addSong(dbSong song) throws SQLException {
         dbsongManager.addSong(song);
+        updateSongList();
     }
 
-    public void setOldSong(Song oldSong) {
+    public void setOldSong(dbSong oldSong) {
         this.oldSong = oldSong;
     }
 
-    public Song getOldSong() {
+    public dbSong getOldSong() {
         return oldSong;
     }
 
@@ -41,6 +42,7 @@ public class dbSongModel {
     public void deleteSong(dbSong song) throws SQLException {
         allSongs.remove(song);
         dbsongManager.deleteSong(song);
+        updateSongList();
     }
 
     public void updateSong(dbSong newSong) throws SQLException {
@@ -52,5 +54,4 @@ public class dbSongModel {
         allSongs.clear();
         allSongs.addAll(dbsongManager.getAllSongs());
     }
-
 }

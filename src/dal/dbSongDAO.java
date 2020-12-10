@@ -6,7 +6,10 @@ import bll.dbSong;
 
 import com.microsoft.sqlserver.jdbc.SQLServerException;
 import dal.db.MyDatabaseConnector;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 
+import java.io.File;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,25 +19,31 @@ public class dbSongDAO {
 
     private MyDatabaseConnector databaseConnector;
 
-    public dbSongDAO(){databaseConnector = new MyDatabaseConnector();}
+    public dbSongDAO() {
+        databaseConnector = new MyDatabaseConnector();
+    }
 
     /**
      * Return a list of all songs in the database, converted into dbSong objects.
+     *
      * @return
      * @throws SQLException
      */
     public List<dbSong> getAllSongs() throws SQLException {
         List<dbSong> allSongs = new ArrayList<>();
+        Media m = new Media(new File("src/Resources/123.mp3").toURI().toString());
+        MediaPlayer mp = new MediaPlayer(m);
 
-        try(Connection con = databaseConnector.getConnection()){
-            String sql = "SELECT * FROM Song;";
+        Connection con = databaseConnector.getConnection();
+        String sql = "SELECT * FROM Song;";
 
-            Statement statement = con.createStatement();
+        Statement statement = con.createStatement();
 
-            if(statement.execute(sql)){
+        try {
+            if (statement.execute(sql)) {
                 ResultSet resultSet = statement.getResultSet();
 
-                while(resultSet.next()){
+                while (resultSet.next()) {
                     String songTitle = resultSet.getString("songtitle");
                     String category = resultSet.getString("category");
                     String duration = resultSet.getString("duration");
@@ -43,29 +52,33 @@ public class dbSongDAO {
                     allSongs.add(new dbSong(songTitle, category, duration, filePath, artist));
                 }
             }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
         }
+
+
         return allSongs;
     }
 
     public int getNextAvailableSongId() throws SQLException {
-        try(Connection con = databaseConnector.getConnection()){
-            int id = -1 ;
+        try (Connection con = databaseConnector.getConnection()) {
+            int id = -1;
             String sql = "SELECT Id FROM Song;";
 
             Statement statement = con.createStatement();
 
-            if(statement.execute(sql)){
+            if (statement.execute(sql)) {
                 ResultSet resultSet = statement.getResultSet();
 
-                while(resultSet.next()){
+                while (resultSet.next()) {
                     id = resultSet.getInt("id");
                 }
 
             }
-            if(id == -1){
+            if (id == -1) {
                 return id;
-            } else{
-                return id +1;
+            } else {
+                return id + 1;
             }
         }
     }
@@ -73,33 +86,41 @@ public class dbSongDAO {
     /**
      * Add a new song to the database in accordance with the database column structure.
      * The injection uses prepared statement.
+     *
      * @param song
      * @throws SQLException
      */
     public void addSong(dbSong song) throws SQLException {
+        MediaPlayer mp = new MediaPlayer(new Media(song.getFilePath()));
+        mp.setOnReady(() -> {
+            String songTitle = song.getTitle();
+            String genre = song.getGenre();
+            String duration = song.getDurationString();
+            String filePath = song.getFilePath();
+            String artist = song.getArtist();
 
-        String songTitle = song.getTitle();
-        String genre = song.getGenre();
-        String duration = song.getDurationInSeconds();
-        String filePath = song.getFilePath();
-        String artist = song.getArtist();
+            try (Connection con = databaseConnector.getConnection()) {
 
-        try(Connection con = databaseConnector.getConnection()) {
+                PreparedStatement pSql = con.prepareStatement("INSERT INTO Song VALUES(?,?,?,?,?)");
+                pSql.setString(1, songTitle);
+                pSql.setString(2, genre);
+                pSql.setString(3, duration);
+                pSql.setString(4, filePath);
+                pSql.setString(5, artist);
 
-            PreparedStatement pSql = con.prepareStatement("INSERT INTO Song VALUES(?,?,?,?,?)");
-            pSql.setString(1,songTitle);
-            pSql.setString(2,genre);
-            pSql.setString(3,duration);
-            pSql.setString(4,filePath);
-            pSql.setString(5, artist);
-
-            pSql.execute();
-        }
+                pSql.execute();
+            } catch (SQLServerException throwables) {
+                throwables.printStackTrace();
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+        });
     }
 
     /**
      * Delete a song from the Song table in the database, IF the database subject is by the
      * specified artist, and has the specified song title.
+     *
      * @param song
      * @throws SQLException
      */
@@ -107,15 +128,14 @@ public class dbSongDAO {
         String title = song.getTitle();
         String artist = song.getArtist();
 
-        try(Connection con = databaseConnector.getConnection()){
+        try (Connection con = databaseConnector.getConnection()) {
 
             String sql = "SELECT Id FROM Song;";
 
             Statement statement = con.createStatement();
 
-            if(statement.execute(sql)){
+            if (statement.execute(sql)) {
                 ResultSet resultSet = statement.getResultSet();
-
 
 
                 String deleteSql = "DELETE FROM Song WHERE Songtitle='" + title + "' AND Artist='" + artist + "'";
@@ -123,10 +143,10 @@ public class dbSongDAO {
                 Statement deleteStatement = con.createStatement();
                 deleteStatement.execute(deleteSql);
 
-                }
-
             }
+
         }
+    }
 
     public void editSong(dbSong newSong) throws SQLException {
         String Title = newSong.getTitle();
@@ -134,7 +154,7 @@ public class dbSongDAO {
         String Path = newSong.getFilePath();
         String Artist = newSong.getArtist();
 
-        try(Connection con = databaseConnector.getConnection()){
+        try (Connection con = databaseConnector.getConnection()) {
 
             Statement statement = con.createStatement();
             statement.addBatch("UPDATE Song SET Songtitle= '" + Title + "' WHERE Filepath= '" + Path + "'");
@@ -143,17 +163,13 @@ public class dbSongDAO {
 
             statement.executeBatch();
 
-            if(statement != null){
+            if (statement != null) {
                 statement.close();
             }
 
         }
 
     }
-
-
-
-
 
 
     public static void main(String[] args) throws SQLException {
@@ -165,7 +181,7 @@ public class dbSongDAO {
 
         //dbmyTunesDAO.deleteSong("Jingle", "Bob Dylan");
         List<dbSong> allSongs = dbmySongDAO.getAllSongs();
-        for(dbSong song : allSongs){
+        for (dbSong song : allSongs) {
             System.out.println(song);
         }
 

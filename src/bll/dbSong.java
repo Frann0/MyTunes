@@ -6,6 +6,7 @@ import javafx.scene.image.Image;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 
+import java.io.File;
 import java.util.concurrent.TimeUnit;
 
 public class dbSong {
@@ -40,6 +41,32 @@ public class dbSong {
             setDurationInSeconds(durationInSeconds);
         });
 
+    }
+
+    public dbSong(File f) {
+        Media m = new Media(f.toURI().toString());
+
+        System.out.println(f.toURI().toString());
+
+        MediaPlayer mdp = new MediaPlayer(m);
+
+        mdp.setOnReady(()->{
+            double millis = m.getDuration().toMillis();
+            long minutes = TimeUnit.MILLISECONDS.toMinutes((long) millis);
+            long seconds = TimeUnit.MILLISECONDS.toSeconds((long) millis) - (minutes * 60);
+            if (seconds > 10) {
+                durationString.set(minutes + ":" + seconds);
+            }else{
+                durationString.set(minutes + ":0" + seconds);
+            }
+            setTitle(m.getMetadata().get("title").toString());
+            setArtist(m.getMetadata().get("artist").toString());
+            setAlbumArt(m.getMetadata().get("image") != null ? (Image) m.getMetadata().get("image") : albumArt);
+            setGenre(m.getMetadata().get("genre").toString());
+        });
+
+
+        setFilePath(f.toURI().toString());
     }
 
     public String getTitle() {
@@ -96,7 +123,7 @@ public class dbSong {
 
     @Override
     public String toString() {
-        return title + " " + genre + " " + durationInSeconds + " " + filePath + " " + artist;
+        return title.get() + " " + genre.get() + " " + durationString.get() + " " + filePath + " " + artist.get();
     }
 
 /*

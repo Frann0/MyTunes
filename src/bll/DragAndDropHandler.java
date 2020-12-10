@@ -2,6 +2,7 @@ package bll;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 
 import java.io.File;
@@ -20,13 +21,13 @@ public class DragAndDropHandler {
      * @param selectedFiles de filer der er dropped.
      * @return listen af de nye sange.
      */
-    public ArrayList<Song> handleDragDropped(List<File> selectedFiles) {
-        ArrayList<Song> songs = new ArrayList<>();
+    public ArrayList<dbSong> handleDragDropped(List<File> selectedFiles) {
+        ArrayList<dbSong> songs = new ArrayList<>();
         selectedFiles.sort((Comparator.comparing(File::getName)));
         for (File f : selectedFiles){
-            Song s = new Song(f);
+            dbSong s = new dbSong(f);
 
-            MediaPlayer mp = new MediaPlayer(s.getMedia());
+            MediaPlayer mp = new MediaPlayer(new Media(s.getFilePath()));
             mp.setOnReady(() -> {
                 songs.add(s);
             });
