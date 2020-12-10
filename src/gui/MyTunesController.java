@@ -501,15 +501,18 @@ public class MyTunesController implements Initializable {
 
     public void handleAddToPlaylist(ActionEvent actionEvent) throws SQLException {
         if (tblAllsongs.getSelectionModel().getSelectedItem() != null) {
-            //mediaManager.getPlayOrder().add(tblAllsongs.getSelectionModel().getSelectedItem());
-            //mediaManager.getUnShuffledPlayOrder().add(tblAllsongs.getSelectionModel().getSelectedItem());
-            //currentPlaylist.addSong(tblAllsongs.getSelectionModel().getSelectedItem());
-            dbPlaylistModel.addSongToPlaylist(currentPlaylist, tblAllsongs.getSelectionModel().getSelectedItem());
-            playlistSongs.clear();
-            playlistSongs.addAll(dbPlaylistModel.getPlaylist(currentPlaylist));
+            dbSong cSong = tblAllsongs.getSelectionModel().getSelectedItem();
+            MediaPlayer mp = new MediaPlayer(new Media(cSong.getFilePath()));
+            mp.setOnReady(() -> {
+                playlistSongs.add(cSong);
+                try {
+                    dbPlaylistModel.addSongToPlaylist(currentPlaylist, cSong);
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                }
 
-            lstQueue.setItems(playlistSongs);
-            lstQueue.refresh();
+                lstQueue.refresh();
+            });
         }
     }
 

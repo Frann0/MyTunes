@@ -123,7 +123,7 @@ public class dbSong {
 
     @Override
     public String toString() {
-        return title.get() + " " + genre.get() + " " + durationString.get() + " " + filePath + " " + artist.get();
+        return artist.get() + " - " + title.get();
     }
 
 /*
