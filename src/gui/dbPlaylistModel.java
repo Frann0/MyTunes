@@ -3,7 +3,6 @@ package gui;
 import bll.Playlist;
 import bll.dbPlaylistManager;
 import bll.dbSong;
-import bll.dbSongManager;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -42,6 +41,10 @@ public class dbPlaylistModel {
     // TODO editPlaylistName
     public void editPlaylistName(String oldName, String newName) throws SQLException {
         dbplaylistManager.editPlaylistName(oldName, newName);
+    }
+
+    public List<String> getPlaylistNames() throws SQLException {
+        return dbplaylistManager.getPlaylistNames();
     }
 
 }

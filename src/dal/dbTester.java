@@ -72,6 +72,7 @@ public class dbTester {
             System.out.println(song);
         }*/
 
+        /*
         List<Playlist> allPlaylists = p.getAllPlaylists();
         for(int i = 0; i < allPlaylists.size(); i++){
             List<dbSong> songs =  allPlaylists.get(i).getSongs();
@@ -81,6 +82,11 @@ public class dbTester {
                 System.out.println(song.getArtist());
 
             }
+        }*/
+
+        List<String> pl = p.getPlaylistNames();
+        for(String sd : pl){
+            System.out.println(sd);
         }
 
 

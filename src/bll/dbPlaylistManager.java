@@ -45,5 +45,9 @@ public class dbPlaylistManager {
         dbplaylistDAO.editPlaylistName(oldName, newName);
     }
 
+    public List<String> getPlaylistNames() throws SQLException {
+        return dbplaylistDAO.getPlaylistNames();
+    }
+
 
 }

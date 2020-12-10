@@ -2,6 +2,7 @@ package dal;
 
 import bll.Playlist;
 import bll.dbSong;
+import com.microsoft.sqlserver.jdbc.SQLServerException;
 import dal.db.MyDatabaseConnector;
 
 import java.sql.*;
@@ -189,6 +190,27 @@ public class dbPlaylistDAO {
 
         }
     }
+
+    public List<String> getPlaylistNames() throws SQLException {
+
+        List<String> playlistNames = new ArrayList<>();
+
+        try(Connection con = databaseConnector.getConnection()) {
+
+            String sql = "SELECT * FROM PlaylistList;";
+
+            Statement statement = con.createStatement();
+
+            if (statement.execute(sql)) {
+                ResultSet resultSet = statement.getResultSet();
+
+                while (resultSet.next()) {
+                        playlistNames.add(resultSet.getString("PlName"));
+                    }
+                }
+            }
+        return playlistNames;
+        }
 
 
     public static void main(String[] args) throws SQLException {

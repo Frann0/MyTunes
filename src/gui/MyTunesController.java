@@ -233,7 +233,7 @@ public class MyTunesController implements Initializable {
             dialog.setContentText("Please enter your new playlist name: ");
 
             Optional<String> result = dialog.showAndWait();
-            result.ifPresent(s -> playlistHandler.updatePlaylist(lstPlaylist.getSelectionModel().getSelectedIndex(), s));
+                result.ifPresent(s -> playlistHandler.updatePlaylist(lstPlaylist.getSelectionModel().getSelectedIndex(), s));
             lblCurrentPlaylist.setText(lstPlaylist.getSelectionModel().getSelectedItem().getName());
             lstPlaylist.refresh();
         }
