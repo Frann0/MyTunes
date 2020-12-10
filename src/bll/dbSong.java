@@ -46,8 +46,6 @@ public class dbSong {
     public dbSong(File f) {
         Media m = new Media(f.toURI().toString());
 
-        System.out.println(f.toURI().toString());
-
         MediaPlayer mdp = new MediaPlayer(m);
 
         mdp.setOnReady(()->{

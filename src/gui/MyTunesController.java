@@ -146,6 +146,15 @@ public class MyTunesController implements Initializable {
             allSongs.addAll(dbsongModel.getSongs());
         });
 
+        if (!allPlaylists.isEmpty()){
+            lstPlaylist.getSelectionModel().select(allPlaylists.get(0));
+            try {
+                handlePlaylistSelect();
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+        }
+
 
         lstPlaylist.setItems(allPlaylists);
 
@@ -186,8 +195,19 @@ public class MyTunesController implements Initializable {
             currentPlaylist = lstPlaylist.getSelectionModel().getSelectedItem();
             lblCurrentPlaylist.setText(currentPlaylist);
             playlistSongs.clear();
-            playlistSongs.addAll(dbPlaylistModel.getPlaylist(currentPlaylist));
+
+            MediaPlayer mediaPlayer = new MediaPlayer(new Media(new File("src/Resources/123.mp3").toURI().toString()));
+            mediaPlayer.setOnReady(() -> {
+                try {
+                    playlistSongs.addAll(dbPlaylistModel.getPlaylist(currentPlaylist));
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                }
+
+            });
             lstQueue.setItems(playlistSongs);
+            lstQueue.refresh();
+
 
         }
     }
@@ -226,7 +246,7 @@ public class MyTunesController implements Initializable {
             alert.setTitle("Remove " + lstPlaylist.getSelectionModel().getSelectedItem() + "?");
             alert.setHeaderText("Remove " + lstPlaylist.getSelectionModel().getSelectedItem() + "?");
             alert.setContentText("Are you sure, you want to remove " + lstPlaylist.getSelectionModel().getSelectedItem() + " playlist?\n" +
-                    "All songs in the playlist will be lost, and will need to be readded");
+                    "All songs in the playlist will be lost, and will need to be re-added");
 
 
             Optional<ButtonType> result = alert.showAndWait();
@@ -309,6 +329,10 @@ public class MyTunesController implements Initializable {
      * Håndtere hvad der skal ske når vi vil slette en sang fra vores playliste
      */
     public void handleRemoveSong() throws SQLException {
+        if (playlistSongs.contains(tblAllsongs.getSelectionModel().getSelectedItem())){
+            dbPlaylistModel.removeSongFromPlaylist(currentPlaylist,tblAllsongs.getSelectionModel().getSelectedItem());
+            playlistSongs.remove(tblAllsongs.getSelectionModel().getSelectedItem());
+        }
         dbsongModel.deleteSong(tblAllsongs.getSelectionModel().getSelectedItem());
         allSongs.remove(tblAllsongs.getSelectionModel().getSelectedItem());
         // currentPlaylist.removeSong(tblAllsongs.getSelectionModel().getSelectedItem());
@@ -516,18 +540,25 @@ public class MyTunesController implements Initializable {
         }
     }
 
-    public void handleRemoveFromPlaylist(ActionEvent actionEvent) throws SQLException {
+    public void handleRemoveFromPlaylist(ActionEvent actionEvent){
         if (lstQueue.getSelectionModel().getSelectedItem() != null) {
-            dbPlaylistModel.removeSongFromPlaylist(currentPlaylist, lstQueue.getSelectionModel().getSelectedItem());
-            playlistSongs.clear();
-            playlistSongs.addAll(dbPlaylistModel.getPlaylist(currentPlaylist));
-            lstQueue.setItems(playlistSongs);
+            dbSong cSong = lstQueue.getSelectionModel().getSelectedItem();
+            MediaPlayer mp = new MediaPlayer(new Media(cSong.getFilePath()));
+            mp.setOnReady(() -> {
+                playlistSongs.remove(cSong);
+                try {
+                    dbPlaylistModel.removeSongFromPlaylist(currentPlaylist, cSong);
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                }
+                lstQueue.refresh();
+            });
         }
     }
 
     public void handleShowPlaylist() {
         icnQueue.setOnMouseEntered(mouseEvent -> icnQueue.setStyle("-fx-font-family: FontAwesome; -fx-fill: white; -fx-font-size: 20"));
-        FadeTransition fadeT = new FadeTransition(Duration.millis(500), vboxQueue);
+        FadeTransition fadeT = new FadeTransition(Duration.millis(250), vboxQueue);
 
         if (!queueShowing) {
             icnQueue.setStyle("-fx-font-family: FontAwesome; -fx-fill: #71BA51; -fx-font-size: 20");
