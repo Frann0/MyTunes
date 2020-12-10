@@ -298,7 +298,7 @@ public class MyTunesController implements Initializable {
         if (lstQueue.getSelectionModel().getSelectedItem() != null) {
             Song cSong = lstQueue.getSelectionModel().getSelectedItem();
 
-            mediaManager.setMedia(cSong.getMedia());
+            mediaManager.setMedia(cSong.getPath());
 
             lblTimeMin.setText(cSong.getCurrentTime());
             lblTimeMax.setText(cSong.getDuration().get());

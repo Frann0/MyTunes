@@ -11,7 +11,7 @@ public class dbTester {
 
     public static void main(String[] args) throws SQLException {
         dbSongDAO s = new dbSongDAO();
-        dbPlaylistDao p = new dbPlaylistDao();
+        dbPlaylistDAO p = new dbPlaylistDAO();
 
         String pl1 = "Test1";
         String pl2 = "Test2";

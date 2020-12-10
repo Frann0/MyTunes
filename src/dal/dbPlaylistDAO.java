@@ -2,20 +2,19 @@ package dal;
 
 import bll.Playlist;
 import bll.dbSong;
-import com.microsoft.sqlserver.jdbc.SQLServerException;
 import dal.db.MyDatabaseConnector;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class dbPlaylistDao {
+public class dbPlaylistDAO {
 
     private List<Playlist> allPlaylists;
 
     private MyDatabaseConnector databaseConnector;
 
-    public dbPlaylistDao(){
+    public dbPlaylistDAO(){
         databaseConnector = new MyDatabaseConnector();
         allPlaylists = new ArrayList<>();
     }
@@ -193,7 +192,7 @@ public class dbPlaylistDao {
 
 
     public static void main(String[] args) throws SQLException {
-        dbPlaylistDao db = new dbPlaylistDao();
+        dbPlaylistDAO db = new dbPlaylistDAO();
         db.addPlaylist("Test1");
     }
 
