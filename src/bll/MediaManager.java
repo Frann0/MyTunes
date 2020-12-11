@@ -1,43 +1,38 @@
 package bll;
 
+import gui.MyTunesController;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
-import javafx.util.Duration;
 
-import java.io.File;
+import java.sql.SQLException;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class MediaManager {
+    public IntegerProperty index = new SimpleIntegerProperty();
     private MediaPlayer mediaPlayer;
     private final ObservableList<Song> playOrder = FXCollections.observableArrayList();
     private final ObservableList<Song> unShuffledPlayOrder = FXCollections.observableArrayList();
-    private double duration = 0;
-    private double defaultvolume = 1;
+
     private double currentvolume = 1;
-    private boolean isPause = true;
+
     private StringProperty durationProperty = new SimpleStringProperty("");
-    private StringProperty currentTimeProperty = new SimpleStringProperty("");
     private List<dbSong> currentPlaylist;
+
+    private MyTunesController controller;
 
     public MediaManager(){
     }
 
-    /**
-     * håndtere at pause sangen.
-     * @param paused hvor vidt den er pauset eller ej.
-     */
-    public void play(boolean paused){
-        if (paused) {
-            mediaPlayer.play();
-        }else{
-            mediaPlayer.pause();
-        }
+    public void setController(MyTunesController controller){
+        this.controller = controller;
     }
 
     /**
@@ -53,36 +48,24 @@ public class MediaManager {
             long seconds = TimeUnit.MILLISECONDS.toSeconds((long) millis);
             long minutes = seconds/60;
             durationProperty.set(minutes + ":" + seconds);
-            mediaPlayer.setVolume(defaultvolume);
-            isPause = true;
+            mediaPlayer.setVolume(currentvolume);
         });
         mediaPlayer.setOnEndOfMedia(() -> {
-            currentPlaylist.remove(0);
-            setMedia(currentPlaylist.get(0).getFilePath());
-            resume();
+
+            if (!currentPlaylist.isEmpty()) {
+                currentPlaylist.remove(0);
+                setMedia(currentPlaylist.get(0).getFilePath());
+                index.set(index.get() +1);
+                try {
+                    controller.selectNextSong();
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                }
+                resume();
+            }
         });
     }
 
-    /**
-     * sets the time of the audio file
-     * @param time tiden, som filen skal sætes til, er af typen javafx.util.Duration
-     */
-    public void settime(double time){
-        Duration seeked = new Duration(time);
-        mediaPlayer.seek(seeked);
-    }
-
-    /**
-     * gets the current time of the song
-     */
-    public void currentTime(){
-        if(mediaPlayer != null) {
-            double millis = mediaPlayer.getCurrentTime().toMillis();
-            long seconds = TimeUnit.MILLISECONDS.toSeconds((long) millis);
-            long minutes = seconds / 60;
-   //         X.set(minutes + ":" + seconds);
-        }
-    }
 
     /**
      * sætter musiken på pause
@@ -102,14 +85,6 @@ public class MediaManager {
         }
     }
 
-    /**
-     * stopper sangen, således at den starter fra begyndelsen igen, hvis genstartet
-     */
-    public void stop(){
-        if(mediaPlayer != null) {
-            mediaPlayer.stop();
-        }
-    }
 
     /**
      * Ændret, men ikke testet, virker formentligt. i stedet for at bruge mute metoden, bruges setvolume
@@ -134,43 +109,9 @@ public class MediaManager {
      * @param volume Værdien fra slideren.
      */
     public void setVolume(double volume) {
-        mediaPlayer.setVolume(volume);
-        currentvolume = volume;
-    }
-
-    /**
-     * hæver volumen med 10%
-     */
-    public void increaseVolume() {
-        double raise = currentvolume + 0.1;
-        mediaPlayer.setVolume(raise);
-        currentvolume = raise;
-    }
-
-    /**
-     * sænker volumen med 10%
-     */
-    public void lowerVolume() {
-        double lower = currentvolume - 0.1;
-        mediaPlayer.setVolume(lower);
-        currentvolume = lower;
-    }
-
-    /**
-     * Getter for vores nuværende playorder.
-     * @return Arrayliste for vores playorder.
-     */
-    public ObservableList<Song> getPlayOrder() {
-        return playOrder;
-    }
-
-    /**
-     * getter vores unshuffleable playorder. så vi kan returnere til vores tidligere
-     * playorder hvis shuffle er deaktiveret.
-     * @return observablelist for vores unshuffleable playorder.
-     */
-    public ObservableList<Song> getUnShuffledPlayOrder() {
-        return unShuffledPlayOrder;
+        double v = map(0,100,0,1,volume);
+        mediaPlayer.setVolume(v);
+        currentvolume = v;
     }
 
     /**
@@ -187,15 +128,24 @@ public class MediaManager {
         }
     }
 
-    /**
-     * getter for duration af sangen.
-     * @return længden af sangen.
-     */
-    public StringProperty getDuration(){
-        return durationProperty;
-    }
 
     public void setCurrentPlaylist(List<dbSong> Playlist, int index) {
+        this.index.set(index);
         this.currentPlaylist = Playlist.subList(index,Playlist.size());
+    }
+
+    /**
+     * Mapper et tal mellem a1 og a2 til et nyt tal mellem b1 og b2.
+     * @param a1    fra vores normale værdi
+     * @param a2    til vores normale værdi
+     * @param b1    fra ny værdi
+     * @param b2    til ny værdi
+     * @param s     input værdi mellem a1 og a2
+     * @return      Returnere en værdi mellem b1 og b2 fra mellem a1 og a2.
+     *              F.eks bruger vi funktionen til at mappe vores volumesliders værdi som går
+     *              mellem 0-100 til vores mediaplayers set volume som går mellem 0 og 1.
+     */
+    private double map(double a1, double a2, double b1, double b2, double s){
+        return b1 + ((s - a1)*(b2 - b1))/(a2 - a1);
     }
 }

@@ -50,6 +50,11 @@ public class dbPlaylistDAO {
             pSql.setString(2, oldName);
             pSql.execute();
 
+            PreparedStatement pSql2 = con.prepareStatement("UPDATE Playlist SET PlaylistName=? Where PlaylistName=?");
+            pSql2.setString(1, newName);
+            pSql2.setString(2, oldName);
+            pSql2.execute();
+
         }
     }
 

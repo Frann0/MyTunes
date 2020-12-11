@@ -9,7 +9,10 @@ import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon;
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView;
 import javafx.animation.FadeTransition;
 import javafx.animation.Transition;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableIntegerArray;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -103,10 +106,10 @@ public class MyTunesController implements Initializable {
     private final ObservableList<dbSong> playlistSongs = FXCollections.observableArrayList();
 
     private final PlaylistHandler playlistHandler = new PlaylistHandler();
-    private final MediaManager mediaManager = new MediaManager();
+    private final MediaManager mediaManager = new MediaManager();;
     private final DragAndDropHandler dragAndDropHandler = new DragAndDropHandler();
-    private dbSongModel dbsongModel = new dbSongModel();
-    private dbPlaylistModel dbPlaylistModel = new dbPlaylistModel();
+    private final dbSongModel dbsongModel = new dbSongModel();
+    private final dbPlaylistModel dbPlaylistModel = new dbPlaylistModel();
 
     private boolean isMuted;
     private boolean isPlaying;
@@ -115,7 +118,11 @@ public class MyTunesController implements Initializable {
     private boolean repeatActive;
     private boolean queueShowing;
 
+    private int index = 0;
+
     public MyTunesController() throws SQLException {
+        mediaManager.setController(this);
+
     }
 
     /**
@@ -146,7 +153,7 @@ public class MyTunesController implements Initializable {
             allSongs.addAll(dbsongModel.getSongs());
         });
 
-        if (!allPlaylists.isEmpty()){
+        if (!allPlaylists.isEmpty()) {
             lstPlaylist.getSelectionModel().select(allPlaylists.get(0));
             try {
                 handlePlaylistSelect();
@@ -171,8 +178,8 @@ public class MyTunesController implements Initializable {
         sldTime.setValue(0);
 
         sldVolume.setMin(0);
-        sldVolume.setMax(1);
-        sldVolume.setValue(1);
+        sldVolume.setMax(100);
+        sldVolume.setValue(50);
 
         prevVolume = sldVolume.getValue();
         vboxQueue.setVisible(false);
@@ -329,8 +336,8 @@ public class MyTunesController implements Initializable {
      * Håndtere hvad der skal ske når vi vil slette en sang fra vores playliste
      */
     public void handleRemoveSong() throws SQLException {
-        if (playlistSongs.contains(tblAllsongs.getSelectionModel().getSelectedItem())){
-            dbPlaylistModel.removeSongFromPlaylist(currentPlaylist,tblAllsongs.getSelectionModel().getSelectedItem());
+        if (playlistSongs.contains(tblAllsongs.getSelectionModel().getSelectedItem())) {
+            dbPlaylistModel.removeSongFromPlaylist(currentPlaylist, tblAllsongs.getSelectionModel().getSelectedItem());
             playlistSongs.remove(tblAllsongs.getSelectionModel().getSelectedItem());
         }
         dbsongModel.deleteSong(tblAllsongs.getSelectionModel().getSelectedItem());
@@ -358,8 +365,8 @@ public class MyTunesController implements Initializable {
      */
     public void handleSongSelect() throws SQLException {
         if (lstQueue.getSelectionModel().getSelectedItem() != null) {
+            mediaManager.setCurrentPlaylist(dbPlaylistModel.getPlaylist(currentPlaylist), lstQueue.getSelectionModel().getSelectedIndex());
             dbSong cSong = lstQueue.getSelectionModel().getSelectedItem();
-            mediaManager.setCurrentPlaylist(dbPlaylistModel.getPlaylist(currentPlaylist),lstQueue.getSelectionModel().getSelectedIndex());
             mediaManager.setMedia(cSong.getFilePath());
 
             lblTimeMin.setText("0:00");
@@ -370,7 +377,13 @@ public class MyTunesController implements Initializable {
             lblTitlebar.setText("Codify - " + cSong.getTitle() + " by " + cSong.getArtist());
 
             sldTime.setMax(100);
+
         }
+    }
+
+    public void selectNextSong() throws SQLException {
+        lstQueue.getSelectionModel().select(mediaManager.index.get());
+        handleSongSelect();
     }
 
     //UI KNAPPER FUNKTIONER
@@ -542,7 +555,7 @@ public class MyTunesController implements Initializable {
         }
     }
 
-    public void handleRemoveFromPlaylist(ActionEvent actionEvent){
+    public void handleRemoveFromPlaylist(ActionEvent actionEvent) {
         if (lstQueue.getSelectionModel().getSelectedItem() != null) {
             dbSong cSong = lstQueue.getSelectionModel().getSelectedItem();
             MediaPlayer mp = new MediaPlayer(new Media(cSong.getFilePath()));
