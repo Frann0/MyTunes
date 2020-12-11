@@ -171,8 +171,8 @@ public class MyTunesController implements Initializable {
         sldTime.setValue(0);
 
         sldVolume.setMin(0);
-        sldVolume.setMax(100);
-        sldVolume.setValue(50);
+        sldVolume.setMax(1);
+        sldVolume.setValue(1);
 
         prevVolume = sldVolume.getValue();
         vboxQueue.setVisible(false);
@@ -356,10 +356,10 @@ public class MyTunesController implements Initializable {
     /**
      * Håndtere hvad der skal ske når vi vælger en sang fra listen.
      */
-    public void handleSongSelect() {
+    public void handleSongSelect() throws SQLException {
         if (lstQueue.getSelectionModel().getSelectedItem() != null) {
             dbSong cSong = lstQueue.getSelectionModel().getSelectedItem();
-
+            mediaManager.setCurrentPlaylist(dbPlaylistModel.getPlaylist(currentPlaylist),lstQueue.getSelectionModel().getSelectedIndex());
             mediaManager.setMedia(cSong.getFilePath());
 
             lblTimeMin.setText("0:00");
@@ -383,14 +383,16 @@ public class MyTunesController implements Initializable {
         //TODO Lav getState i mediaManager, og opdater ikon derefter
         tglPlay.setOnMouseEntered(mouseEvent -> tglPlay.setStyle("-fx-font-family: 'Material Design Icons'; -fx-fill: white; -fx-font-size: 40"));
         tglPlay.setOnMouseExited(mouseEvent -> tglPlay.setStyle("-fx-font-family: 'Material Design Icons'; -fx-fill: #4f4f4f; -fx-font-size: 40"));
-        if (tblAllsongs.getSelectionModel().getSelectedItem() != null) {
+        if (lstQueue.getSelectionModel().getSelectedItem() != null) {
 
             if (!isPlaying) {
                 tglPlay.setIcon(MaterialDesignIcon.PAUSE_CIRCLE_OUTLINE);
                 isPlaying = true;
+                mediaManager.resume();
             } else {
                 tglPlay.setIcon(MaterialDesignIcon.PLAY_CIRCLE_OUTLINE);
                 isPlaying = false;
+                mediaManager.pause();
             }
         }
     }
