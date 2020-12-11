@@ -10,6 +10,7 @@ import javafx.util.Duration;
 
 import java.io.File;
 import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class MediaManager {
@@ -22,7 +23,7 @@ public class MediaManager {
     private boolean isPause = true;
     private StringProperty durationProperty = new SimpleStringProperty("");
     private StringProperty currentTimeProperty = new SimpleStringProperty("");
-    private Playlist currentPlaylist;
+    private List<dbSong> currentPlaylist;
 
     public MediaManager(){
     }
@@ -54,6 +55,11 @@ public class MediaManager {
             durationProperty.set(minutes + ":" + seconds);
             mediaPlayer.setVolume(defaultvolume);
             isPause = true;
+        });
+        mediaPlayer.setOnEndOfMedia(() -> {
+            currentPlaylist.remove(0);
+            setMedia(currentPlaylist.get(0).getFilePath());
+            resume();
         });
     }
 
@@ -189,7 +195,7 @@ public class MediaManager {
         return durationProperty;
     }
 
-    public void setCurrentPlaylist(Playlist currentPlaylist) {
-        this.currentPlaylist = currentPlaylist;
+    public void setCurrentPlaylist(List<dbSong> Playlist, int index) {
+        this.currentPlaylist = Playlist.subList(index,Playlist.size());
     }
 }
