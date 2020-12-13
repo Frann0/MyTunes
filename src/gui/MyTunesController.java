@@ -448,6 +448,13 @@ public class MyTunesController implements Initializable {
             icnRepeat.setOnMouseExited(mouseEvent -> icnRepeat.setStyle("-fx-font-family: 'Material Design Icons'; -fx-fill: #4f4f4f; -fx-font-size: 20"));
             repeatActive = false;
         }
+        mediaManager.setRepeatActive(repeatActive);
+    }
+
+    public void handlePrevSong(MouseEvent mouseEvent) {
+    }
+
+    public void handleNextSong(MouseEvent mouseEvent) {
     }
 
     /**
@@ -628,5 +635,4 @@ public class MyTunesController implements Initializable {
         }
         lstQueue.refresh();
     }
-
 }

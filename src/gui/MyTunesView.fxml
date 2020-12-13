@@ -41,9 +41,9 @@
                         <JFXSlider fx:id="sldTime" layoutX="91.0" layoutY="44.0" prefHeight="14.0" prefWidth="581.0" />
                         <Label fx:id="lblTimeMin" layoutX="50.0" layoutY="42.0" textAlignment="RIGHT" textFill="WHITE" />
                         <Label fx:id="lblTimeMax" layoutX="672.0" layoutY="42.0" textFill="WHITE" />
-                        <FontAwesomeIconView fill="WHITE" glyphName="BACKWARD" layoutX="319.0" layoutY="28.0" size="15" styleClass="UIButtons" />
+                        <FontAwesomeIconView fill="WHITE" glyphName="BACKWARD" layoutX="319.0" layoutY="28.0" onMousePressed="#handlePrevSong" size="15" styleClass="UIButtons" />
                         <FontAwesomeIconView fx:id="icnShuffle" fill="WHITE" glyphName="RANDOM" layoutX="279.0" layoutY="28.0" onMousePressed="#handleShufflePlay" size="15" styleClass="shufflebutton" />
-                        <FontAwesomeIconView fill="WHITE" glyphName="FORWARD" layoutX="429.0" layoutY="28.0" size="15" styleClass="UIButtons" />
+                        <FontAwesomeIconView fill="WHITE" glyphName="FORWARD" layoutX="429.0" layoutY="28.0" onMousePressed="#handleNextSong" size="15" styleClass="UIButtons" />
                         <MaterialDesignIconView fx:id="icnRepeat" fill="WHITE" glyphName="REPEAT" layoutX="466.0" layoutY="30.0" onMousePressed="#handleRepeat" size="20" styleClass="UIButtons" />
                         <MaterialDesignIconView fx:id="tglPlay" fill="WHITE" glyphName="PLAY_CIRCLE_OUTLINE" layoutX="361.0" layoutY="38.0" onMousePressed="#handleToggleAction" size="40" styleClass="UIButtons" />
 

@@ -22,6 +22,7 @@ public class MediaManager {
     private final ObservableList<Song> unShuffledPlayOrder = FXCollections.observableArrayList();
 
     private double currentvolume = 1;
+    private boolean repeatActive = false;
 
     private StringProperty durationProperty = new SimpleStringProperty("");
     private List<dbSong> currentPlaylist;
@@ -52,10 +53,20 @@ public class MediaManager {
         });
         mediaPlayer.setOnEndOfMedia(() -> {
 
-            if (!currentPlaylist.isEmpty()) {
-                currentPlaylist.remove(0);
+            if (!repeatActive) {
+                if (!currentPlaylist.isEmpty()) {
+                    currentPlaylist.remove(0);
+                    setMedia(currentPlaylist.get(0).getFilePath());
+                    index.set(index.get() + 1);
+                    try {
+                        controller.selectNextSong();
+                    } catch (SQLException throwables) {
+                        throwables.printStackTrace();
+                    }
+                    resume();
+                }
+            } else{
                 setMedia(currentPlaylist.get(0).getFilePath());
-                index.set(index.get() +1);
                 try {
                     controller.selectNextSong();
                 } catch (SQLException throwables) {
@@ -85,6 +96,9 @@ public class MediaManager {
         }
     }
 
+    public void setRepeatActive(boolean repeatActive) {
+        this.repeatActive = repeatActive;
+    }
 
     /**
      * Ændret, men ikke testet, virker formentligt. i stedet for at bruge mute metoden, bruges setvolume
