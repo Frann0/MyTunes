@@ -210,12 +210,10 @@ public class MyTunesController implements Initializable {
                 } catch (SQLException throwables) {
                     throwables.printStackTrace();
                 }
-
             });
             lstQueue.setItems(playlistSongs);
             lstQueue.refresh();
-
-
+            
         }
     }
 
@@ -336,11 +334,12 @@ public class MyTunesController implements Initializable {
      */
     public void handleRemoveSong() throws SQLException {
         if (playlistSongs.contains(tblAllsongs.getSelectionModel().getSelectedItem())) {
-            dbPlaylistModel.removeSongFromPlaylist(currentPlaylist, tblAllsongs.getSelectionModel().getSelectedItem());
+            //dbPlaylistModel.removeSongFromPlaylist(currentPlaylist, tblAllsongs.getSelectionModel().getSelectedItem());
             playlistSongs.remove(tblAllsongs.getSelectionModel().getSelectedItem());
         }
         dbsongModel.deleteSong(tblAllsongs.getSelectionModel().getSelectedItem());
         allSongs.remove(tblAllsongs.getSelectionModel().getSelectedItem());
+
         // currentPlaylist.removeSong(tblAllsongs.getSelectionModel().getSelectedItem());
     }
 

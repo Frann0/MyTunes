@@ -57,7 +57,35 @@ public class dbSongDAO {
         return allSongs;
     }
 
+    /**
+     * Delete all playlist associations to song in the database.
+     * @param song
+     * @throws SQLException
+     */
+    public void removeSongFromAllPlaylists(dbSong song) throws SQLException {
 
+        String songId = "";
+        String filePath = song.getFilePath();
+
+        try(Connection con = databaseConnector.getConnection()){
+
+            PreparedStatement pSql = con.prepareStatement("SELECT * FROM Song");
+
+            if(pSql.execute()){
+                ResultSet resultSet = pSql.getResultSet();
+
+                while(resultSet.next()){
+                    if(resultSet.getString("filepath").equals(filePath)){
+                        songId = resultSet.getString("id");
+                    }
+                }
+            }
+
+            PreparedStatement pSql2 = con.prepareStatement("DELETE FROM Playlist WHERE SongId=?");
+            pSql2.setString(1, songId);
+            pSql2.execute();
+        }
+    }
 
     /**
      * Add a new song to the database in accordance with the database column structure.
@@ -101,20 +129,24 @@ public class dbSongDAO {
      * @throws SQLException
      */
     public void deleteSong(dbSong song) throws SQLException {
+        removeSongFromAllPlaylists(song);
         String title = song.getTitle();
         String artist = song.getArtist();
 
         try (Connection con = databaseConnector.getConnection()) {
 
-            String sql = "SELECT Id FROM Song;";
+            String sql = "SELECT * FROM Song;";
 
             Statement statement = con.createStatement();
 
             if (statement.execute(sql)) {
                 ResultSet resultSet = statement.getResultSet();
-                String deleteSql = "DELETE FROM Song WHERE Songtitle='" + title + "' AND Artist='" + artist + "'";
-                Statement deleteStatement = con.createStatement();
-                deleteStatement.execute(deleteSql);
+                PreparedStatement pSql = con.prepareStatement("DELETE FROM Song WHERE Songtitle=? AND Artist=?");
+                pSql.setString(1,title);
+                pSql.setString(2,artist);
+                //String deleteSql = "DELETE FROM Song WHERE Songtitle='" + title + "' AND Artist='" + artist + "'";
+                //Statement deleteStatement = con.createStatement();
+                pSql.execute();
 
             }
 
