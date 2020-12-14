@@ -67,54 +67,106 @@ public class dbSong {
         setFilePath(f.toURI().toString());
     }
 
+    /**
+     * Get the title of dbSong.
+     * @return title of dbSong.
+     */
     public String getTitle() {
         return title.get();
     }
 
+    /**
+     * Set the title of dbSong.
+     * @param title
+     */
     public void setTitle(String title) {
         this.title.set(title);
     }
 
+    /**
+     * Get artist of song.
+     * @return
+     */
     public String getArtist() {
         return artist.get();
     }
 
+    /**
+     * Set artist of song.
+     * @param artist
+     */
     public void setArtist(String artist) {
         this.artist.set(artist);
     }
 
+    /**
+     * Get filePath of dbSong.
+     * @return
+     */
     public String getFilePath() {
         return filePath;
     }
 
+    /**
+     * Set filepath of dbSong.
+     * @param filePath
+     */
     public void setFilePath(String filePath) {
         this.filePath = filePath;
     }
 
+    /**
+     * Get genre of dbSong.
+     * @return
+     */
     public String getGenre() {
         return genre.get();
     }
 
+    /**
+     * Set genre of dbSong.
+     * @param genre
+     */
     public void setGenre(String genre) {
         this.genre.set(genre);
     }
 
+    /**
+     * Get the duration in seconds of dbSong.
+     * @return
+     */
     public String getDurationInSeconds() {
         return durationInSeconds;
     }
 
+    /**
+     * Set the duration in seconds of dbSong.
+     * @param durationInSeconds
+     */
     public void setDurationInSeconds(String durationInSeconds) {
         this.durationInSeconds = durationInSeconds;
     }
 
+    /**
+     * Get a string with the duration of dbSong.
+     * @return
+     */
     public String getDurationString() {
         return durationString.get();
     }
 
+    /**
+     * Get album art of dbSong.
+     * @return
+     */
     public Image getAlbumArt() {
         return albumArt;
     }
 
+    /**
+     * Set album art of dbSong.
+     * @param albumArt
+     */
     public void setAlbumArt(Image albumArt) {
         this.albumArt = albumArt;
     }
@@ -123,14 +175,5 @@ public class dbSong {
     public String toString() {
         return artist.get() + " - " + title.get();
     }
-
-/*
-    @Override
-    public boolean equals(Object o){
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        dbSong dbsong = (dbSong) o;
-        return
-    }*/
 
 }

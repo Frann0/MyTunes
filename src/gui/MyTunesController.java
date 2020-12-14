@@ -241,7 +241,6 @@ public class MyTunesController implements Initializable {
         allPlaylists.addAll(dbPlaylistModel.getPlaylistNames());
 
         lstPlaylist.setItems(allPlaylists);
-        //dbPlaylistModel.addPlaylist(navn);
     }
 
     /**

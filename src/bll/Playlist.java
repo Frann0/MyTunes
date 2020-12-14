@@ -10,7 +10,7 @@ public class Playlist {
     private final List<dbSong> songs;
 
     /**
-     * Vores constructor, som tager et navn ind på den playliste vi vil lave.
+     * Constructs a playlist with the specified name.
      * @param name
      */
     public Playlist(String name) {
@@ -18,6 +18,11 @@ public class Playlist {
         songs = new ArrayList<>();
     }
 
+    /**
+     * Constructs a playlist with a list of dbSongs.
+     * @param name
+     * @param playlist
+     */
     public Playlist(String name, List<dbSong> playlist){
         this.name = name;
         songs = playlist;
@@ -25,24 +30,24 @@ public class Playlist {
     }
 
     /**
-     * Getter for navnet på playlisten
-     * @return navnet på playlisten
+     * Returns the name of the playlist.
+     * @return Name of the playlist.
      */
     public String getName() {
         return name;
     }
 
     /**
-     * setter for navnet på playlisten
-     * @param name det nye navn på playlisten
+     * Sets the name of the playlist.
+     * @param name the new name of the playlist.
      */
     public void setName(String name) {
         this.name = name;
     }
 
     /**
-     * Getter for alle sang elementer der er i den nuværende playliste.
-     * @return en observable liste med type Song.
+     * Returns a list of all songs in the playlist.
+     * @return observable list of type Song.
      */
     public ObservableList<Song> getSongs() {
         return null;
@@ -51,17 +56,16 @@ public class Playlist {
 
 
     /**
-     * Tilføjer en sang til vores liste.
-     * @param song Den sang der skal tilføjes
+     * Add a song to the playlist.
+     * @param song , the song to be added.
      */
     public void addSong(dbSong song) {
         songs.add(song);
-        //System.out.println(song.getSongName());
     }
 
     /**
-     * fjerner sangen fra listen.
-     * @param song sangen der skal fjernes
+     * Removes the song from the playlist.
+     * @param song , the song to be removed.
      */
     public void removeSong(dbSong song) {
         songs.remove(song);
@@ -84,15 +88,18 @@ public class Playlist {
     }*/
 
     /**
-     * overrider toString metoden. Bliver egentligt ikke brugt.
-     * brugte den til at prøve at få lidt padding på top baren.
-     * @return navnet på playlisten.
+     * Overwritten toString method.
+     * @return name of playlist.
      */
     @Override
     public String toString() {
         return String.format("%s", getName());
     }
 
+    /**
+     * Add the songs in a playlist to a string.
+     * @return string of all songs.
+     */
     public String printPlaylist(){
         String name = this.name;
         String songs = "";
