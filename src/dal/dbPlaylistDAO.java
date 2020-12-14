@@ -41,14 +41,19 @@ public class dbPlaylistDAO {
      */
     public void deletePlaylist(String name) throws SQLException {
 
-        try(Connection con = databaseConnector.getConnection()){
 
-            PreparedStatement pSql = con.prepareStatement("DELETE FROM PlaylistList WHERE PlName=?");
-            pSql.setString(1, name);
+        try(Connection con = databaseConnector.getConnection()){
+            PreparedStatement pSql = con.prepareStatement("DELETE FROM Playlist WHERE PlaylistName=?");
+            pSql.setString(1,name);
             pSql.execute();
+
+            PreparedStatement pSql2 = con.prepareStatement("DELETE FROM PlaylistList WHERE PlName=?");
+            pSql2.setString(1, name);
+            pSql2.execute();
 
         }
     }
+    
 
     /**
      * Changes the name of the playlist selected in the GUI from oldName to newName.
