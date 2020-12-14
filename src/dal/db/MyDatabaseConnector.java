@@ -2,9 +2,7 @@ package dal.db;
 
 import com.microsoft.sqlserver.jdbc.SQLServerDataSource;
 import com.microsoft.sqlserver.jdbc.SQLServerException;
-
 import java.sql.Connection;
-import java.sql.SQLException;
 
 public class MyDatabaseConnector {
 
@@ -19,6 +17,11 @@ public class MyDatabaseConnector {
         dataSource.setPortNumber(1433);
     }
 
+    /**
+     * Establish a connection to the database.
+     * @return the connection to the data source.
+     * @throws SQLServerException
+     */
     public Connection getConnection() throws SQLServerException {
         return dataSource.getConnection();
     }

@@ -88,5 +88,4 @@ public class dbPlaylistManager {
         return dbplaylistDAO.getPlaylistNames();
     }
 
-
 }
