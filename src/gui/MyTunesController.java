@@ -335,6 +335,7 @@ public class MyTunesController implements Initializable {
         }
         dbsongModel.deleteSong(tblAllsongs.getSelectionModel().getSelectedItem());
         allSongs.remove(tblAllsongs.getSelectionModel().getSelectedItem());
+        lstQueue.refresh();
 
         // currentPlaylist.removeSong(tblAllsongs.getSelectionModel().getSelectedItem());
     }
