@@ -40,6 +40,11 @@ public class dbSong {
             setFilePath(filePath);
             setDurationInSeconds(durationInSeconds);
         });
+        setTitle(title);
+        setArtist(artist);
+        setGenre(genre);
+        setFilePath(filePath);
+        setDurationInSeconds(durationInSeconds);
 
     }
 

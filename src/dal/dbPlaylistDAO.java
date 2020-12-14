@@ -64,16 +64,52 @@ public class dbPlaylistDAO {
     public void editPlaylistName(String oldName, String newName) throws SQLException {
         try(Connection con = databaseConnector.getConnection()){
 
-            PreparedStatement pSql = con.prepareStatement("UPDATE PlaylistList SET PlName=? WHERE PlName=?");
-            pSql.setString(1, newName);
-            pSql.setString(2, oldName);
+            List<dbSong> playlistBuffer = getPlaylist(oldName);
+
+            // Delete playlist "oldName".
+            PreparedStatement pSql = con.prepareStatement("DELETE FROM Playlist WHERE PlaylistName=?");
+            pSql.setString(1,oldName);
             pSql.execute();
 
-            PreparedStatement pSql2 = con.prepareStatement("UPDATE Playlist SET PlaylistName=? Where PlaylistName=?");
+            // Update playlistName to newName.
+            PreparedStatement pSql2 = con.prepareStatement("UPDATE PlaylistList SET PlName=? WHERE PlName=?");
             pSql2.setString(1, newName);
             pSql2.setString(2, oldName);
             pSql2.execute();
 
+            // Get songId's to be added to new playlist
+            ArrayList<String> songIds = new ArrayList<>();
+
+            String sql3 = "SELECT * FROM Song;";
+            Statement statement2 = con.createStatement();
+
+            if (statement2.execute(sql3)) {
+                ResultSet resultSet = statement2.getResultSet();
+
+                while (resultSet.next()) {
+
+                    String songPath = resultSet.getString("filepath");
+                    for(int i = 0; i < playlistBuffer.size(); i++){
+                        if (songPath.equals(playlistBuffer.get(i).getFilePath())){
+                            songIds.add(resultSet.getString("id"));
+                        }
+                    }
+                }
+            }
+            for (int i = 0; i< songIds.size(); i++){
+                System.out.println(songIds.get(i));
+            }
+
+            // Add songs to playlist
+            PreparedStatement pSql3 = con.prepareStatement("INSERT INTO Playlist VALUES(?,?)");
+
+            for (int i = 0; i < songIds.size(); i++){
+                pSql3.setString(1, newName);
+                pSql3.setString(2,songIds.get(i));
+                pSql3.addBatch();
+                System.out.println("added " + songIds.get(i) + "to " + newName);
+            }
+            pSql3.executeBatch();
         }
     }
 
@@ -106,8 +142,8 @@ public class dbPlaylistDAO {
             String sql2 = "SELECT * FROM Song;";
             Statement statement2 = con.createStatement();
 
-            if (statement.execute(sql2)) {
-                ResultSet resultSet = statement.getResultSet();
+            if (statement2.execute(sql2)) {
+                ResultSet resultSet = statement2.getResultSet();
 
                 while (resultSet.next()) {
                     for(int i = 0; i < songIds.size(); i++){
@@ -220,6 +256,7 @@ public class dbPlaylistDAO {
             pSql.setString(2, songID);
             pSql.execute();
         }
+
     }
 
 
