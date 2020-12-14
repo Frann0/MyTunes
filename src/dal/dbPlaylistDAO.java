@@ -20,9 +20,13 @@ public class dbPlaylistDAO {
         allPlaylists = new ArrayList<>();
     }
 
+    /**
+     * Create a new playlist in the database.
+     * @param name
+     * @throws SQLException
+     */
     public void addPlaylist(String name) throws SQLException {
         try (Connection con = databaseConnector.getConnection()) {
-            //String sql = "INSERT INTO Song " + "Values ('" + songTitle + "', '" + category + "'," + durationInSeconds + ", '" + filePath + ;
 
             PreparedStatement pSql = con.prepareStatement("INSERT INTO PlaylistList VALUES(?)");
             pSql.setString(1, name);
@@ -30,7 +34,11 @@ public class dbPlaylistDAO {
         }
     }
 
-
+    /**
+     * Delete playlist from the database, specified by the parameter name.
+     * @param name
+     * @throws SQLException
+     */
     public void deletePlaylist(String name) throws SQLException {
 
         try(Connection con = databaseConnector.getConnection()){
@@ -42,6 +50,12 @@ public class dbPlaylistDAO {
         }
     }
 
+    /**
+     * Changes the name of the playlist selected in the GUI from oldName to newName.
+     * @param oldName
+     * @param newName
+     * @throws SQLException
+     */
     public void editPlaylistName(String oldName, String newName) throws SQLException {
         try(Connection con = databaseConnector.getConnection()){
 
@@ -58,18 +72,20 @@ public class dbPlaylistDAO {
         }
     }
 
-
+    /**
+     * Returns a list of all dbSongs associated with the playlist's name.
+     * @param name
+     * @return
+     * @throws SQLException
+     */
     public List<dbSong> getPlaylist(String name) throws SQLException {
 
         ArrayList<String> songIds = new ArrayList<>();
         List<dbSong> playlist = new ArrayList<>();
 
-
-
         try(Connection con = databaseConnector.getConnection()) {
 
             String sql = "SELECT * FROM Playlist;";
-
             Statement statement = con.createStatement();
 
             if (statement.execute(sql)) {
@@ -83,7 +99,6 @@ public class dbPlaylistDAO {
             }
 
             String sql2 = "SELECT * FROM Song;";
-
             Statement statement2 = con.createStatement();
 
             if (statement.execute(sql2)) {
@@ -99,28 +114,27 @@ public class dbPlaylistDAO {
                             String artist = resultSet.getString("artist");
 
                             playlist.add(new dbSong(title, genre, duration, filepath, artist));
-
                         }
                     }
-
                 }
             }
-
         }
         return playlist;
     }
 
-
+    /**
+     * Returns a list of all playlists in the database.
+     * @return
+     * @throws SQLException
+     */
     public List<Playlist> getAllPlaylists() throws SQLException {
         List<Playlist> playlists = new ArrayList<>();
         List<String> playlistNames = new ArrayList<>();
 
 
-
         try(Connection con = databaseConnector.getConnection()) {
 
             String sql = "SELECT * FROM Playlist;";
-
             Statement statement = con.createStatement();
 
             if (statement.execute(sql)) {
@@ -134,7 +148,6 @@ public class dbPlaylistDAO {
             }
         }
 
-
         for (int i = 0; i < playlistNames.size(); i++){
             List<dbSong> songs = getPlaylist(playlistNames.get(i));
             playlists.add(new Playlist(playlistNames.get(i), songs));
@@ -142,13 +155,18 @@ public class dbPlaylistDAO {
         return playlists;
     }
 
+    /**
+     * Removes the selected song from the selected playlist.
+     * @param playlistName
+     * @param song
+     * @throws SQLException
+     */
     public void removeSongFromPlaylist(String playlistName, dbSong song) throws SQLException {
         String songID = "";
 
         try(Connection con = databaseConnector.getConnection()){
 
             String sql = "SELECT * FROM Song;";
-
             Statement statement = con.createStatement();
 
             if(statement.execute(sql)){
@@ -160,22 +178,26 @@ public class dbPlaylistDAO {
                     }
                 }
             }
-
             PreparedStatement pSql = con.prepareStatement("DELETE FROM Playlist WHERE SongId=? AND PlaylistName=?");
             pSql.setString(1, songID);
             pSql.setString(2, playlistName);
             pSql.execute();
-
         }
     }
 
+    /**
+     * Adds a song to a playlist. An association is created between a playlist name,
+     * and a songId in the database.
+     * @param playlistName
+     * @param song
+     * @throws SQLException
+     */
     public void addSongToPlaylist(String playlistName, dbSong song) throws SQLException {
         String songID = "";
 
         try(Connection con = databaseConnector.getConnection()){
 
             String sql = "SELECT * FROM Song;";
-
             Statement statement = con.createStatement();
 
             if(statement.execute(sql)){
@@ -192,10 +214,14 @@ public class dbPlaylistDAO {
             pSql.setString(1, playlistName);
             pSql.setString(2, songID);
             pSql.execute();
-
         }
     }
 
+    /**
+     * Returns a list of all playlist names in the database.
+     * @return
+     * @throws SQLException
+     */
     public List<String> getPlaylistNames() throws SQLException {
 
         List<String> playlistNames = new ArrayList<>();
@@ -203,7 +229,6 @@ public class dbPlaylistDAO {
         try(Connection con = databaseConnector.getConnection()) {
 
             String sql = "SELECT * FROM PlaylistList;";
-
             Statement statement = con.createStatement();
 
             if (statement.execute(sql)) {
@@ -216,11 +241,5 @@ public class dbPlaylistDAO {
             }
         return playlistNames;
         }
-
-
-    public static void main(String[] args) throws SQLException {
-        dbPlaylistDAO db = new dbPlaylistDAO();
-        db.addPlaylist("Test1");
-    }
 
 }

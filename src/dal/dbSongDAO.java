@@ -1,8 +1,6 @@
 package dal;
 
-import bll.Song;
 import bll.dbSong;
-
 
 import com.microsoft.sqlserver.jdbc.SQLServerException;
 import dal.db.MyDatabaseConnector;
@@ -17,7 +15,7 @@ import java.util.List;
 
 public class dbSongDAO {
 
-    private MyDatabaseConnector databaseConnector;
+    private final MyDatabaseConnector databaseConnector;
 
     public dbSongDAO() {
         databaseConnector = new MyDatabaseConnector();
@@ -25,7 +23,6 @@ public class dbSongDAO {
 
     /**
      * Return a list of all songs in the database, converted into dbSong objects.
-     *
      * @return
      * @throws SQLException
      */
@@ -60,28 +57,7 @@ public class dbSongDAO {
         return allSongs;
     }
 
-    public int getNextAvailableSongId() throws SQLException {
-        try (Connection con = databaseConnector.getConnection()) {
-            int id = -1;
-            String sql = "SELECT Id FROM Song;";
 
-            Statement statement = con.createStatement();
-
-            if (statement.execute(sql)) {
-                ResultSet resultSet = statement.getResultSet();
-
-                while (resultSet.next()) {
-                    id = resultSet.getInt("id");
-                }
-
-            }
-            if (id == -1) {
-                return id;
-            } else {
-                return id + 1;
-            }
-        }
-    }
 
     /**
      * Add a new song to the database in accordance with the database column structure.
@@ -90,7 +66,7 @@ public class dbSongDAO {
      * @param song
      * @throws SQLException
      */
-    public void addSong(dbSong song) throws SQLException {
+    public void addSong(dbSong song) {
         MediaPlayer mp = new MediaPlayer(new Media(song.getFilePath()));
         mp.setOnReady(() -> {
             String songTitle = song.getTitle();
@@ -136,10 +112,7 @@ public class dbSongDAO {
 
             if (statement.execute(sql)) {
                 ResultSet resultSet = statement.getResultSet();
-
-
                 String deleteSql = "DELETE FROM Song WHERE Songtitle='" + title + "' AND Artist='" + artist + "'";
-                //String deleteSql = "DELETE FROM Song WHERE Id=" + 1;
                 Statement deleteStatement = con.createStatement();
                 deleteStatement.execute(deleteSql);
 
@@ -148,6 +121,12 @@ public class dbSongDAO {
         }
     }
 
+    /**
+     * With reference to the song's filepath, this method will update the song's
+     * title, genre and artist in the database.
+     * @param newSong
+     * @throws SQLException
+     */
     public void editSong(dbSong newSong) throws SQLException {
         String Title = newSong.getTitle();
         String Genre = newSong.getGenre();
@@ -166,26 +145,7 @@ public class dbSongDAO {
             if (statement != null) {
                 statement.close();
             }
-
         }
-
-    }
-
-
-    public static void main(String[] args) throws SQLException {
-        dbSongDAO dbmySongDAO = new dbSongDAO();
-        //dbmyTunesDAO.addSong("Jizzle", "Rock", 250, "c:/file2", "Bob Dylan");
-        //dbmyTunesDAO.addSong("Jingle", "Disco", 250, "c:/file1", "Tarzan");
-        //dbmyTunesDAO.addSong("YOLO", "Punk", 250, "c:/file3", "Bojack");
-        //dbmyTunesDAO.addSong("Skit", "Classical", 250, "c:/file4", "Frann");
-
-        //dbmyTunesDAO.deleteSong("Jingle", "Bob Dylan");
-        List<dbSong> allSongs = dbmySongDAO.getAllSongs();
-        for (dbSong song : allSongs) {
-            System.out.println(song);
-        }
-
-        //System.out.println(dbmyTunesDAO.getNextAvailableSongId());
     }
 
 }

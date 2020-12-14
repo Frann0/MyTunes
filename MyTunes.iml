@@ -11,5 +11,6 @@
     <orderEntry type="library" name="com.microsoft.sqlserver:mssql-jdbc:9.1.0.jre11-preview" level="project" />
     <orderEntry type="library" name="javax.xml.bind:jaxb-api:2.4.0-b180830.0359" level="project" />
     <orderEntry type="library" name="lib" level="project" />
+    <orderEntry type="library" name="mssql-jdbc-6.3.6-SNAPSHOT.jre9-preview" level="project" />
   </component>
 </module>

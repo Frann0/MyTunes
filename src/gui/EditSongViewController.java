@@ -1,26 +1,14 @@
 package gui;
 
-import bll.Song;
 import bll.dbSong;
 import com.jfoenix.controls.JFXTextField;
-import com.sun.media.jfxmediaimpl.platform.Platform;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-
 import java.net.URL;
-import java.nio.file.Path;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
 
@@ -45,6 +33,9 @@ public class EditSongViewController implements Initializable {
 
     }
 
+    /**
+     * Upon opening of the edit song window, the textfields are set with the song info to be edited.
+     */
     public void setFields(){
         dbSong oldSong = dbsongModel.getOldSong();
         titleField.setText(oldSong.getTitle());
@@ -53,11 +44,20 @@ public class EditSongViewController implements Initializable {
         timeLabel.setText(oldSong.getDurationString());
     }
 
+    /**
+     * This method is called from the MyTunesController so they both reference the
+     * same instance of dbSongModel.
+     * @param dbsongModel
+     */
     public void setDbsongModel(dbSongModel dbsongModel) {
         this.dbsongModel = dbsongModel;
     }
 
-    // TODO Update according to the dbSong updates in MyTunesController
+    /**
+     * Creates a new dbSong object, which is passed to the updateSong().
+     * oldSong is updated with the info in newSong.
+     * @throws SQLException
+     */
     public void handleSaveEdit() throws SQLException {
         dbSong oldSong = dbsongModel.getOldSong();
 
@@ -72,7 +72,10 @@ public class EditSongViewController implements Initializable {
         window.close();
     }
 
-
+    /**
+     * If cancel button is pressed, the edit song window close.
+     * @param actionEvent
+     */
     public void handleCancel(ActionEvent actionEvent) {
         Stage window = (Stage) anchorPane.getScene().getWindow();
         window.close();

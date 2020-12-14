@@ -10,33 +10,57 @@ import java.util.List;
 public class dbPlaylistModel {
     private final dbPlaylistManager dbplaylistManager = new dbPlaylistManager();
 
-    // TODO getallplaylist
+    /**
+     * Returns a list of all playlists.
+     * @return
+     * @throws SQLException
+     */
     public List<Playlist> getALlPlaylists() throws SQLException {
         return dbplaylistManager.getALlPlaylists();
     }
 
-    // TODO getsongfromplaylist
+    /**
+     * Returns a list of dbSongs related to the selected playlist name.
+     * @param name
+     * @return
+     * @throws SQLException
+     */
     public List<dbSong> getPlaylist(String name) throws SQLException {
         return dbplaylistManager.getPlaylist(name);
     }
 
-    // TODO addPlaylist
+    /**
+     * Add a playlist to the database using the parameter name.
+     * @param name
+     * @throws SQLException
+     */
     public void addPlaylist(String name) throws SQLException {
         dbplaylistManager.addPlaylist(name);
     }
-    // TODO deletePlaylist
+
+    /**
+     * Deletes the playlist specified by name in the database.
+     * @param name
+     * @throws SQLException
+     */
     public void deletePlaylist(String name) throws SQLException {
         dbplaylistManager.deletePlaylist(name);
     }
-    // TODO addSongToPlaylist
+
+    /**
+     * Creates an association between playlistName and song in the database.
+     * @param playlistName
+     * @param song
+     * @throws SQLException
+     */
     public void addSongToPlaylist(String playlistName,dbSong song) throws SQLException {
         dbplaylistManager.addSongToPlaylist(playlistName, song);
     }
-    // TODO removeSongFromPlaylist
+
     public void removeSongFromPlaylist(String playlistName, dbSong song) throws SQLException {
         dbplaylistManager.removeSongFromPlaylist(playlistName, song);
     }
-    // TODO editPlaylistName
+
     public void editPlaylistName(String oldName, String newName) throws SQLException {
         dbplaylistManager.editPlaylistName(oldName, newName);
     }
