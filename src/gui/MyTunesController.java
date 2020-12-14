@@ -1,26 +1,22 @@
 package gui;
 
-import bll.*;
+import bll.DragAndDropHandler;
+import bll.MediaManager;
+import bll.PlaylistHandler;
 import bll.Util.SongSearcher;
+import bll.dbSong;
 import com.jfoenix.controls.JFXSlider;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon;
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView;
 import javafx.animation.FadeTransition;
-import javafx.animation.Transition;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableIntegerArray;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
@@ -31,7 +27,6 @@ import javafx.scene.input.DragEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.BorderPane;
-
 import javafx.scene.layout.VBox;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
@@ -45,7 +40,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 
 public class MyTunesController implements Initializable {
 
@@ -213,7 +207,6 @@ public class MyTunesController implements Initializable {
             });
             lstQueue.setItems(playlistSongs);
             lstQueue.refresh();
-            
         }
     }
 
@@ -272,6 +265,7 @@ public class MyTunesController implements Initializable {
      */
     public void handleEditPlaylist() throws SQLException {
         if (lstPlaylist.getSelectionModel().getSelectedItem() != null) {
+            int index = lstPlaylist.getSelectionModel().getSelectedIndex();
             TextInputDialog dialog = new TextInputDialog("New Playlist Name");
             dialog.setTitle("Edit playlist");
             dialog.setHeaderText("Edit playlist");
@@ -285,12 +279,14 @@ public class MyTunesController implements Initializable {
                     throwables.printStackTrace();
                 }
             });
-            lblCurrentPlaylist.setText(currentPlaylist);
 
             allPlaylists.clear();
             allPlaylists.addAll(dbPlaylistModel.getPlaylistNames());
 
             lstPlaylist.setItems(allPlaylists);
+
+            lstPlaylist.getSelectionModel().select(allPlaylists.get(index));
+            handlePlaylistSelect();
         }
     }
 
