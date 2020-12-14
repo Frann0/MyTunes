@@ -57,14 +57,31 @@ public class dbPlaylistModel {
         dbplaylistManager.addSongToPlaylist(playlistName, song);
     }
 
+    /**
+     * Removes the association in the database between the playlistName and song.
+     * @param playlistName
+     * @param song
+     * @throws SQLException
+     */
     public void removeSongFromPlaylist(String playlistName, dbSong song) throws SQLException {
         dbplaylistManager.removeSongFromPlaylist(playlistName, song);
     }
 
+    /**
+     * Updates the name of a playlist in the database.
+     * @param oldName
+     * @param newName
+     * @throws SQLException
+     */
     public void editPlaylistName(String oldName, String newName) throws SQLException {
         dbplaylistManager.editPlaylistName(oldName, newName);
     }
 
+    /**
+     * Returns a list of all the playlist names in the db.
+     * @return
+     * @throws SQLException
+     */
     public List<String> getPlaylistNames() throws SQLException {
         return dbplaylistManager.getPlaylistNames();
     }
