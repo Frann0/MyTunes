@@ -176,6 +176,10 @@ public class dbSong {
         this.albumArt = albumArt;
     }
 
+    public void setDurationString(String duration){
+        this.durationString.set(duration);
+    }
+
     @Override
     public String toString() {
         return artist.get() + " - " + title.get();

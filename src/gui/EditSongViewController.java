@@ -36,6 +36,7 @@ public class EditSongViewController implements Initializable {
     private ObservableList<dbSong> allSongs;
     private ObservableList<dbSong> playlistSongs;
     private String currentPlaylist;
+    private String durationString;
 
 
     @Override
@@ -71,6 +72,7 @@ public class EditSongViewController implements Initializable {
         artistField.setText(oldSong.getArtist());
         categoryField.setText(oldSong.getGenre());
         timeLabel.setText(oldSong.getDurationString());
+        durationString = oldSong.getDurationString();
     }
 
     /**
@@ -95,6 +97,7 @@ public class EditSongViewController implements Initializable {
         String genre = categoryField.getText();
 
         dbSong newSong = new dbSong(title,genre,oldSong.getDurationString(), oldSong.getFilePath(), artist);
+        newSong.setDurationString(durationString);
         allSongs.remove(oldSong);
         allSongs.add(newSong);
 
@@ -106,6 +109,8 @@ public class EditSongViewController implements Initializable {
         playlistSongs.addAll(dbplaylistModel.getPlaylist(currentPlaylist));
         lstQueue.setItems(playlistSongs);
         lstQueue.refresh();
+
+
 
         Stage window = (Stage) anchorPane.getScene().getWindow();
         window.close();
