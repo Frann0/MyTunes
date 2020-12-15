@@ -356,7 +356,13 @@ public class MyTunesController implements Initializable {
         EditSongViewController controller = fxmlLoader.getController();
         dbsongModel.setOldSong(tblAllsongs.getSelectionModel().getSelectedItem());
         controller.setDbsongModel(dbsongModel);
+        controller.setAllSongs(allSongs);
+        controller.setLstQueue(lstQueue);
+        controller.setPlaylistSongs(playlistSongs);
+        controller.setDbplaylistModel(dbPlaylistModel);
+        controller.setCurrentPlaylist(currentPlaylist);
         controller.setFields();
+
     }
 
     /**
@@ -634,4 +640,5 @@ public class MyTunesController implements Initializable {
         }
         lstQueue.refresh();
     }
+
 }

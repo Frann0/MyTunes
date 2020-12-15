@@ -79,7 +79,7 @@ public class dbSongModel {
      * Updates the content of allSongs.
      * @throws SQLException
      */
-    private void updateSongList() throws SQLException {
+    public void updateSongList() throws SQLException {
         allSongs.clear();
         allSongs.addAll(dbsongManager.getAllSongs());
     }
