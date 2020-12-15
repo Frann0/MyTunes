@@ -108,11 +108,11 @@ public class MediaManager {
      */
     public void setMute(boolean mute){
         if (mediaPlayer != null)
-            if(mute == true) {
+            if(mute) {
                 mediaPlayer.setVolume(0);
                 currentvolume = 0;
             }
-        if (mute == false) {
+        if (!mute) {
             mediaPlayer.setVolume(1);
             currentvolume = 1;
         }
