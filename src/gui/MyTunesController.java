@@ -455,7 +455,7 @@ public class MyTunesController implements Initializable {
     public void handlePrevSong(MouseEvent mouseEvent) {
     }
 
-    public void handleNextSong(MouseEvent mouseEvent) {
+    public void handleNextSong(MouseEvent mouseEvent) throws SQLException {
     }
 
     /**
