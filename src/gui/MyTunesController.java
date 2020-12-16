@@ -2,7 +2,6 @@ package gui;
 
 import bll.DragAndDropHandler;
 import bll.MediaManager;
-import bll.PlaylistHandler;
 import bll.Util.SongSearcher;
 import bll.dbSong;
 import com.jfoenix.controls.JFXSlider;
@@ -13,7 +12,6 @@ import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView;
 import javafx.animation.FadeTransition;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -24,7 +22,6 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.DragEvent;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
@@ -86,7 +83,7 @@ public class MyTunesController implements Initializable {
     @FXML
     private TableColumn<dbSong, String> tblClmTime;
     @FXML
-    private TableColumn tblClmSpacer;
+    private TableColumn<dbSong, dbSong> tblClmSpacer;
     @FXML
     private MaterialDesignIconView tglPlay;
     @FXML
@@ -99,8 +96,8 @@ public class MyTunesController implements Initializable {
     private final ObservableList<String> allPlaylists = FXCollections.observableArrayList();
     private final ObservableList<dbSong> playlistSongs = FXCollections.observableArrayList();
 
-    private final PlaylistHandler playlistHandler = new PlaylistHandler();
-    private final MediaManager mediaManager = new MediaManager();;
+    private final MediaManager mediaManager = new MediaManager();
+
     private final DragAndDropHandler dragAndDropHandler = new DragAndDropHandler();
     private final dbSongModel dbsongModel = new dbSongModel();
     private final dbPlaylistModel dbPlaylistModel = new dbPlaylistModel();
@@ -111,8 +108,6 @@ public class MyTunesController implements Initializable {
     private boolean shuffleActive;
     private boolean repeatActive;
     private boolean queueShowing;
-
-    private int index = 0;
 
     public MyTunesController() throws SQLException {
         mediaManager.setController(this);
@@ -142,10 +137,8 @@ public class MyTunesController implements Initializable {
             throwables.printStackTrace();
         }
 
-        MediaPlayer mediaPlayer = new MediaPlayer(new Media(new File("src/Resources/123.mp3").toURI().toString()));
-        mediaPlayer.setOnReady(() -> {
-            allSongs.addAll(dbsongModel.getSongs());
-        });
+        MediaPlayer mediaPlayer = new MediaPlayer(new Media(new File("src/Resources/buffer.mp3").toURI().toString()));
+        mediaPlayer.setOnReady(() -> allSongs.addAll(dbsongModel.getSongs()));
 
         if (!allPlaylists.isEmpty()) {
             lstPlaylist.getSelectionModel().select(allPlaylists.get(0));
@@ -197,7 +190,7 @@ public class MyTunesController implements Initializable {
             lblCurrentPlaylist.setText(currentPlaylist);
             playlistSongs.clear();
 
-            MediaPlayer mediaPlayer = new MediaPlayer(new Media(new File("src/Resources/123.mp3").toURI().toString()));
+            MediaPlayer mediaPlayer = new MediaPlayer(new Media(new File("src/Resources/buffer.mp3").toURI().toString()));
             mediaPlayer.setOnReady(() -> {
                 try {
                     playlistSongs.addAll(dbPlaylistModel.getPlaylist(currentPlaylist));
@@ -304,7 +297,7 @@ public class MyTunesController implements Initializable {
     /**
      * Håndtere vores manuelle tilføj sang funktion.
      */
-    public void handleAddSong() throws SQLException {
+    public void handleAddSong() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Select a song you want to add to your playlist");
         FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("Sound files (*.wav , *.mp3)", "*.wav", "*.mp3");
@@ -340,7 +333,12 @@ public class MyTunesController implements Initializable {
         // currentPlaylist.removeSong(tblAllsongs.getSelectionModel().getSelectedItem());
     }
 
-    public void handleEditSong(ActionEvent actionEvent) throws IOException {
+    /**
+     * Sætter et nyt vindue og åbner det.
+     *
+     * @throws IOException Hvis den ikke kan finde EditSongView.fxml.
+     */
+    public void handleEditSong() throws IOException {
         Stage stage = new Stage();
         FXMLLoader fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(getClass().getResource("EditSongView.fxml"));
@@ -359,6 +357,45 @@ public class MyTunesController implements Initializable {
         controller.setCurrentPlaylist(currentPlaylist);
         controller.setFields();
 
+    }
+
+    /**
+     * Håndtere når vi tilføjer en sang til playlisten
+     */
+    public void handleAddToPlaylist() {
+        if (tblAllsongs.getSelectionModel().getSelectedItem() != null) {
+            dbSong cSong = tblAllsongs.getSelectionModel().getSelectedItem();
+            MediaPlayer mp = new MediaPlayer(new Media(cSong.getFilePath()));
+            mp.setOnReady(() -> {
+                playlistSongs.add(cSong);
+                try {
+                    dbPlaylistModel.addSongToPlaylist(currentPlaylist, cSong);
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                }
+
+                lstQueue.refresh();
+            });
+        }
+    }
+
+    /**
+     * Håndtere når vi fjerner en sang fra playlisten.
+     */
+    public void handleRemoveFromPlaylist() {
+        if (lstQueue.getSelectionModel().getSelectedItem() != null) {
+            dbSong cSong = lstQueue.getSelectionModel().getSelectedItem();
+            MediaPlayer mp = new MediaPlayer(new Media(cSong.getFilePath()));
+            mp.setOnReady(() -> {
+                playlistSongs.remove(cSong);
+                try {
+                    dbPlaylistModel.removeSongFromPlaylist(currentPlaylist, cSong);
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                }
+                lstQueue.refresh();
+            });
+        }
     }
 
     /**
@@ -382,6 +419,72 @@ public class MyTunesController implements Initializable {
         }
     }
 
+    /**
+     * Håndtere når vi trykker på vores playliste knap. Viser og lukker panelet.
+     */
+    public void handleShowPlaylist() {
+        icnQueue.setOnMouseEntered(mouseEvent -> icnQueue.setStyle("-fx-font-family: FontAwesome; -fx-fill: white; -fx-font-size: 20"));
+        FadeTransition fadeT = new FadeTransition(Duration.millis(250), vboxQueue);
+
+        if (!queueShowing) {
+            icnQueue.setStyle("-fx-font-family: FontAwesome; -fx-fill: #71BA51; -fx-font-size: 20");
+            icnQueue.setOnMouseExited(mouseEvent -> icnQueue.setStyle("-fx-font-family: FontAwesome; -fx-fill: #71BA51; -fx-font-size: 20"));
+
+            queueShowing = true;
+            vboxQueue.setVisible(true);
+            vboxQueue.setMaxWidth(240);
+            tblClmSpacer.setPrefWidth(172);
+            fadeT.setFromValue(0);
+            fadeT.setToValue(1);
+            fadeT.play();
+        } else {
+            icnQueue.setStyle("-fx-font-family: FontAwesome; -fx-fill: #4f4f4f; -fx-font-size: 20");
+            icnQueue.setOnMouseExited(mouseEvent -> icnQueue.setStyle("-fx-font-family: FontAwesome; -fx-fill: #4f4f4f; -fx-font-size: 20"));
+            queueShowing = false;
+
+            fadeT.setFromValue(1);
+            fadeT.setToValue(0);
+            fadeT.play();
+
+            fadeT.onFinishedProperty().set((event) -> {
+                vboxQueue.setVisible(false);
+                vboxQueue.setMaxWidth(0);
+            });
+
+            tblClmSpacer.setPrefWidth(406);
+
+        }
+        //lstQueue.setItems(mediaManager.getPlayOrder());
+        lstQueue.refresh();
+    }
+
+    /**
+     * Flytter en sang i vores nuværende playliste op, hvis indexet valgt ikke et toppen.
+     */
+    public void handleMoveUpList() {
+        if (lstQueue.getSelectionModel().getSelectedIndex() != 0 && lstQueue.getSelectionModel().getSelectedItem() != null) {
+            Collections.swap(lstQueue.getItems(), lstQueue.getSelectionModel().getSelectedIndex(), lstQueue.getSelectionModel().getSelectedIndex() - 1);
+            lstQueue.getSelectionModel().select(lstQueue.getSelectionModel().getSelectedIndex() - 1);
+        }
+        lstQueue.refresh();
+    }
+
+    /**
+     * Flytter en sang i vores nuværende playliste ned, hvis ikke indexet er bunden af listen
+     */
+    public void handleMoveDownList() {
+        if (lstQueue.getSelectionModel().getSelectedIndex() != lstQueue.getItems().size() - 1 && lstQueue.getSelectionModel().getSelectedItem() != null) {
+            Collections.swap(lstQueue.getItems(), lstQueue.getSelectionModel().getSelectedIndex(), lstQueue.getSelectionModel().getSelectedIndex() + 1);
+            lstQueue.getSelectionModel().select(lstQueue.getSelectionModel().getSelectedIndex() + 1);
+        }
+        lstQueue.refresh();
+    }
+
+    /**
+     * Håndtere når vi skal vise den næste sang i vores playliste. Efter vores sidste sang var færdig.
+     *
+     * @throws SQLException
+     */
     public void selectNextSong() throws SQLException {
         lstQueue.getSelectionModel().select(mediaManager.index.get());
         handleSongSelect();
@@ -414,8 +517,7 @@ public class MyTunesController implements Initializable {
     /**
      * Kommer til at håndtere shuffle play.
      * Ved at tage alle sangene i nuværende playlist.
-     * Sætte dem ind i tilfældig rækkefølge i en ArrayList, og derefter afspille
-     * den første sang i den liste.
+     * og bruge Collections.shuffle(nuværende Playliste).
      */
     public void handleShufflePlay() {
         icnShuffle.setOnMouseEntered(mouseEvent -> icnShuffle.setStyle("-fx-font-family: FontAwesome; -fx-fill: white; -fx-font-size: 15"));
@@ -429,8 +531,9 @@ public class MyTunesController implements Initializable {
             icnShuffle.setOnMouseExited(mouseEvent -> icnShuffle.setStyle("-fx-font-family: FontAwesome; -fx-fill: #4f4f4f; -fx-font-size: 15"));
             shuffleActive = false;
         }
+
         //mediaManager.setCurrentPlaylist(currentPlaylist);
-        mediaManager.shuffle(shuffleActive);
+        //mediaManager.shuffle(shuffleActive);
         //lstQueue.setItems(mediaManager.getPlayOrder());
     }
 
@@ -452,10 +555,16 @@ public class MyTunesController implements Initializable {
         mediaManager.setRepeatActive(repeatActive);
     }
 
-    public void handlePrevSong(MouseEvent mouseEvent) {
+    /**
+     * Skulle have været lavet, men grundet tidsbegrænsning nåede vi ikke
+     */
+    public void handlePrevSong() {
     }
 
-    public void handleNextSong(MouseEvent mouseEvent) throws SQLException {
+    /**
+     * Skulle have været lavet, men grundet tidsbegrænsning nåede vi ikke
+     */
+    public void handleNextSong() {
     }
 
     /**
@@ -544,97 +653,6 @@ public class MyTunesController implements Initializable {
     public void handleMinimize() {
         Stage stage = (Stage) root.getScene().getWindow();
         stage.setIconified(true);
-    }
-
-    public void handleAddToPlaylist(ActionEvent actionEvent) throws SQLException {
-        if (tblAllsongs.getSelectionModel().getSelectedItem() != null) {
-            dbSong cSong = tblAllsongs.getSelectionModel().getSelectedItem();
-            MediaPlayer mp = new MediaPlayer(new Media(cSong.getFilePath()));
-            mp.setOnReady(() -> {
-                playlistSongs.add(cSong);
-                try {
-                    dbPlaylistModel.addSongToPlaylist(currentPlaylist, cSong);
-                } catch (SQLException throwables) {
-                    throwables.printStackTrace();
-                }
-
-                lstQueue.refresh();
-            });
-        }
-    }
-
-    public void handleRemoveFromPlaylist(ActionEvent actionEvent) {
-        if (lstQueue.getSelectionModel().getSelectedItem() != null) {
-            dbSong cSong = lstQueue.getSelectionModel().getSelectedItem();
-            MediaPlayer mp = new MediaPlayer(new Media(cSong.getFilePath()));
-            mp.setOnReady(() -> {
-                playlistSongs.remove(cSong);
-                try {
-                    dbPlaylistModel.removeSongFromPlaylist(currentPlaylist, cSong);
-                } catch (SQLException throwables) {
-                    throwables.printStackTrace();
-                }
-                lstQueue.refresh();
-            });
-        }
-    }
-
-    public void handleShowPlaylist() {
-        icnQueue.setOnMouseEntered(mouseEvent -> icnQueue.setStyle("-fx-font-family: FontAwesome; -fx-fill: white; -fx-font-size: 20"));
-        FadeTransition fadeT = new FadeTransition(Duration.millis(250), vboxQueue);
-
-        if (!queueShowing) {
-            icnQueue.setStyle("-fx-font-family: FontAwesome; -fx-fill: #71BA51; -fx-font-size: 20");
-            icnQueue.setOnMouseExited(mouseEvent -> icnQueue.setStyle("-fx-font-family: FontAwesome; -fx-fill: #71BA51; -fx-font-size: 20"));
-
-            queueShowing = true;
-            vboxQueue.setVisible(true);
-            vboxQueue.setMaxWidth(240);
-            tblClmSpacer.setPrefWidth(172);
-            fadeT.setFromValue(0);
-            fadeT.setToValue(1);
-            fadeT.play();
-        } else {
-            icnQueue.setStyle("-fx-font-family: FontAwesome; -fx-fill: #4f4f4f; -fx-font-size: 20");
-            icnQueue.setOnMouseExited(mouseEvent -> icnQueue.setStyle("-fx-font-family: FontAwesome; -fx-fill: #4f4f4f; -fx-font-size: 20"));
-            queueShowing = false;
-
-            fadeT.setFromValue(1);
-            fadeT.setToValue(0);
-            fadeT.play();
-
-            fadeT.onFinishedProperty().set((event) -> {
-                vboxQueue.setVisible(false);
-                vboxQueue.setMaxWidth(0);
-            });
-
-            tblClmSpacer.setPrefWidth(406);
-
-        }
-        //lstQueue.setItems(mediaManager.getPlayOrder());
-        lstQueue.refresh();
-    }
-
-    /**
-     * Flytter en sang i vores nuværende playliste op, hvis indexet valgt ikke et toppen.
-     */
-    public void handleMoveUpList() {
-        if (lstQueue.getSelectionModel().getSelectedIndex() != 0 && lstQueue.getSelectionModel().getSelectedItem() != null) {
-            Collections.swap(lstQueue.getItems(), lstQueue.getSelectionModel().getSelectedIndex(), lstQueue.getSelectionModel().getSelectedIndex() - 1);
-            lstQueue.getSelectionModel().select(lstQueue.getSelectionModel().getSelectedIndex() - 1);
-        }
-        lstQueue.refresh();
-    }
-
-    /**
-     * Flytter en sang i vores nuværende playliste ned, hvis ikke indexet er bunden af listen
-     */
-    public void handleMoveDownList() {
-        if (lstQueue.getSelectionModel().getSelectedIndex() != lstQueue.getItems().size() - 1 && lstQueue.getSelectionModel().getSelectedItem() != null) {
-            Collections.swap(lstQueue.getItems(), lstQueue.getSelectionModel().getSelectedIndex(), lstQueue.getSelectionModel().getSelectedIndex() + 1);
-            lstQueue.getSelectionModel().select(lstQueue.getSelectionModel().getSelectedIndex() + 1);
-        }
-        lstQueue.refresh();
     }
 
 }

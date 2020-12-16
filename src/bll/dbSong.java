@@ -176,6 +176,10 @@ public class dbSong {
         this.albumArt = albumArt;
     }
 
+    /**
+     * Sætter for duration string. Bruges til at sikre vi har længden af sangen efter vi editer den.
+     * @param duration Længden af sangen formatted som "mm:ss:
+     */
     public void setDurationString(String duration){
         this.durationString.set(duration);
     }

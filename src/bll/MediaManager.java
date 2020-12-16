@@ -18,8 +18,6 @@ import java.util.concurrent.TimeUnit;
 public class MediaManager {
     public IntegerProperty index = new SimpleIntegerProperty();
     private MediaPlayer mediaPlayer;
-    private final ObservableList<dbSong> playOrder = FXCollections.observableArrayList();
-    private final ObservableList<Song> unShuffledPlayOrder = FXCollections.observableArrayList();
 
     private double currentvolume = 1;
     private boolean repeatActive = false;
@@ -131,27 +129,10 @@ public class MediaManager {
     }
 
     /**
-     * Shuffler vores playorder liste, så sangene er på en tilfældig plads.
-     *
-     * @param shuffleActive håndtere om playorderen skal shuffles eller ej.
+     * Sætter vores nuværende playliste.
+     * @param Playlist Playlisten den skal spille fra
+     * @param index Det index playlisten skal starte fra
      */
-    public void shuffle(boolean shuffleActive) {
-        if (currentPlaylist != null) {
-            playOrder.clear();
-            playOrder.addAll(currentPlaylist);
-            if (shuffleActive) {
-                Collections.shuffle(playOrder);
-            }
-        }
-    }
-
-    public void skipSong() throws SQLException {
-    }
-
-    public void lastSong() throws SQLException {
-    }
-
-
     public void setCurrentPlaylist(List<dbSong> Playlist, int index) {
         this.index.set(index);
         this.currentPlaylist = Playlist.subList(index, Playlist.size());

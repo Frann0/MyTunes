@@ -28,7 +28,7 @@ public class dbSongDAO {
      */
     public List<dbSong> getAllSongs() throws SQLException {
         List<dbSong> allSongs = new ArrayList<>();
-        Media m = new Media(new File("src/Resources/123.mp3").toURI().toString());
+        Media m = new Media(new File("src/Resources/buffer.mp3").toURI().toString());
         MediaPlayer mp = new MediaPlayer(m);
 
         Connection con = databaseConnector.getConnection();
