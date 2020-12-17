@@ -2,7 +2,7 @@ package gui;
 
 import bll.DragAndDropHandler;
 import bll.MediaManager;
-import bll.Util.SongSearcher;
+import bll.SongSearcher;
 import bll.dbSong;
 import com.jfoenix.controls.JFXSlider;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;

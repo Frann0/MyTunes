@@ -1,4 +1,4 @@
-package bll.Util;
+package bll;
 
 import bll.dbSong;
 import javafx.collections.FXCollections;

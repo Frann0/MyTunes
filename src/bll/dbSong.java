@@ -68,7 +68,6 @@ public class dbSong {
             setGenre(m.getMetadata().get("genre").toString());
         });
 
-
         setFilePath(f.toURI().toString());
     }
 
