@@ -1,7 +1,7 @@
 <component name="libraryTable">
   <library name="mssql-jdbc-6.3.6-SNAPSHOT.jre9-preview">
     <CLASSES>
-      <root url="jar://$USER_HOME$/Downloads/mssql-jdbc-6.3.6-SNAPSHOT.jre9-preview.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../../../Skrivebord/lib/mssql-jdbc-6.3.6-SNAPSHOT.jre9-preview.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />
