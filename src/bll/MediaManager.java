@@ -1,17 +1,15 @@
 package bll;
 
-import gui.MyTunesController;
+import be.dbSong;
+import gui.controller.MyTunesController;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 
 import java.sql.SQLException;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 

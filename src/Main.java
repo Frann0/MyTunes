@@ -18,7 +18,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        Parent root = FXMLLoader.load(getClass().getResource("gui/MyTunesView.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("gui/view/MyTunesView.fxml"));
         primaryStage.setTitle(TITLE);
         primaryStage.setScene(new Scene(root, WIDTH, HEIGHT));
         primaryStage.initStyle(StageStyle.UNDECORATED);

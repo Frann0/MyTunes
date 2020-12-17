@@ -19,7 +19,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" styleClass="background" stylesheets="@css/Styles.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.MyTunesController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" styleClass="background" stylesheets="@../css/Styles.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.controller.MyTunesController">
    <children>
       <BorderPane fx:id="root" onDragDropped="#handleDragDropped" onDragOver="#handleDragOver" prefHeight="720.0" prefWidth="1280.0">
          <bottom>
@@ -61,9 +61,9 @@
             </HBox>
          </bottom>
          <left>
-            <VBox prefHeight="617.0" prefWidth="237.0" styleClass="playlist-bar" stylesheets="@css/Styles.css" BorderPane.alignment="CENTER">
+            <VBox prefHeight="617.0" prefWidth="237.0" styleClass="playlist-bar" stylesheets="@../css/Styles.css" BorderPane.alignment="CENTER">
                <children>
-                  <Pane prefHeight="40.0" prefWidth="200.0" styleClass="bottombar" stylesheets="@css/Styles.css">
+                  <Pane prefHeight="40.0" prefWidth="200.0" styleClass="bottombar" stylesheets="@../css/Styles.css">
                      <children>
                         <Label layoutX="84.0" layoutY="7.0" text="Playlists" textAlignment="CENTER" textFill="WHITE">
                            <font>
@@ -123,9 +123,9 @@
                   </Pane>
                </top>
                <right>
-                  <VBox fx:id="vboxQueue" prefHeight="617.0" prefWidth="240.0" styleClass="playlist-bar" stylesheets="@css/Styles.css" BorderPane.alignment="CENTER">
+                  <VBox fx:id="vboxQueue" prefHeight="617.0" prefWidth="240.0" styleClass="playlist-bar" stylesheets="@../css/Styles.css" BorderPane.alignment="CENTER">
                      <children>
-                        <Pane prefHeight="40.0" prefWidth="200.0" styleClass="bottombar" stylesheets="@css/Styles.css">
+                        <Pane prefHeight="40.0" prefWidth="200.0" styleClass="bottombar" stylesheets="@../css/Styles.css">
                            <children>
                               <Label fx:id="lblCurrentPlaylist" layoutX="10.0" layoutY="1.0" text="test1" textFill="WHITE">
                                  <font>

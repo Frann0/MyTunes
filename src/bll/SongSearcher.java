@@ -1,6 +1,6 @@
-package bll.Util;
+package bll;
 
-import bll.dbSong;
+import be.dbSong;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 

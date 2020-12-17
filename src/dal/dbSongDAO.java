@@ -1,9 +1,9 @@
 package dal;
 
-import bll.dbSong;
+import be.dbSong;
 
 import com.microsoft.sqlserver.jdbc.SQLServerException;
-import dal.db.MyDatabaseConnector;
+import be.MyDatabaseConnector;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 

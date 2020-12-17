@@ -1,9 +1,8 @@
 package dal;
 
-import bll.Playlist;
-import bll.dbSong;
-import com.microsoft.sqlserver.jdbc.SQLServerException;
-import dal.db.MyDatabaseConnector;
+import be.Playlist;
+import be.dbSong;
+import be.MyDatabaseConnector;
 
 import java.sql.*;
 import java.util.ArrayList;

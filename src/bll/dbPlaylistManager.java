@@ -1,5 +1,7 @@
 package bll;
 
+import be.Playlist;
+import be.dbSong;
 import dal.dbPlaylistDAO;
 
 import java.sql.SQLException;

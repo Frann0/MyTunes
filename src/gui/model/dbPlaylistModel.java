@@ -1,8 +1,8 @@
-package gui;
+package gui.model;
 
-import bll.Playlist;
+import be.Playlist;
 import bll.dbPlaylistManager;
-import bll.dbSong;
+import be.dbSong;
 
 import java.sql.SQLException;
 import java.util.List;

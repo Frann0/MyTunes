@@ -1,6 +1,6 @@
-package gui;
+package gui.model;
 
-import bll.dbSong;
+import be.dbSong;
 import bll.dbSongManager;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;

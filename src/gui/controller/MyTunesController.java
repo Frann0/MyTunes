@@ -1,14 +1,16 @@
-package gui;
+package gui.controller;
 
 import bll.DragAndDropHandler;
 import bll.MediaManager;
-import bll.Util.SongSearcher;
-import bll.dbSong;
+import bll.SongSearcher;
+import be.dbSong;
 import com.jfoenix.controls.JFXSlider;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon;
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView;
+import gui.model.dbPlaylistModel;
+import gui.model.dbSongModel;
 import javafx.animation.FadeTransition;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -100,7 +102,7 @@ public class MyTunesController implements Initializable {
 
     private final DragAndDropHandler dragAndDropHandler = new DragAndDropHandler();
     private final dbSongModel dbsongModel = new dbSongModel();
-    private final dbPlaylistModel dbPlaylistModel = new dbPlaylistModel();
+    private final gui.model.dbPlaylistModel dbPlaylistModel = new dbPlaylistModel();
 
     private boolean isMuted;
     private boolean isPlaying;

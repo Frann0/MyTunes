@@ -1,12 +1,12 @@
-package gui;
+package gui.controller;
 
-import bll.dbSong;
+import be.dbSong;
 import com.jfoenix.controls.JFXTextField;
-import javafx.collections.FXCollections;
+import gui.model.dbPlaylistModel;
+import gui.model.dbSongModel;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
@@ -43,22 +43,42 @@ public class EditSongViewController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
     }
 
+    /**
+     * set allSongs
+     * @param allSongs
+     */
     public void setAllSongs(ObservableList<dbSong> allSongs) {
         this.allSongs = allSongs;
     }
 
+    /**
+     * set dbPlaylistModel
+     * @param dbplaylistModel
+     */
     public void setDbplaylistModel(dbPlaylistModel dbplaylistModel) {
         this.dbplaylistModel = dbplaylistModel;
     }
 
+    /**
+     * set lstQueue
+     * @param lstQueue
+     */
     public void setLstQueue(ListView<dbSong> lstQueue) {
         this.lstQueue = lstQueue;
     }
 
+    /**
+     *
+     * @param playlistSongs
+     */
     public void setPlaylistSongs(ObservableList<dbSong> playlistSongs) {
         this.playlistSongs = playlistSongs;
     }
 
+    /**
+     * set currentPlaylist
+     * @param currentPlaylist
+     */
     public void setCurrentPlaylist(String currentPlaylist) {
         this.currentPlaylist = currentPlaylist;
     }
@@ -101,16 +121,11 @@ public class EditSongViewController implements Initializable {
         allSongs.remove(oldSong);
         allSongs.add(newSong);
 
-        //playlistSongs.remove(oldSong);
-        //playlistSongs.add(newSong);
-
         dbsongModel.updateSong(newSong);
         playlistSongs.clear();
         playlistSongs.addAll(dbplaylistModel.getPlaylist(currentPlaylist));
         lstQueue.setItems(playlistSongs);
         lstQueue.refresh();
-
-
 
         Stage window = (Stage) anchorPane.getScene().getWindow();
         window.close();

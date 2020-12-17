@@ -1,7 +1,6 @@
 package bll;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import be.dbSong;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 

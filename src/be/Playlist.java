@@ -1,8 +1,7 @@
-package bll;
+package be;
 
-import javafx.collections.ObservableList;
+import be.dbSong;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class Playlist {
